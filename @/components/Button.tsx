@@ -1,4 +1,4 @@
-import { styled } from "@/stitches.config"
+import { DARKS, styled } from "@/stitches.config"
 
 export const Button = styled("button", {
     backgroundColor: "$accent",
@@ -9,8 +9,11 @@ export const Button = styled("button", {
     color: "white !important",
     gap: "2rem",
     alignSelf: "stretch",
-    high: true,
+    high: "accent",
     animated: true,
+    display: "flex",
+    placeItems: "center",
+    textAlign: "center",
     "&:focus": {
         boxShadow:
             "0px 1rem 2rem 0px #2EA4AB5C, inset 0rem 0rem 0px 0.5rem black",
@@ -20,6 +23,13 @@ export const Button = styled("button", {
             true: {
                 padding: "4rem 6rem",
                 gap: "3rem",
+                display: "block",
+            },
+        },
+        color: {
+            black: {
+                backgroundColor: "$dark1",
+                high: "black",
             },
         },
     },

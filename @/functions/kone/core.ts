@@ -8,12 +8,17 @@ export const kone =
     ) =>
     async (data: Parameters<koneFunc>[0]) => {
         try {
-            const res = await fetch(`/api/${endpoint}`, {
+            const url =
+                `/api/${endpoint}` +
+                (method === "GET"
+                    ? "?" + new URLSearchParams({ query: JSON.stringify(data) })
+                    : "")
+            const res = await fetch(url, {
                 method,
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
+                body: method === "GET" ? undefined : JSON.stringify(data),
             })
 
             const fetched = await res.json()
@@ -28,6 +33,8 @@ export const kone =
                 })
 
                 throw new Error(e.message)
+            } else {
+                throw e
             }
         }
     }

@@ -1,18 +1,24 @@
 import { HandlerError } from "@/types"
 import { NextApiHandler } from "next"
 
-export type Handlers = Record<string, (req: unknown) => unknown>
+export type Handlers = Record<
+    string,
+    (req: unknown, slug?: Record<string, string | string[]>) => unknown
+>
 
 export const endpoint =
     (handlers: Handlers): NextApiHandler =>
     async (req, res) => {
         try {
             const handler = handlers[req.method]
-            const result = await handler(req.body)
+            const result = await handler(
+                req.method === "GET"
+                    ? JSON.parse(req.query.query as string)
+                    : req.body,
+                req.query
+            )
             res.json(result)
         } catch (e) {
-            console.log(e)
-
             if (e instanceof HandlerError) {
                 res.status(e.code).json({
                     message: e.message,

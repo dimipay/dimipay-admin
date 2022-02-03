@@ -5,6 +5,7 @@ export const LoadSVG: React.FC<{
     height: number
     src: string
     alt: string
+    color?: string
 }> = (props) => {
     return (
         <div

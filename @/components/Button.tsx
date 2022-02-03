@@ -10,6 +10,7 @@ export const Button = styled("button", {
     gap: "2rem",
     alignSelf: "stretch",
     high: true,
+    animated: true,
     "&:focus": {
         boxShadow:
             "0px 1rem 2rem 0px #2EA4AB5C, inset 0rem 0rem 0px 0.5rem black",

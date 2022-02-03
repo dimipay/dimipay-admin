@@ -17,7 +17,6 @@ globalCss({
     },
     "*": {
         fontFamily: "SUIT Variable",
-        animated: true,
     },
 })()
 

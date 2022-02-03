@@ -5,6 +5,7 @@ export const InputWraper = styled(Vexile, {
     border: "0.5rem solid $dark5",
     backgroundColor: "$dark6",
     borderRadius: "2rem",
+    animated: true,
     "&:focus-within": {
         borderColor: "$accent",
         backgroundColor: "white",

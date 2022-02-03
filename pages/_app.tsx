@@ -1,5 +1,6 @@
 import { globalCss } from "@/stitches.config"
 import "@/assets/font/SUIT-Variable.css"
+import { RecoilRoot } from "recoil"
 
 globalCss({
     ":root": {
@@ -21,7 +22,11 @@ globalCss({
 })()
 
 function MyApp({ Component, pageProps }) {
-    return <Component {...pageProps} />
+    return (
+        <RecoilRoot>
+            <Component {...pageProps} />
+        </RecoilRoot>
+    )
 }
 
 export default MyApp

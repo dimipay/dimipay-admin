@@ -6,3 +6,101 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model dimipay_users {
+  id            Int      @id @default(autoincrement())
+  student_id    Int?
+  username      String?  @db.VarChar(255)
+  profile_image String?  @db.VarChar(255)
+  roles         Json?    @db.Json
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+enum OrderCarrier {
+  hanjin
+}
+
+enum OrderInspection {
+  inspection1
+  inspection2
+  inspection3
+  inspection4
+}
+
+enum OrderStatus {
+  booked
+  freight_on_hand
+  partial_arrival
+  freight_payment
+  booking_confirmed
+  dispatched
+  in_transit
+  arrived_at_terminal
+  tax_payment
+  tax_closed
+  clearance
+  release
+  delivered
+  return_received
+  return_shipping_payment
+  return_shipping_closed
+  return_complete
+  exception
+  handling_payment
+}
+
+enum OrderType {
+  simplified_clearance
+  general_clearance
+}
+
+enum Userstatus {
+  normal
+  banned
+  dormanted
+}
+
+enum ordercarrier {
+  hanjin
+}
+
+enum orderinspection {
+  inspection1
+  inspection2
+  inspection3
+  inspection4
+}
+
+enum orderstatus {
+  booked
+  freight_on_hand
+  partial_arrival
+  freight_payment
+  booking_confirmed
+  dispatched
+  in_transit
+  arrived_at_terminal
+  tax_payment
+  tax_closed
+  clearance
+  release
+  delivered
+  return_received
+  return_shipping_payment
+  return_shipping_closed
+  return_complete
+  exception
+  handling_payment
+}
+
+enum ordertype {
+  simplified_clearance
+  general_clearance
+}
+
+enum userstatus {
+  normal
+  banned
+  dormanted
+}

@@ -12,3 +12,12 @@ export const userAtom = atom<{
     key: "USER",
     effects_UNSTABLE: [persistAtom],
 })
+
+export const subContentAtom = atom<{
+    name: string
+    element: JSX.Element
+}>({
+    default: null,
+    key: "SUB_CONTENT",
+    // effects_UNSTABLE: [persistAtom],
+})

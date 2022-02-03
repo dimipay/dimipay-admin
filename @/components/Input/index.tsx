@@ -8,12 +8,14 @@ export const Input: React.FC<{
     name: string
     hideContent?: boolean
     hooker?: UseFormRegisterReturn
-}> = forwardRef((props, ref) => (
+    defaultValue?: string
+}> = (props, ref) => (
     <label>
         <InputWraper gap={1.5} padding={3}>
             <Token>{props.name}</Token>
             <LogicalInput
                 {...props.hooker}
+                defaultValue={props.defaultValue}
                 placeholder={props.placeholder}
                 {...(props.hideContent && {
                     type: "password",
@@ -21,4 +23,4 @@ export const Input: React.FC<{
             />
         </InputWraper>
     </label>
-))
+)

@@ -8,7 +8,7 @@
         "lint": "next lint"
     },
     "dependencies": {
-        "@haechi/flexile": "^1.4.2",
+        "@haechi/flexile": "^1.4.7",
         "@prisma/client": "3.9.1",
         "@stitches/react": "^1.2.6",
         "@types/jsonwebtoken": "^8.5.8",

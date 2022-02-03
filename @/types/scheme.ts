@@ -4,7 +4,7 @@ export interface Scheme {
     slug: string
     fields?: {
         [key: string]: {
-            display: string | boolean
+            display: string
             computed?(value: unknown): string
         }
     }

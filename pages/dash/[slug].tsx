@@ -1,25 +1,26 @@
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
+import { useRecoilValue } from "recoil"
 import { NextPage } from "next"
 
-import { Button, LoadSVG, Table } from "@/components"
-import { addIcon, downloadIcon } from "@/assets"
-import { GROUPED_TABLES, TABLES } from "@/constants"
-import { Important, PageHeader } from "@/typo"
-import { Sidebar } from "./partial"
 import { table, useConsole, useKone } from "@/functions"
+import { Button, LoadSVG, Table } from "@/components"
+import { GROUPED_TABLES, TABLES } from "@/constants"
+import { addIcon, closeIcon, downloadIcon } from "@/assets"
+import { Important, PageHeader } from "@/typo"
+import { subContentAtom } from "@/coil"
+import { Sidebar } from "./partial"
+import { SubcontentWrapper } from "./style"
 
 const TableViewer: NextPage = () => {
     const router = useRouter()
+    const subcontent = useRecoilValue(subContentAtom)
     const slug = router.query.slug
-    useConsole("SLUG", slug)
 
     const tableInfo = TABLES.find((table) => table.slug === slug)
     const tableData = useKone(table[tableInfo?.slug]?.get, {
         amount: 3,
     })
-
-    useConsole("TABLE_FETCH", tableData)
 
     return (
         <Hexile fillx filly>
@@ -51,6 +52,20 @@ const TableViewer: NextPage = () => {
                     </Hexile>
                     {tableData && <Table data={tableData} scheme={tableInfo} />}
                 </Vexile>
+            )}
+            {subcontent && (
+                <SubcontentWrapper paddingx={6} paddingy={10} gap={6}>
+                    <Hexile x="space">
+                        <PageHeader>{subcontent.name}</PageHeader>
+                        <LoadSVG
+                            alt="닫기 버튼"
+                            height={3}
+                            width={3}
+                            src={closeIcon}
+                        />
+                    </Hexile>
+                    {subcontent.element}
+                </SubcontentWrapper>
             )}
         </Hexile>
     )

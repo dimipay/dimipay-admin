@@ -28,9 +28,11 @@ export const {
         },
     },
     utils: {
-        elevated: (hightlight: boolean) => ({
-            boxShadow:
-                "0px 1rem 2rem 0px" + hightlight ? "#0000001F" : "#2EA4AB5C",
+        elevated: () => ({
+            boxShadow: "0px 1rem 2rem 0px #0000001F",
+        }),
+        high: () => ({
+            boxShadow: "0px 1rem 2rem 0px #2EA4AB5C",
         }),
         animated: () => ({
             transition: "500ms cubic-bezier(0,.67,0,.99)",

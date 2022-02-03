@@ -11,8 +11,6 @@ const actions = {
             },
         })
 
-        console.log(user, content)
-
         if (!user)
             throw new HandlerError("일치하는 사용자를 찾을 수 없어요", 400)
 

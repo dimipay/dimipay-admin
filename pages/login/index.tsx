@@ -9,17 +9,18 @@ import { logo } from "@/assets"
 import { login } from "@/functions"
 import { useRecoilState } from "recoil"
 import { userAtom } from "@/coil"
+import { useRouter } from "next/router"
 
 export const Login = () => {
     const { register, handleSubmit } = useForm<AuthIdentification>()
-    const [user, setUser] = useRecoilState(userAtom)
+    const setUser = useRecoilState(userAtom)[1]
+    const router = useRouter()
 
     const onSubmit: SubmitHandler<AuthIdentification> = async (data) => {
         try {
-            console.log(data)
             const res = await login(data)
             setUser(res)
-            console.log(res)
+            router.replace("/dash")
         } catch (e) {
             if (e instanceof HandlerError) {
                 alert(e.message)

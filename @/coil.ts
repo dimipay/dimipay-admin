@@ -1,5 +1,8 @@
 import { dimipay_users } from "@prisma/client"
 import { atom } from "recoil"
+import { recoilPersist } from "recoil-persist"
+
+const { persistAtom } = recoilPersist()
 
 export const userAtom = atom<{
     user: dimipay_users
@@ -7,4 +10,5 @@ export const userAtom = atom<{
 }>({
     default: null,
     key: "USER",
+    effects_UNSTABLE: [persistAtom],
 })

@@ -7,4 +7,8 @@ export class HandlerError extends Error {
         super(message)
         this.code = code
     }
+
+    static isHandlerError(d: any): boolean {
+        return d?.isHandlerError === true
+    }
 }

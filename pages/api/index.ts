@@ -14,10 +14,15 @@ export const endpoint =
             console.log(e)
 
             if (e instanceof HandlerError) {
-                res.status(e.code).json({ error: e.message })
-            }
-
-            res.status(e.code).json({ error: "알 수 없는 오류가 발생했어요" })
+                res.status(e.code).json({
+                    message: e.message,
+                    isHandlerError: true,
+                })
+            } else
+                res.status(e.code).json({
+                    message: "알 수 없는 오류가 발생했어요",
+                    isHandlerError: true,
+                })
         }
     }
 

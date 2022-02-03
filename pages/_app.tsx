@@ -1,6 +1,9 @@
 import { globalCss } from "@/stitches.config"
-import "@/assets/font/SUIT-Variable.css"
+import { ToastContainer, toast } from "react-toastify"
 import { RecoilRoot } from "recoil"
+
+import "react-toastify/dist/ReactToastify.css"
+import "@/assets/font/SUIT-Variable.css"
 
 globalCss({
     ":root": {
@@ -24,6 +27,7 @@ globalCss({
 function MyApp({ Component, pageProps }) {
     return (
         <RecoilRoot>
+            <ToastContainer />
             <Component {...pageProps} />
         </RecoilRoot>
     )

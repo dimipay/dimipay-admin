@@ -7,7 +7,7 @@ import "@/assets/font/SUIT-Variable.css"
 
 globalCss({
     ":root": {
-        fontSize: "4px",
+        fontSize: "5px",
     },
     body: {
         fontSize: "6rem",

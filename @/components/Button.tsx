@@ -1,4 +1,4 @@
-import { DARKS, styled } from "@/stitches.config"
+import { DARKS, MAIN_ACCENT, styled } from "@/stitches.config"
 
 export const Button = styled("button", {
     backgroundColor: "$accent",
@@ -15,8 +15,7 @@ export const Button = styled("button", {
     placeItems: "center",
     textAlign: "center",
     "&:focus": {
-        boxShadow:
-            "0px 1rem 2rem 0px #2EA4AB5C, inset 0rem 0rem 0px 0.5rem black",
+        boxShadow: "inset 0rem 0rem 0px 1rem black",
     },
     variants: {
         big: {
@@ -30,6 +29,9 @@ export const Button = styled("button", {
             black: {
                 backgroundColor: "$dark1",
                 high: "black",
+                "&:focus": {
+                    boxShadow: `inset 0rem 0rem 0px 1rem ${MAIN_ACCENT}`,
+                },
             },
         },
     },

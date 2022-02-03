@@ -1,10 +1,12 @@
+import { Scheme } from "@/types"
 import { Regular } from "@/typo"
 import React from "react"
 import { Cell, HeaderCell, TableContent, TableWrapper } from "./style"
 
 export const Table: React.FC<{
-    data: unknown[]
-}> = ({ data }) => (
+    scheme: Scheme
+    data: ({ id: number } & Record<string, unknown>)[]
+}> = ({ data, scheme }) => (
     <TableWrapper fillx scrollx>
         <TableContent>
             <thead>
@@ -13,21 +15,33 @@ export const Table: React.FC<{
                         opacity: 0.4,
                     }}
                 >
-                    {Object.keys(data[0]).map((key) => (
-                        <HeaderCell key={key}>
-                            <Regular>{key}</Regular>
-                        </HeaderCell>
-                    ))}
+                    {Object.keys(data[0]).map(
+                        (key) =>
+                            key in scheme?.fields && (
+                                <HeaderCell key={key}>
+                                    <Regular>
+                                        {scheme?.fields?.[key]?.display || key}
+                                    </Regular>
+                                </HeaderCell>
+                            )
+                    )}
                 </tr>
             </thead>
             <tbody>
                 {data.map((row) => (
                     <tr key={row.id}>
-                        {Object.keys(row).map((key) => (
-                            <Cell key={key}>
-                                <Regular>{row[key]}</Regular>
-                            </Cell>
-                        ))}
+                        {Object.keys(row).map(
+                            (key) =>
+                                key in scheme?.fields && (
+                                    <Cell key={key}>
+                                        <Regular>
+                                            {scheme?.fields?.[key]?.computed?.(
+                                                row[key]
+                                            ) || row[key]}
+                                        </Regular>
+                                    </Cell>
+                                )
+                        )}
                     </tr>
                 ))}
             </tbody>

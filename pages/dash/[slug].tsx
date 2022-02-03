@@ -49,7 +49,7 @@ const TableViewer: NextPage = () => {
                             </Button>
                         </Hexile>
                     </Hexile>
-                    {tableData && <Table data={tableData} />}
+                    {tableData && <Table data={tableData} scheme={tableInfo} />}
                 </Vexile>
             )}
         </Hexile>

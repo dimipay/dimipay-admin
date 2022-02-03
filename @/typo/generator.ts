@@ -1,13 +1,15 @@
 import { styled } from "@/stitches.config"
 import { Property } from "@stitches/react/types/css"
+import { ComponentType } from "react"
 
 export const createTypo = (props: {
     fontSize: number
     fontWeight: Property.FontWeight
     spatialLetter?: boolean
     color?: string
+    element?: keyof JSX.IntrinsicElements | ComponentType<any>
 }) =>
-    styled("p", {
+    styled(props.element || "p", {
         fontSize: props.fontSize + "rem",
         fontWeight: props.fontWeight,
         color: props.color || "$dark1",
@@ -17,6 +19,11 @@ export const createTypo = (props: {
             accent: {
                 true: {
                     color: "$accent",
+                },
+            },
+            white: {
+                true: {
+                    color: "white",
                 },
             },
             strike: {

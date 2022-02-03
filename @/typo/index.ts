@@ -1,9 +1,14 @@
 import { createTypo } from "./generator"
 
-export const PageHeader = createTypo({ fontSize: 4.5, fontWeight: 600 })
+export const PageHeader = createTypo({
+    fontSize: 4.5,
+    fontWeight: 600,
+    element: "h1",
+})
 export const Important = createTypo({
     fontSize: 4,
     fontWeight: 600,
+    element: "b",
 })
 export const Regular = createTypo({
     fontSize: 4,

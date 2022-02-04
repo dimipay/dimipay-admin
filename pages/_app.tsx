@@ -1,13 +1,14 @@
 import { globalCss } from "@/stitches.config"
 import { ToastContainer, toast } from "react-toastify"
 import { RecoilRoot } from "recoil"
+import "josa-complete"
 
 import "react-toastify/dist/ReactToastify.css"
 import "@/assets/font/SUIT-Variable.css"
 
 globalCss({
     ":root": {
-        fontSize: "5px",
+        fontSize: "4px",
     },
     body: {
         fontSize: "6rem",

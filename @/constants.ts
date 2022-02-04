@@ -32,15 +32,31 @@ export const GROUPED_TABLES: SchemeGroup[] = [
                     },
                     student_id: {
                         display: "교내관리번호",
+                        required: true,
                     },
                     username: {
                         display: "ID",
+                        required: true,
                     },
                     roles: {
                         display: "유형",
+                        required: true,
                         additional: {
                             type: "multiple",
-                            options: ["S", "T", "A"],
+                            options: [
+                                {
+                                    label: "S",
+                                    color: "#E54444",
+                                },
+                                {
+                                    label: "T",
+                                    color: "#E5E544",
+                                },
+                                {
+                                    label: "A",
+                                    color: "#44A2E5",
+                                },
+                            ],
                             map: {
                                 S: "학생",
                                 T: "교사",

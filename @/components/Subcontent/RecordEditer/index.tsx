@@ -1,15 +1,18 @@
-import { Button, InlineForm, Input } from "@/components"
-import { Scheme } from "@/types"
+import { Button, InlineForm } from "@/components"
+import { DataValue, Scheme } from "@/types"
 import { Important } from "@/typo"
 import { Vexile } from "@haechi/flexile"
 import { useEffect } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
+import { PropertyEditer } from "./partial"
 
 export const RecordEditer = (props: {
-    data: Record<string, unknown>
+    data: Record<string, DataValue>
     scheme: Scheme
 }) => {
-    const { register, handleSubmit, setValue } = useForm({
+    const { register, handleSubmit, setValue } = useForm<
+        Record<string, DataValue>
+    >({
         defaultValues: props.data,
     })
 
@@ -29,12 +32,10 @@ export const RecordEditer = (props: {
                 {Object.entries(props.data)
                     .filter(([column]) => column in props.scheme.fields)
                     .map(([key, data]) => (
-                        <Input
+                        <PropertyEditer
                             hooker={register(key)}
-                            name={props.scheme.fields[key].display}
-                            placeholder="asdf"
-                            defaultValue={data as string}
-                            disabled={props.scheme.fields[key].readonly}
+                            data={data}
+                            field={props.scheme?.fields[key]}
                         />
                     ))}
                 <Button block>

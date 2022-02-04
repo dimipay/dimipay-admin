@@ -9,8 +9,17 @@ export type DataValue =
     | boolean
     | null
     | undefined
-    | DataValue[]
+    | string[]
+    | number[]
+    | boolean[]
     | Relation
+
+export interface Option {
+    label: string
+    key?: string | number
+    color?: string
+    amount?: number
+}
 
 export interface Field {
     display: string
@@ -18,9 +27,11 @@ export interface Field {
     readonly?: boolean
     additional?: {
         type: "multiple"
-        options: string[] | number[]
-        map?: Record<string | number, string | number | boolean>
+        options: Option[]
+        map?: Record<string | number, string>
     }
+    placeholder?: string
+    required?: boolean
 }
 
 export interface Scheme {

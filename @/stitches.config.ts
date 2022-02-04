@@ -33,8 +33,8 @@ export const {
         },
     },
     utils: {
-        elevated: () => ({
-            boxShadow: "0px 1rem 2rem 0px #0000001F",
+        elevated: (condition: boolean) => ({
+            boxShadow: condition ? "0px 1rem 2rem 0px #0000001F" : "none",
         }),
         high: (color: "accent" | "black") => ({
             boxShadow: `0px 1rem 2rem 0px $${color}`,

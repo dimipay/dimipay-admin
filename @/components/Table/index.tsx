@@ -14,7 +14,12 @@ const getFieldValue = (field: Field, value: DataValue) => {
         field.additional.type === "multiple" &&
         field.additional.map
     )
-        return value.map((v: string | number) => field.additional.map[v] || v)
+        return value
+            .map(
+                (v: string | number | boolean) =>
+                    field.additional.map[v.toString()] || v
+            )
+            .join(", ")
 
     return value
 }

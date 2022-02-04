@@ -33,19 +33,31 @@ export const GROUPED_TABLES: SchemeGroup[] = [
                     student_id: {
                         display: "교내관리번호",
                         required: true,
-                        // validateFunc(data) {
-                        //     return "안돼요"
-                        // },
+                        validateFunc(data) {
+                            if (data < 0)
+                                return "교내관리번호는 0 이상이여야 합니다"
+                        },
                     },
                     username: {
                         display: "ID",
                         required: true,
+                        validateFunc(data: string) {
+                            if (data.length < 2)
+                                return "ID는 2글자 이상이여야 합니다"
+
+                            if (data.length > 20)
+                                return "ID는 20글자 이하이여야 합니다"
+
+                            if (!/^[a-zA-Z0-9!@#$%^&*()]+$/.test(data))
+                                return "ID는 영문과 숫자만, 특수문자 사용할 수 있습니다"
+                        },
                     },
                     roles: {
                         display: "유형",
                         required: true,
-                        validateFunc(data) {
-                            return "안돼요!!"
+                        validateFunc(data: string[]) {
+                            if (data.includes("S") && data.includes("T"))
+                                return "학생과 교사 권한을 동시에 부여할 수 없습니다"
                         },
                         additional: {
                             type: "multiple",

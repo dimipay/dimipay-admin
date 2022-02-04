@@ -29,7 +29,7 @@ export const Table: React.FC<{
     data: ({ id: number } & Record<string, DataValue>)[]
 }> = ({ data, scheme }) => {
     const setSubContent = useRecoilState(subContentAtom)[1]
-    console.log(scheme.fields)
+
     return (
         <TableWrapper fillx scrollx>
             <TableContent>

@@ -64,6 +64,3 @@ export const createTypo = (props: {
             >,
         },
     })
-
-// console.log(
-// )

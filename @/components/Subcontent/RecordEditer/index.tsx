@@ -26,7 +26,7 @@ export const RecordEditer = (props: {
     }, [props.data])
 
     const onSubmit: SubmitHandler<Record<string, unknown>> = async (data) => {
-        console.log(data)
+        alert("이제해야죠")
     }
 
     return (

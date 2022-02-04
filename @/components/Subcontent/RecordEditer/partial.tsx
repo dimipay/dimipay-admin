@@ -1,16 +1,20 @@
 import { Input, MultipleSelect } from "@/components"
+import { useConsole } from "@/functions"
 import { DataValue, Field } from "@/types"
 import React from "react"
-import { UseFormRegisterReturn } from "react-hook-form"
+import { FieldError, FieldErrors, UseFormRegisterReturn } from "react-hook-form"
 
 export const PropertyEditer: React.FC<{
     field: Field
     data: DataValue
     hooker: UseFormRegisterReturn
+    error?: FieldError
 }> = (props) => {
     const dataType = typeof props.data
     const placeholder =
         props.field.placeholder || props.field.display.을를 + " 입력해주세요"
+
+    useConsole("FIELD_ERROR", props.error?.message)
 
     if (dataType === "string")
         return (
@@ -18,8 +22,9 @@ export const PropertyEditer: React.FC<{
                 hooker={props.hooker}
                 name={props.field.display}
                 defaultValue={props.data as string}
-                disabled={props.field.readonly}
+                disabled={props.field.disabled}
                 placeholder={placeholder}
+                error={props.error?.message}
             />
         )
 
@@ -29,9 +34,10 @@ export const PropertyEditer: React.FC<{
                 hooker={props.hooker}
                 name={props.field.display}
                 defaultValue={props.data as string}
-                disabled={props.field.readonly}
+                disabled={props.field.disabled}
                 type="number"
                 placeholder={placeholder}
+                error={props.error?.message}
             />
         )
 
@@ -52,6 +58,7 @@ export const PropertyEditer: React.FC<{
                     name={props.field.display}
                     displayMap={props.field.additional.map}
                     hooker={props.hooker}
+                    error={props.error?.message}
                 />
             )
     }

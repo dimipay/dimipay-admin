@@ -18,6 +18,14 @@ export const InputWraper = styled(Vexile, {
                 backgroundColor: "$dark5",
             },
         },
+        hasError: {
+            true: {
+                borderColor: "$error",
+                "&:focus-within": {
+                    borderColor: "$error",
+                },
+            },
+        },
     },
 })
 

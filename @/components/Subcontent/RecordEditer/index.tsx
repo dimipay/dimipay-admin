@@ -3,16 +3,19 @@ import { DataValue, Scheme } from "@/types"
 import { Important } from "@/typo"
 import { Vexile } from "@haechi/flexile"
 import { useEffect } from "react"
-import { SubmitHandler, useForm } from "react-hook-form"
+import { FieldError, SubmitHandler, useForm } from "react-hook-form"
 import { PropertyEditer } from "./partial"
 
 export const RecordEditer = (props: {
     data: Record<string, DataValue>
     scheme: Scheme
 }) => {
-    const { register, handleSubmit, setValue } = useForm<
-        Record<string, DataValue>
-    >({
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm<Record<string, DataValue>>({
         defaultValues: props.data,
     })
 
@@ -33,9 +36,12 @@ export const RecordEditer = (props: {
                     .filter(([column]) => column in props.scheme.fields)
                     .map(([key, data]) => (
                         <PropertyEditer
-                            hooker={register(key)}
+                            hooker={register(key, {
+                                validate: props.scheme.fields[key].validateFunc,
+                            })}
+                            error={errors[key] as FieldError}
                             data={data}
-                            field={props.scheme?.fields[key]}
+                            field={props.scheme.fields[key]}
                         />
                     ))}
                 <Button block>

@@ -18,6 +18,15 @@ export const Wrapper = styled(Vexile, {
         backgroundColor: "white",
         zIndex: 1,
     },
+    variants: {
+        hasError: {
+            true: {
+                "&:focus > div:first-of-type": {
+                    borderColor: "$error",
+                },
+            },
+        },
+    },
 })
 
 export const Item = styled(Hexile, {

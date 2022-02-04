@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 
-const ALLOWED_LOG: string[] = ["SELECTIVE"]
+const ALLOWED_LOG: string[] = ["FIELD_ERROR"]
 
 export const useConsole = (name: string, data: unknown) => {
     useEffect(() => {

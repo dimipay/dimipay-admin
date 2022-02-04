@@ -28,11 +28,14 @@ export const GROUPED_TABLES: SchemeGroup[] = [
                 fields: {
                     id: {
                         display: "#",
-                        readonly: true,
+                        disabled: true,
                     },
                     student_id: {
                         display: "교내관리번호",
                         required: true,
+                        // validateFunc(data) {
+                        //     return "안돼요"
+                        // },
                     },
                     username: {
                         display: "ID",
@@ -41,6 +44,9 @@ export const GROUPED_TABLES: SchemeGroup[] = [
                     roles: {
                         display: "유형",
                         required: true,
+                        validateFunc(data) {
+                            return "안돼요!!"
+                        },
                         additional: {
                             type: "multiple",
                             options: [

@@ -1,4 +1,4 @@
-import { styled } from "@/stitches.config"
+import { config, styled } from "@/stitches.config"
 import { Property } from "@stitches/react/types/css"
 import { ComponentType } from "react"
 
@@ -49,5 +49,21 @@ export const createTypo = (props: {
                     },
                 ])
             ),
+            color: Object.fromEntries(
+                Object.keys(config.theme.colors).map((key) => [
+                    key,
+                    {
+                        color: `$${key}`,
+                    },
+                ])
+            ) as Record<
+                keyof typeof config.theme.colors,
+                {
+                    color: string
+                }
+            >,
         },
     })
+
+// console.log(
+// )

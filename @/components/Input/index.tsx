@@ -10,9 +10,15 @@ export const Input: React.FC<{
     defaultValue?: string
     disabled?: boolean
     type?: "number"
+    error?: string
 }> = (props) => (
     <label>
-        <InputWraper gap={1.5} padding={3} disabled={props.disabled}>
+        <InputWraper
+            gap={1.5}
+            padding={3}
+            disabled={props.disabled}
+            hasError={!!props.error}
+        >
             <Token>{props.name}</Token>
             <LogicalInput
                 type={props.type}
@@ -24,6 +30,7 @@ export const Input: React.FC<{
                     type: "password",
                 })}
             />
+            {props.error && <Token color="error">{props.error}</Token>}
         </InputWraper>
     </label>
 )

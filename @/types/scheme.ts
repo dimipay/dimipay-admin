@@ -1,3 +1,5 @@
+import { Validate } from "react-hook-form"
+
 interface Relation {
     target: string
     ids: string[]
@@ -24,7 +26,7 @@ export interface Option {
 export interface Field {
     display: string
     computed?(value: unknown): string
-    readonly?: boolean
+    disabled?: boolean
     additional?: {
         type: "multiple"
         options: Option[]
@@ -32,6 +34,7 @@ export interface Field {
     }
     placeholder?: string
     required?: boolean
+    validateFunc?: Validate<DataValue>
 }
 
 export interface Scheme {

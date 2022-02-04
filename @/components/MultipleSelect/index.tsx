@@ -14,9 +14,10 @@ export const MultipleSelect: React.FC<{
     options: Option[]
     data: (string | number)[]
     name: string
-    displayMap?: Record<string | number, string>
     placeholder: string
     hooker: UseFormRegisterReturn
+    displayMap?: Record<string | number, string>
+    error?: string
 }> = (props) => {
     const [opened, setOpened] = useState(false)
     const [logicalValue, setValue] = useState(props.data)
@@ -27,20 +28,26 @@ export const MultipleSelect: React.FC<{
         )
     )
 
-    const selectRef = React.useRef<HTMLSelectElement>(null)
+    const logicalSelect = React.useRef<HTMLSelectElement>(null)
+    const selectableArea = React.useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (selectRef.current) {
+        if (logicalSelect.current) {
             props.hooker.onBlur({
-                target: selectRef.current,
+                target: logicalSelect.current,
                 type: "blur",
             })
         }
     }, [props.hooker, logicalValue])
 
+    useEffect(() => {
+        logicalSelect.current.parentElement.focus()
+    }, [props.error, logicalSelect])
+
     return (
         <label>
             <Wrapper
+                hasError={!!props.error}
                 onKeyDown={clickWithSpace}
                 onFocus={() => setOpened(true)}
                 onBlur={() => setOpened(false)}
@@ -50,7 +57,7 @@ export const MultipleSelect: React.FC<{
                     style={{ display: "none" }}
                     name={props.hooker.name}
                     ref={(r) => {
-                        selectRef.current = r
+                        logicalSelect.current = r
                         props.hooker.ref(r)
                     }}
                     multiple
@@ -65,7 +72,7 @@ export const MultipleSelect: React.FC<{
                         </option>
                     ))}
                 </select>
-                <DataView gap={1.5} padding={3}>
+                <DataView gap={1.5} padding={3} hasError={!!props.error}>
                     <Token>{props.name}</Token>
                     <Regular dark={logicalValue.length ? 1 : 3}>
                         {logicalValue.length
@@ -78,6 +85,7 @@ export const MultipleSelect: React.FC<{
                               ).join(", ")
                             : props.placeholder}
                     </Regular>
+                    {props.error && <Token color="error">{props.error}</Token>}
                 </DataView>
                 {opened && (
                     <>

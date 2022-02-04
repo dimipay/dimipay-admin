@@ -1,6 +1,10 @@
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
-import { useRecoilValue } from "recoil"
+import {
+    useRecoilState,
+    useRecoilState_TRANSITION_SUPPORT_UNSTABLE,
+    useRecoilValue,
+} from "recoil"
 import { NextPage } from "next"
 
 import { table, useConsole, useKone } from "@/functions"
@@ -14,7 +18,7 @@ import { SubcontentWrapper } from "./style"
 
 const TableViewer: NextPage = () => {
     const router = useRouter()
-    const subcontent = useRecoilValue(subContentAtom)
+    const [subcontent, setSubcontent] = useRecoilState(subContentAtom)
     const slug = router.query.slug
 
     const tableInfo = TABLES.find((table) => table.slug === slug)
@@ -62,6 +66,7 @@ const TableViewer: NextPage = () => {
                             height={3}
                             width={3}
                             src={closeIcon}
+                            onClick={() => setSubcontent(undefined)}
                         />
                     </Hexile>
                     {subcontent.element}

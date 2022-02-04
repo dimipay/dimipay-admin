@@ -52,7 +52,7 @@ export const Login = () => {
                         />
                     </Vexile>
                     <Description>계정 문의 : reactdev@kakao.com</Description>
-                    <Button big>
+                    <Button big block>
                         <Important white>로그인</Important>
                     </Button>
                 </LoginWrapper>

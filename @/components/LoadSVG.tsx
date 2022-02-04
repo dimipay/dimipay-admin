@@ -6,9 +6,11 @@ export const LoadSVG: React.FC<{
     src: string
     alt: string
     color?: string
+    onClick?(): void
 }> = (props) => {
     return (
         <div
+            onClick={props.onClick}
             style={{
                 position: "relative",
                 minHeight: props.height + "rem",

@@ -22,7 +22,6 @@ export const Button = styled("button", {
             true: {
                 padding: "4rem 6rem",
                 gap: "3rem",
-                display: "block",
             },
         },
         color: {
@@ -32,6 +31,11 @@ export const Button = styled("button", {
                 "&:focus": {
                     boxShadow: `inset 0rem 0rem 0px 1rem ${MAIN_ACCENT}`,
                 },
+            },
+        },
+        block: {
+            true: {
+                display: "block",
             },
         },
     },

@@ -7,6 +7,7 @@ export const table = Object.fromEntries(
         e.slug,
         {
             get: kone<tableKone["GET"]>("table/" + e.slug, "GET"),
+            patch: kone<tableKone["PATCH"]>("table/" + e.slug, "PATCH"),
         },
     ])
 )

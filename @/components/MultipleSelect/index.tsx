@@ -29,19 +29,18 @@ export const MultipleSelect: React.FC<{
     )
 
     const logicalSelect = React.useRef<HTMLSelectElement>(null)
-    const selectableArea = React.useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         if (logicalSelect.current) {
-            props.hooker.onBlur({
+            props.hooker.onChange({
                 target: logicalSelect.current,
-                type: "blur",
+                type: "change",
             })
         }
     }, [props.hooker, logicalValue])
 
     useEffect(() => {
-        logicalSelect.current.parentElement.focus()
+        if (props.error) logicalSelect.current.parentElement.focus()
     }, [props.error, logicalSelect])
 
     return (

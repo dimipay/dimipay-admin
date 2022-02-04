@@ -1,6 +1,6 @@
 import { TABLES } from "@/constants"
 import { prisma } from "@/storage"
-import { Operator } from "@/types"
+import { HandlerError, Operator, TableRecord } from "@/types"
 import { endpoint } from ".."
 
 const actions = {
@@ -17,7 +17,7 @@ const actions = {
         slug: {
             slug: string
         }
-    ): Promise<unknown[]> {
+    ): Promise<TableRecord[]> {
         const table = TABLES.find((table) => table.slug === slug.slug)
 
         try {
@@ -60,6 +60,35 @@ const actions = {
             console.log(e)
             throw e
         }
+    },
+    async PATCH(
+        props: {
+            id: number
+            data: Omit<TableRecord, "id">
+        },
+        slug: {
+            slug: string
+        }
+    ) {
+        const table = TABLES.find((table) => table.slug === slug.slug)
+
+        if (!table)
+            throw new HandlerError(
+                `요청한 테이블(${slug.slug})을 찾을 수 없어요`,
+                400
+            )
+        console.log("됐대?", table.tableName, props.data, props.id)
+
+        const res: TableRecord = await prisma[table.tableName].update({
+            where: {
+                id: props.id,
+            },
+            data: props.data,
+        })
+
+        if (!res.id) throw new HandlerError(`수정에 오류가 발생했어요`, 500)
+
+        return res
     },
 }
 

@@ -1,15 +1,11 @@
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
-import {
-    useRecoilState,
-    useRecoilState_TRANSITION_SUPPORT_UNSTABLE,
-    useRecoilValue,
-} from "recoil"
+import { useRecoilState } from "recoil"
 import { NextPage } from "next"
 
-import { table, useConsole, useKone } from "@/functions"
+import { table, useKone } from "@/functions"
 import { Button, LoadSVG, Table } from "@/components"
-import { GROUPED_TABLES, TABLES } from "@/constants"
+import { TABLES } from "@/constants"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
 import { Important, PageHeader } from "@/typo"
 import { subContentAtom } from "@/coil"
@@ -22,7 +18,7 @@ const TableViewer: NextPage = () => {
     const slug = router.query.slug
 
     const tableInfo = TABLES.find((table) => table.slug === slug)
-    const tableData = useKone(table[tableInfo?.slug]?.get, {
+    const [tableData, reload] = useKone(table[tableInfo?.slug]?.get, {
         amount: 3,
     })
 
@@ -54,7 +50,13 @@ const TableViewer: NextPage = () => {
                             </Button>
                         </Hexile>
                     </Hexile>
-                    {tableData && <Table data={tableData} scheme={tableInfo} />}
+                    {tableData && (
+                        <Table
+                            records={tableData}
+                            scheme={tableInfo}
+                            onReloadRequested={reload}
+                        />
+                    )}
                 </Vexile>
             )}
             {subcontent && (

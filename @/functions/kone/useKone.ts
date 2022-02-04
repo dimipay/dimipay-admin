@@ -1,18 +1,22 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 
 export const useKone = <Input, Output>(
     koneFunction: ((data: Input) => Promise<Output>) | undefined,
     input: Input
-): undefined | Output => {
+): undefined | [Output, () => void] => {
     const [result, setResult] = useState<Output>()
     const serialized = JSON.stringify(input)
 
-    useEffect(() => {
+    const load = useCallback(() => {
         ;(async () => {
             const res = await koneFunction?.(input)
             setResult(res)
         })()
     }, [koneFunction, serialized])
 
-    return result
+    useEffect(() => {
+        load()
+    }, [koneFunction, serialized])
+
+    return [result, load]
 }

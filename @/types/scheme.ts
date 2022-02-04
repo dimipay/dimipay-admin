@@ -48,3 +48,7 @@ export interface SchemeGroup {
     groupName: string
     content: Scheme[]
 }
+
+export type TableRecord = Record<string, DataValue> & {
+    id: number
+}

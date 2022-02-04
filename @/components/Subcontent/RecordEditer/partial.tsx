@@ -2,7 +2,7 @@ import { Input, MultipleSelect } from "@/components"
 import { useConsole } from "@/functions"
 import { DataValue, Field } from "@/types"
 import React from "react"
-import { FieldError, FieldErrors, UseFormRegisterReturn } from "react-hook-form"
+import { FieldError, UseFormRegisterReturn } from "react-hook-form"
 
 export const PropertyEditer: React.FC<{
     field: Field

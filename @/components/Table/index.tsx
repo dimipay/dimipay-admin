@@ -1,10 +1,12 @@
-import { subContentAtom } from "@/coil"
-import { DataValue, Field, Scheme } from "@/types"
-import { PageHeader, Regular } from "@/typo"
-import React from "react"
 import { useRecoilState } from "recoil"
-import { RecordEditer } from ".."
+import React from "react"
+
+import { DataValue, Field, Scheme, TableRecord } from "@/types"
+import { subContentAtom } from "@/coil"
+import { Regular } from "@/typo"
+
 import { Cell, HeaderCell, TableContent, TableWrapper } from "./style"
+import { RecordEditer } from ".."
 
 const getFieldValue = (field: Field, value: DataValue) => {
     if (field.computed) return field.computed(value)
@@ -26,8 +28,9 @@ const getFieldValue = (field: Field, value: DataValue) => {
 
 export const Table: React.FC<{
     scheme: Scheme
-    data: ({ id: number } & Record<string, DataValue>)[]
-}> = ({ data, scheme }) => {
+    records: TableRecord[]
+    onReloadRequested(): void
+}> = ({ records: data, scheme, onReloadRequested }) => {
     const setSubContent = useRecoilState(subContentAtom)[1]
 
     return (
@@ -60,6 +63,9 @@ export const Table: React.FC<{
                                 setSubContent({
                                     element: (
                                         <RecordEditer
+                                            onReloadRequested={
+                                                onReloadRequested
+                                            }
                                             data={row}
                                             scheme={scheme}
                                         />

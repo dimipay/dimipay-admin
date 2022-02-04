@@ -4,9 +4,11 @@ import { toast } from "react-toastify"
 export const kone =
     <koneFunc extends (...args: any) => any>(
         endpoint: string,
-        method: "POST" | "GET"
+        method: "POST" | "GET" | "PATCH" | "DELETE"
     ) =>
-    async (data: Parameters<koneFunc>[0]) => {
+    async (
+        data: Parameters<koneFunc>[0]
+    ): Promise<Awaited<ReturnType<koneFunc>>> => {
         try {
             const url =
                 `/api/${endpoint}` +

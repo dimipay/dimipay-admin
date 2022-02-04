@@ -11,6 +11,14 @@ export const InputWraper = styled(Vexile, {
         backgroundColor: "white",
         elevated: true,
     },
+    variants: {
+        disabled: {
+            true: {
+                borderColor: "$dark4",
+                backgroundColor: "$dark5",
+            },
+        },
+    },
 })
 
 export const LogicalInput = styled("input", {

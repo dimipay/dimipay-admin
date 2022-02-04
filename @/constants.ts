@@ -28,6 +28,7 @@ export const GROUPED_TABLES: SchemeGroup[] = [
                 fields: {
                     id: {
                         display: "#",
+                        readonly: true,
                     },
                     student_id: {
                         display: "교내관리번호",
@@ -37,17 +38,14 @@ export const GROUPED_TABLES: SchemeGroup[] = [
                     },
                     roles: {
                         display: "유형",
-                        computed(value: string[]) {
-                            return value
-                                .map(
-                                    (e) =>
-                                        ({
-                                            S: "학생",
-                                            T: "교사",
-                                            A: "관리자",
-                                        }[e])
-                                )
-                                .join(", ")
+                        additional: {
+                            type: "multiple",
+                            options: ["S", "T", "A"],
+                            map: {
+                                S: "학생",
+                                T: "교사",
+                                A: "관리자",
+                            },
                         },
                     },
                 },

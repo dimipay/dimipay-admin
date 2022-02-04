@@ -1,14 +1,27 @@
 import { subContentAtom } from "@/coil"
-import { Scheme } from "@/types"
+import { DataValue, Field, Scheme } from "@/types"
 import { PageHeader, Regular } from "@/typo"
 import React from "react"
 import { useRecoilState } from "recoil"
 import { RecordEditer } from ".."
 import { Cell, HeaderCell, TableContent, TableWrapper } from "./style"
 
+const getFieldValue = (field: Field, value: DataValue) => {
+    if (field.computed) return field.computed(value)
+
+    if (
+        value instanceof Array &&
+        field.additional.type === "multiple" &&
+        field.additional.map
+    )
+        return value.map((v: string | number) => field.additional.map[v] || v)
+
+    return value
+}
+
 export const Table: React.FC<{
     scheme: Scheme
-    data: ({ id: number } & Record<string, unknown>)[]
+    data: ({ id: number } & Record<string, DataValue>)[]
 }> = ({ data, scheme }) => {
     const setSubContent = useRecoilState(subContentAtom)[1]
     console.log(scheme.fields)
@@ -55,10 +68,10 @@ export const Table: React.FC<{
                                     key in scheme?.fields && (
                                         <Cell key={key}>
                                             <Regular>
-                                                {scheme?.fields?.[
-                                                    key
-                                                ]?.computed?.(row[key]) ||
-                                                    row[key]}
+                                                {getFieldValue(
+                                                    scheme.fields[key],
+                                                    row[key]
+                                                )}
                                             </Regular>
                                         </Cell>
                                     )

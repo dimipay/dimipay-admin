@@ -34,6 +34,7 @@ export const RecordEditer = (props: {
                             name={props.scheme.fields[key].display}
                             placeholder="asdf"
                             defaultValue={data as string}
+                            disabled={props.scheme.fields[key].readonly}
                         />
                     ))}
                 <Button block>

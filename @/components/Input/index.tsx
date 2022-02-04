@@ -9,11 +9,13 @@ export const Input: React.FC<{
     hideContent?: boolean
     hooker?: UseFormRegisterReturn
     defaultValue?: string
-}> = (props, ref) => (
+    disabled?: boolean
+}> = (props) => (
     <label>
-        <InputWraper gap={1.5} padding={3}>
+        <InputWraper gap={1.5} padding={3} disabled={props.disabled}>
             <Token>{props.name}</Token>
             <LogicalInput
+                disabled={props.disabled}
                 {...props.hooker}
                 defaultValue={props.defaultValue}
                 placeholder={props.placeholder}

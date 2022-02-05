@@ -77,7 +77,35 @@ const actions = {
                 `요청한 테이블(${slug.slug})을 찾을 수 없어요`,
                 400
             )
-        console.log("됐대?", table.tableName, props.data, props.id)
+
+        for (const key in props.data) {
+            const field = table.fields[key]
+
+            if (!field) continue
+
+            if (field.disabled)
+                throw new HandlerError(
+                    `${field.display.은는} 수정이 불가능해요`,
+                    400
+                )
+
+            const validateResult = await table.fields[key].validateFunc(
+                props.data[key]
+            )
+
+            if (typeof validateResult === "string")
+                throw new HandlerError(
+                    `${table.fields[key].display.이가} 올바르지 않아요. ` +
+                        validateResult,
+                    400
+                )
+
+            if (validateResult === false)
+                throw new HandlerError(
+                    `${table.fields[key].display.이가} 올바르지 않아요`,
+                    400
+                )
+        }
 
         const res: TableRecord = await prisma[table.tableName].update({
             where: {

@@ -34,7 +34,9 @@ export interface Field {
     }
     placeholder?: string
     required?: boolean
-    validateFunc?: Validate<DataValue>
+    validateFunc?: (
+        data: DataValue
+    ) => boolean | undefined | string | Promise<boolean | undefined | string>
 }
 
 export interface Scheme {

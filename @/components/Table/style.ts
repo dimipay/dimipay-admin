@@ -9,13 +9,22 @@ export const TableWrapper = styled(Vexile, {
 
 export const TableContent = styled("table", {
     height: "100%",
+    width: "100%",
 })
 
 export const Cell = styled("td", {
-    padding: "3rem",
+    padding: "3rem 5rem",
+    whiteSpace: "nowrap",
+    "&:last-child": {
+        width: "100%",
+    },
 })
 
 export const HeaderCell = styled("th", {
-    padding: "3rem",
+    padding: "3rem 5rem",
     textAlign: "left",
+    whiteSpace: "nowrap",
+    "&:last-child": {
+        width: "100%",
+    },
 })

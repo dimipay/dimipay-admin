@@ -7,31 +7,16 @@ import { Regular } from "@/typo"
 
 import { Cell, HeaderCell, TableContent, TableWrapper } from "./style"
 import { RecordEditer } from ".."
-
-const getFieldValue = (field: Field, value: DataValue) => {
-    if (field.computed) return field.computed(value)
-
-    if (
-        value instanceof Array &&
-        field.additional.type === "multiple" &&
-        field.additional.map
-    )
-        return value
-            .map(
-                (v: string | number | boolean) =>
-                    field.additional.map[v.toString()] || v
-            )
-            .join(", ")
-
-    return value
-}
+import { Row } from "./partial"
 
 export const Table: React.FC<{
     scheme: Scheme
     records: TableRecord[]
     onReloadRequested(): void
 }> = ({ records: data, scheme, onReloadRequested }) => {
-    const setSubContent = useRecoilState(subContentAtom)[1]
+    const [selectedRecordIds, setSelectedRecordIds] = React.useState<number[]>(
+        []
+    )
 
     return (
         <TableWrapper fillx scrollx>
@@ -42,6 +27,18 @@ export const Table: React.FC<{
                             opacity: 0.4,
                         }}
                     >
+                        <HeaderCell>
+                            <input
+                                type="checkbox"
+                                onChange={(e) =>
+                                    setSelectedRecordIds(
+                                        e.currentTarget.checked
+                                            ? data.map((e) => e.id)
+                                            : []
+                                    )
+                                }
+                            />
+                        </HeaderCell>
                         {Object.keys(data[0]).map(
                             (key) =>
                                 key in scheme?.fields && (
@@ -57,37 +54,23 @@ export const Table: React.FC<{
                 </thead>
                 <tbody>
                     {data.map((row) => (
-                        <tr
-                            key={row.id}
-                            onClick={() =>
-                                setSubContent({
-                                    element: (
-                                        <RecordEditer
-                                            onReloadRequested={
-                                                onReloadRequested
-                                            }
-                                            data={row}
-                                            scheme={scheme}
-                                        />
-                                    ),
-                                    name: scheme.name + " 상세",
-                                })
-                            }
-                        >
-                            {Object.keys(row).map(
-                                (key) =>
-                                    key in scheme?.fields && (
-                                        <Cell key={key}>
-                                            <Regular>
-                                                {getFieldValue(
-                                                    scheme.fields[key],
-                                                    row[key]
-                                                )}
-                                            </Regular>
-                                        </Cell>
+                        <Row
+                            selected={selectedRecordIds.includes(row.id)}
+                            onReloadRequested={onReloadRequested}
+                            onCheckboxClicked={(selected) => {
+                                if (selected)
+                                    setSelectedRecordIds((prev) =>
+                                        prev.filter((id) => id !== row.id)
                                     )
-                            )}
-                        </tr>
+                                else
+                                    setSelectedRecordIds((prev) => [
+                                        ...prev,
+                                        row.id,
+                                    ])
+                            }}
+                            row={row}
+                            scheme={scheme}
+                        />
                     ))}
                 </tbody>
             </TableContent>

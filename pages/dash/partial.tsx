@@ -17,7 +17,7 @@ export const Sidebar = (
             <Vexile gap={2}>
                 <Important>{group.groupName}</Important>
                 {group.content.map((table) => (
-                    <PlainLink href={`/dash/${table.slug}`}>
+                    <PlainLink href={`/dash/${table.tableName}`}>
                         <Regular dark={3}>{table.name}</Regular>
                     </PlainLink>
                 ))}

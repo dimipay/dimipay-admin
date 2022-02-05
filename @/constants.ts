@@ -1,5 +1,5 @@
 import { USER_SCHEME } from "./schemes"
-import { SchemeGroup } from "./types"
+import { SchemeGroup, SLUG } from "./types"
 
 export const assert = (
     name: string,
@@ -19,26 +19,14 @@ export const GROUPED_TABLES: SchemeGroup[] = [
         content: [
             {
                 name: "상품",
-                tableName: "dimipay_admin_product",
-                slug: "product",
+                tableName: SLUG.product,
             },
             USER_SCHEME,
         ],
     },
     {
         groupName: "관리",
-        content: [
-            {
-                name: "상품",
-                tableName: "dimipay_admin_product",
-                slug: "product",
-            },
-            {
-                name: "사용자",
-                tableName: "dimipay_users",
-                slug: "user",
-            },
-        ],
+        content: [],
     },
 ]
 

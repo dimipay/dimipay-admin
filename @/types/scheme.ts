@@ -1,5 +1,10 @@
 import { Validate } from "react-hook-form"
 
+export enum SLUG {
+    user = "dimipay_users",
+    product = "product",
+}
+
 interface Relation {
     target: string
     ids: string[]
@@ -44,15 +49,14 @@ export interface Field {
 
 export interface Scheme {
     name: string
-    tableName: string
-    slug: string
+    tableName: SLUG
     fields?: Record<string, Field>
     actions?: {
         button: {
             label: string
             color: "danger" | "normal" | "accent"
         }
-        func(selectedRecords: TableRecord[]): void
+        func(selectedRecords: TableRecord[], scheme: Scheme): void
     }[]
 }
 

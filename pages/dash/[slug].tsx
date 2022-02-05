@@ -11,14 +11,18 @@ import { Important, PageHeader } from "@/typo"
 import { subContentAtom } from "@/coil"
 import { Sidebar } from "./partial"
 import { SubcontentWrapper } from "./style"
+import { SLUG } from "@/types"
 
 const TableViewer: NextPage = () => {
     const router = useRouter()
     const [subcontent, setSubcontent] = useRecoilState(subContentAtom)
-    const slug = router.query.slug
+    const slug = router.query.slug as string
 
-    const tableInfo = TABLES.find((table) => table.slug === slug)
-    const [tableData, reload] = useKone(table[tableInfo?.slug]?.get, {
+    const tableInfo = TABLES.find((table) => table.tableName === SLUG[slug])
+
+    console.log(table[tableInfo?.tableName])
+
+    const [tableData, reload] = useKone(table[tableInfo?.tableName]?.GET, {
         amount: 3,
     })
 

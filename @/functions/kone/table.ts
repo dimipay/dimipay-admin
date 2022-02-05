@@ -1,13 +1,24 @@
-import { TABLES } from "@/constants"
-import { tableKone } from "pages/api/table/[slug]"
+import { SLUG } from "@/types"
+import { tableKone } from "pages/api/table/[tableName]"
 import { kone } from "./core"
 
+const METHOD = ["GET", "PATCH", "DELETE"] as const
+
 export const table = Object.fromEntries(
-    TABLES.map((e) => [
-        e.slug,
-        {
-            get: kone<tableKone["GET"]>("table/" + e.slug, "GET"),
-            patch: kone<tableKone["PATCH"]>("table/" + e.slug, "PATCH"),
-        },
+    Object.keys(SLUG).map((slug) => [
+        SLUG[slug],
+        Object.fromEntries(
+            METHOD.map((method) => [
+                method,
+                kone<tableKone[typeof method]>("table/" + SLUG[slug], method),
+            ])
+        ),
     ])
-)
+) as Record<
+    SLUG,
+    {
+        [key in "GET" | "PATCH" | "DELETE"]: (
+            input: Parameters<tableKone[key]>[0]
+        ) => ReturnType<tableKone[key]>
+    }
+>

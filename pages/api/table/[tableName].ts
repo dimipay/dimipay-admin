@@ -1,6 +1,7 @@
 import { TABLES } from "@/constants"
 import { prisma } from "@/storage"
 import { HandlerError, Operator, TableRecord } from "@/types"
+import { Prisma } from "@prisma/client"
 import { endpoint } from ".."
 
 const actions = {
@@ -15,10 +16,10 @@ const actions = {
             lastId?: number
         },
         slug: {
-            slug: string
+            tableName: string
         }
     ): Promise<TableRecord[]> {
-        const table = TABLES.find((table) => table.slug === slug.slug)
+        const table = TABLES.find((table) => table.tableName === slug.tableName)
 
         try {
             const filter = {
@@ -67,14 +68,14 @@ const actions = {
             data: Omit<TableRecord, "id">
         },
         slug: {
-            slug: string
+            tableName: string
         }
     ) {
-        const table = TABLES.find((table) => table.slug === slug.slug)
+        const table = TABLES.find((table) => table.tableName === slug.tableName)
 
         if (!table)
             throw new HandlerError(
-                `요청한 테이블(${slug.slug})을 찾을 수 없어요`,
+                `요청한 테이블(${slug.tableName})을 찾을 수 없어요`,
                 400
             )
 
@@ -117,6 +118,28 @@ const actions = {
         if (!res.id) throw new HandlerError(`수정에 오류가 발생했어요`, 500)
 
         return res
+    },
+    async DELETE(
+        props: { ids: number[] },
+        {
+            tableName,
+        }: {
+            tableName: string
+        }
+    ) {
+        const result: Prisma.BatchPayload = await prisma[tableName].deleteMany({
+            where: {
+                id: {
+                    in: props.ids,
+                },
+            },
+        })
+
+        console.log(result)
+
+        return {
+            ok: true,
+        }
     },
 }
 

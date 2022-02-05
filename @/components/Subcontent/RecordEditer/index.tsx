@@ -30,7 +30,7 @@ export const RecordEditer = (props: {
     }, [props.data])
 
     const onSubmit: SubmitHandler<TableRecord> = async (data) => {
-        const res = await table[props.scheme.slug].patch({
+        const res = await table[props.scheme.tableName].patch({
             id: props.data.id,
             data: Object.fromEntries(
                 Object.entries(data).filter(

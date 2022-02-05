@@ -74,9 +74,6 @@ export const Table: React.FC<{
             </TableContent>
             {selectedRecordIds.length !== 0 && (
                 <ActionToolbars gap={2} padding={4}>
-                    <Button>
-                        <Important white>삭제</Important>
-                    </Button>
                     {scheme.actions?.map((action) => (
                         <Button
                             key={action.button.label}
@@ -84,7 +81,8 @@ export const Table: React.FC<{
                                 action.func(
                                     data.filter((d) =>
                                         selectedRecordIds.includes(d.id)
-                                    )
+                                    ),
+                                    scheme
                                 )
                             }
                         >

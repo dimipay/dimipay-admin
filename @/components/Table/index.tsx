@@ -1,7 +1,7 @@
 import React from "react"
 
 import { Scheme, TableRecord } from "@/types"
-import { Important, Regular } from "@/typo"
+import { Description, Important, Regular } from "@/typo"
 
 import { ActionToolbars, HeaderCell, TableContent, TableWrapper } from "./style"
 import { Row } from "./partial"
@@ -74,21 +74,28 @@ export const Table: React.FC<{
             </TableContent>
             {selectedRecordIds.length !== 0 && (
                 <ActionToolbars gap={2} padding={4}>
-                    {scheme.actions?.map((action) => (
-                        <Button
-                            key={action.button.label}
-                            onClick={() =>
-                                action.func(
-                                    data.filter((d) =>
-                                        selectedRecordIds.includes(d.id)
-                                    ),
-                                    scheme
-                                )
-                            }
-                        >
-                            <Important white>{action.button.label}</Important>
-                        </Button>
-                    ))}
+                    {scheme.actions.length ? (
+                        scheme.actions?.map((action) => (
+                            <Button
+                                key={action.button.label}
+                                onClick={async () => {
+                                    await action.func(
+                                        data.filter((d) =>
+                                            selectedRecordIds.includes(d.id)
+                                        ),
+                                        scheme
+                                    )
+                                    onReloadRequested()
+                                }}
+                            >
+                                <Important white>
+                                    {action.button.label}
+                                </Important>
+                            </Button>
+                        ))
+                    ) : (
+                        <Description>수행 가능한 동작이 없어요</Description>
+                    )}
                 </ActionToolbars>
             )}
         </TableWrapper>

@@ -47,17 +47,19 @@ export interface Field {
     ) => boolean | undefined | string | Promise<boolean | undefined | string>
 }
 
+export interface ToolbarAction {
+    button: {
+        label: string
+        color: "danger" | "normal" | "accent"
+    }
+    func(selectedRecords: TableRecord[], scheme: Scheme): void
+}
+
 export interface Scheme {
     name: string
     tableName: SLUG
     fields?: Record<string, Field>
-    actions?: {
-        button: {
-            label: string
-            color: "danger" | "normal" | "accent"
-        }
-        func(selectedRecords: TableRecord[], scheme: Scheme): void
-    }[]
+    actions?: ToolbarAction[]
 }
 
 export interface SchemeGroup {

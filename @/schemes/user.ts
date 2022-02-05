@@ -1,6 +1,6 @@
 import { Scheme, SLUG, TableRecord } from "@/types"
 import { dimipay_users } from "@prisma/client"
-import { DELETE_SELECTED_RECORDS } from "./common"
+import { DELETE_SELECTED_RECORDS_ACTION } from "./common"
 
 export const USER_SCHEME: Scheme = {
     name: "사용자",
@@ -63,13 +63,7 @@ export const USER_SCHEME: Scheme = {
         },
     },
     actions: [
-        {
-            button: {
-                color: "accent",
-                label: "삭제",
-            },
-            func: DELETE_SELECTED_RECORDS,
-        },
+        DELETE_SELECTED_RECORDS_ACTION,
         {
             button: {
                 color: "accent",

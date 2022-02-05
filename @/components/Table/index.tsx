@@ -1,13 +1,11 @@
-import { useRecoilState } from "recoil"
 import React from "react"
 
-import { DataValue, Field, Scheme, TableRecord } from "@/types"
-import { subContentAtom } from "@/coil"
+import { Scheme, TableRecord } from "@/types"
 import { Regular } from "@/typo"
 
-import { Cell, HeaderCell, TableContent, TableWrapper } from "./style"
-import { RecordEditer } from ".."
+import { ActionToolbars, HeaderCell, TableContent, TableWrapper } from "./style"
 import { Row } from "./partial"
+import { Button, DividerLine } from ".."
 
 export const Table: React.FC<{
     scheme: Scheme
@@ -19,7 +17,7 @@ export const Table: React.FC<{
     )
 
     return (
-        <TableWrapper fillx scrollx>
+        <TableWrapper fillx filly scrollx y="space">
             <TableContent>
                 <thead>
                     <tr
@@ -74,6 +72,12 @@ export const Table: React.FC<{
                     ))}
                 </tbody>
             </TableContent>
+            {selectedRecordIds.length !== 0 && (
+                <ActionToolbars gap={2} padding={4}>
+                    <Button>판매중지</Button>
+                    <Button>삭제</Button>
+                </ActionToolbars>
+            )}
         </TableWrapper>
     )
 }

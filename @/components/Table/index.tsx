@@ -1,7 +1,7 @@
 import React from "react"
 
 import { Scheme, TableRecord } from "@/types"
-import { Regular } from "@/typo"
+import { Important, Regular } from "@/typo"
 
 import { ActionToolbars, HeaderCell, TableContent, TableWrapper } from "./style"
 import { Row } from "./partial"
@@ -74,8 +74,23 @@ export const Table: React.FC<{
             </TableContent>
             {selectedRecordIds.length !== 0 && (
                 <ActionToolbars gap={2} padding={4}>
-                    <Button>판매중지</Button>
-                    <Button>삭제</Button>
+                    <Button>
+                        <Important white>삭제</Important>
+                    </Button>
+                    {scheme.actions?.map((action) => (
+                        <Button
+                            key={action.button.label}
+                            onClick={() =>
+                                action.func(
+                                    data.filter((d) =>
+                                        selectedRecordIds.includes(d.id)
+                                    )
+                                )
+                            }
+                        >
+                            <Important white>{action.button.label}</Important>
+                        </Button>
+                    ))}
                 </ActionToolbars>
             )}
         </TableWrapper>

@@ -8,7 +8,6 @@ export const TableWrapper = styled(Vexile, {
 })
 
 export const TableContent = styled("table", {
-    // height: "100%",
     width: "100%",
 })
 
@@ -21,7 +20,7 @@ export const Cell = styled("td", {
 })
 
 export const HeaderCell = styled("th", {
-    padding: "3rem 4rem",
+    padding: "3rem 5rem",
     textAlign: "left",
     whiteSpace: "nowrap",
     borderBottom: "0.5rem solid $dark5",

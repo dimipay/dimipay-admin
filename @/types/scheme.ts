@@ -9,11 +9,13 @@ export type DataValue =
     | string
     | number
     | boolean
+    | Date
     | null
     | undefined
     | string[]
     | number[]
     | boolean[]
+    | Date[]
     | Relation
 
 export interface Option {
@@ -25,6 +27,7 @@ export interface Option {
 
 export interface Field {
     display: string
+    description?: string
     computed?(value: unknown): string
     disabled?: boolean
     additional?: {
@@ -44,6 +47,13 @@ export interface Scheme {
     tableName: string
     slug: string
     fields?: Record<string, Field>
+    actions?: {
+        button: {
+            label: string
+            color: "danger" | "normal" | "accent"
+        }
+        func(selectedRecords: TableRecord[]): void
+    }[]
 }
 
 export interface SchemeGroup {

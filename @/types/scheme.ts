@@ -73,31 +73,6 @@ export interface Scheme {
     actions?: ToolbarAction[]
 }
 
-function isToolbarAction(d: any): d is ToolbarAction {
-    return (
-        typeof d === "object" &&
-        typeof d.button === "object" &&
-        typeof d.button.label === "string" &&
-        typeof d.button.color === "string" &&
-        ["danger", "normal", "accent"].includes(d.button.color) &&
-        typeof d.func === "function"
-    )
-}
-
-function isScheme(d: any): d is Scheme {
-    return (
-        typeof d === "object" &&
-        typeof d.name === "string" &&
-        typeof d.tableName === "string" &&
-        ((typeof d.actions === "object" &&
-            d.every((d) => isToolbarAction(d))) ||
-            d.actions === undefined) &&
-        ((typeof d.fields === "object" &&
-            Object.values(d.fields).every((d) => isField(d))) ||
-            d.fields === undefined)
-    )
-}
-
 export interface SchemeGroup {
     groupName: string
     content: Scheme[]

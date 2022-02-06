@@ -1,6 +1,6 @@
 import { Vexile } from "@haechi/flexile"
 
-import { LoadSVG, PlainLink } from "@/components"
+import { LoadSVG, PlainLink, Redirector } from "@/components"
 import { GROUPED_TABLES } from "@/constants"
 import { Important, Regular } from "@/typo"
 import { SLUG } from "@/types"
@@ -17,10 +17,11 @@ export const Sidebar = (
             src={logo}
         />
         {GROUPED_TABLES.map((group) => (
-            <Vexile gap={2}>
+            <Vexile gap={2} key={group.groupName}>
                 <Important>{group.groupName}</Important>
                 {group.content.map((table) => (
                     <PlainLink
+                        key={table.tableName}
                         href={`/dash/${
                             Object.entries(SLUG).find(
                                 ([key, v]) => v === table.tableName
@@ -34,3 +35,5 @@ export const Sidebar = (
         ))}
     </SidebarWrapper>
 )
+
+export default Redirector

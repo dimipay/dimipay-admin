@@ -21,26 +21,26 @@ export const NewRecord = (props: {
         reValidateMode: "onChange",
     })
 
-    console.log(props.scheme)
-
     const onSubmit: SubmitHandler<TableRecord> = async (data) => {
         console.log(data)
-        // const res = await table[props.scheme.tableName].POST({
-        //     id: props.data.id,
-        //     data: Object.fromEntries(
-        //         Object.entries(data).filter(
-        //             ([column]) =>
-        //                 column in props.scheme.fields &&
-        //                 props.scheme.fields[column].disabled !== true
-        //         )
-        //     ),
-        // })
-        // if (res.id) {
-        //     toast("수정사항을 저장했어요", {
-        //         type: "success",
-        //     })
-        //     props.onReloadRequested()
-        // }
+        const res = await table[props.scheme.tableName].POST({
+            data: Object.fromEntries(
+                Object.entries(data)
+                    .filter(([key]) => !props.scheme.fields[key].autoGenerative)
+                    .map(([key, value]) => [
+                        key,
+                        props.scheme.fields[key].additional.type === "number"
+                            ? Number(value)
+                            : value,
+                    ])
+            ),
+        })
+        if (res.id) {
+            toast("수정사항을 저장했어요", {
+                type: "success",
+            })
+            props.onReloadRequested()
+        }
     }
 
     return (

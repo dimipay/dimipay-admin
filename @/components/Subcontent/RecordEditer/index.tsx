@@ -33,11 +33,18 @@ export const RecordEditer = (props: {
         const res = await table[props.scheme.tableName].PATCH({
             id: props.data.id,
             data: Object.fromEntries(
-                Object.entries(data).filter(
-                    ([column]) =>
-                        column in props.scheme.fields &&
-                        props.scheme.fields[column].readOnly !== true
-                )
+                Object.entries(data)
+                    .filter(
+                        ([column]) =>
+                            column in props.scheme.fields &&
+                            props.scheme.fields[column].readOnly !== true
+                    )
+                    .map(([key, value]) => [
+                        key,
+                        props.scheme.fields[key].additional.type === "number"
+                            ? Number(value)
+                            : value,
+                    ])
             ),
         })
 

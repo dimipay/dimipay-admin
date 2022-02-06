@@ -90,7 +90,7 @@ const actions = {
                     400
                 )
 
-            const validateResult = await table.fields[key].validateFunc(
+            const validateResult = await table.fields[key]?.validateFunc?.(
                 props.data[key]
             )
 
@@ -140,6 +140,22 @@ const actions = {
         return {
             ok: true,
         }
+    },
+    async POST(
+        props: {
+            data: Omit<TableRecord, "id">
+        },
+        {
+            tableName,
+        }: {
+            tableName: string
+        }
+    ) {
+        const res: TableRecord = await prisma[tableName].create({
+            data: props.data,
+        })
+
+        return res
     },
 }
 

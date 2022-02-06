@@ -11,6 +11,7 @@ export const endpoint =
     async (req, res) => {
         try {
             const handler = handlers[req.method]
+            if (!handler) throw new HandlerError(`동작을 찾을 수 없어요`, 404)
             const result = await handler(
                 req.method === "GET"
                     ? JSON.parse(req.query.query as string)
@@ -24,11 +25,13 @@ export const endpoint =
                     message: e.message,
                     isHandlerError: true,
                 })
-            } else
-                res.status(e.code).json({
+            } else {
+                console.log(e)
+                res.status(e.code || 500).json({
                     message: "알 수 없는 오류가 발생했어요",
                     isHandlerError: true,
                 })
+            }
         }
     }
 

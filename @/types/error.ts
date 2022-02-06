@@ -5,6 +5,7 @@ export class HandlerError extends Error {
         code?: number
     ) {
         super(message)
+        console.log("오류 발생!", message)
         this.code = code
     }
 

@@ -12,7 +12,7 @@
         "@prisma/client": "3.9.1",
         "@stitches/react": "^1.2.6",
         "@types/jsonwebtoken": "^8.5.8",
-        "josa-complete": "^1.4.1",
+        "josa-complete": "^2.0.1",
         "jsonwebtoken": "^8.5.1",
         "next": "12.0.10",
         "react": "17.0.2",

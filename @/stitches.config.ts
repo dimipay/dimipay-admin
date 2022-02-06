@@ -42,5 +42,11 @@ export const {
         animated: () => ({
             transition: "500ms cubic-bezier(0,.67,0,.99)",
         }),
+        card: (border: "grey" | string) => ({
+            elevated: true,
+            backgroundColor: "white",
+            border: `0.5rem solid ${border === "grey" ? `$dark5` : border}`,
+            borderRadius: "2rem",
+        }),
     },
 })

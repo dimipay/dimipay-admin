@@ -1,4 +1,7 @@
 export { default as downloadIcon } from "./download.svg"
 export { default as addIcon } from "./add.svg"
 export { default as closeIcon } from "./close.svg"
+export { default as eyeIcon } from "./eye.svg"
+export { default as trashIcon } from "./trash.svg"
 export * from "./input"
+export { default as downArrowIcon } from "./downArrow.svg"

@@ -9,4 +9,7 @@ export const PlainLink = styled(Link, {
 export const DividerLine = styled("div", {
     border: "0.1rem solid $dark5",
     zIndex: 1,
+    "&:last-of-type:not(first-of-type)": {
+        display: "none",
+    },
 })

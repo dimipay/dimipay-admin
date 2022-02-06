@@ -34,6 +34,7 @@ export const Wrapper = styled(Vexile, {
 })
 
 export const Item = styled(Hexile, {
+    borderRadius: "2rem",
     variants: {
         selected: {
             true: {

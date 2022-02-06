@@ -1,13 +1,13 @@
 import { TABLES } from "@/constants"
 import { prisma } from "@/storage"
-import { HandlerError, Operator, TableRecord } from "@/types"
+import { Filter, HandlerError, TableRecord } from "@/types"
 import { Prisma } from "@prisma/client"
 import { endpoint } from ".."
 
 const actions = {
     async GET(
         props: {
-            filter?: [string, Operator, string][]
+            filter?: Filter[]
             sort?: {
                 field: string
                 order: "123" | "321"

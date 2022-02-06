@@ -7,7 +7,7 @@ import { clickWithSpace, useConsole } from "@/functions"
 import { Option } from "@/types"
 
 import { DataView, Item, Wrapper } from "./style"
-import { ColorBubble } from "./partial"
+import { ColorBubble, SelectableList } from "./partial"
 import { DividerLine } from ".."
 
 export const MultipleSelect: React.FC<{
@@ -52,7 +52,7 @@ export const MultipleSelect: React.FC<{
                 onFocus={props.disabled ? undefined : () => setOpened(true)}
                 onBlur={props.disabled ? undefined : () => setOpened(false)}
                 tabIndex={props.disabled ? -1 : 0}
-                disabled={props.disabled}
+                disabled={!!props.disabled}
             >
                 <select
                     style={{ display: "none" }}
@@ -77,7 +77,7 @@ export const MultipleSelect: React.FC<{
                     gap={1.5}
                     padding={3}
                     hasError={!!props.error}
-                    disabled={props.disabled}
+                    disabled={!!props.disabled}
                 >
                     <Token>{props.name}</Token>
                     <Regular dark={logicalValue.length ? 1 : 3}>
@@ -94,56 +94,30 @@ export const MultipleSelect: React.FC<{
                     {props.error && <Token color="error">{props.error}</Token>}
                 </DataView>
                 {opened && (
-                    <>
-                        <Vexile>
-                            {props.options.map((option) => (
-                                <>
-                                    <Item
-                                        x="space"
-                                        padding={3}
-                                        selected={logicalValue.includes(
-                                            option.key || option.label
-                                        )}
-                                        onClick={() => {
-                                            if (
-                                                logicalValue.includes(
-                                                    option.key || option.label
-                                                )
-                                            ) {
-                                                setValue((prev) =>
-                                                    prev.filter(
-                                                        (v) =>
-                                                            v !==
-                                                            (option.key ||
-                                                                option.label)
-                                                    )
-                                                )
-                                            } else {
-                                                setValue((prev) => [
-                                                    ...prev,
-                                                    option.key || option.label,
-                                                ])
-                                            }
-                                        }}
-                                    >
-                                        <Hexile gap={2} y="center">
-                                            {option.color && (
-                                                <ColorBubble
-                                                    color={option.color}
-                                                />
-                                            )}
-                                            <Description dark={1}>
-                                                {props.displayMap?.[
-                                                    option.label
-                                                ] || option.label}
-                                            </Description>
-                                        </Hexile>
-                                    </Item>
-                                    <DividerLine />
-                                </>
-                            ))}
-                        </Vexile>
-                    </>
+                    <SelectableList
+                        options={props.options}
+                        itemLabelMap={props.displayMap}
+                        selectedItems={logicalValue}
+                        onItemSelected={(option) => {
+                            if (
+                                logicalValue.includes(
+                                    option.key || option.label
+                                )
+                            ) {
+                                setValue((prev) =>
+                                    prev.filter(
+                                        (v) =>
+                                            v !== (option.key || option.label)
+                                    )
+                                )
+                            } else {
+                                setValue((prev) => [
+                                    ...prev,
+                                    option.key || option.label,
+                                ])
+                            }
+                        }}
+                    />
                 )}
             </Wrapper>
         </label>

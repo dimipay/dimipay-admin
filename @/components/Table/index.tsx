@@ -1,11 +1,13 @@
-import React from "react"
+import React, { useState } from "react"
 
 import { Scheme, TableRecord } from "@/types"
 import { Description, Important, Regular } from "@/typo"
 
 import { ActionToolbars, HeaderCell, TableContent, TableWrapper } from "./style"
-import { Row } from "./partial"
-import { Button, DividerLine } from ".."
+import { ActionableHeaderCell, Row } from "./partial"
+import { Button } from ".."
+import { Vexile } from "@haechi/flexile"
+import { useFilter } from "@/functions"
 
 export const Table: React.FC<{
     scheme: Scheme
@@ -15,90 +17,93 @@ export const Table: React.FC<{
     const [selectedRecordIds, setSelectedRecordIds] = React.useState<number[]>(
         []
     )
+    const { filter, addFilter, element } = useFilter(scheme)
+    const [sort, setSort] = useState<string>(null)
 
     return (
-        <TableWrapper fillx filly scrollx y="space">
-            <TableContent>
-                <thead>
-                    <tr
-                        style={{
-                            opacity: 0.4,
-                        }}
-                    >
-                        <HeaderCell>
-                            <input
-                                type="checkbox"
-                                onChange={(e) =>
-                                    setSelectedRecordIds(
-                                        e.currentTarget.checked
-                                            ? data.map((e) => e.id)
-                                            : []
-                                    )
-                                }
-                            />
-                        </HeaderCell>
-                        {Object.keys(data[0]).map(
-                            (key) =>
-                                key in scheme?.fields &&
-                                !scheme.fields[key].invisibleInTable && (
-                                    <HeaderCell key={key}>
-                                        <Regular>
+        <Vexile gap={4} filly>
+            <TableWrapper fillx filly scrollx y="space">
+                <TableContent>
+                    <thead>
+                        <tr>
+                            <HeaderCell>
+                                <input
+                                    type="checkbox"
+                                    onChange={(e) =>
+                                        setSelectedRecordIds(
+                                            e.currentTarget.checked
+                                                ? data.map((e) => e.id)
+                                                : []
+                                        )
+                                    }
+                                />
+                            </HeaderCell>
+                            {Object.keys(data[0]).map(
+                                (key) =>
+                                    key in scheme?.fields &&
+                                    !scheme.fields[key].invisibleInTable && (
+                                        <ActionableHeaderCell
+                                            key={key}
+                                            onFilter={() => addFilter(key)}
+                                            onSort={() => setSort(key)}
+                                        >
                                             {scheme?.fields?.[key]?.display ||
                                                 key}
-                                        </Regular>
-                                    </HeaderCell>
-                                )
-                        )}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((row) => (
-                        <Row
-                            selected={selectedRecordIds.includes(row.id)}
-                            onReloadRequested={onReloadRequested}
-                            onCheckboxClicked={(selected) => {
-                                if (selected)
-                                    setSelectedRecordIds((prev) =>
-                                        prev.filter((id) => id !== row.id)
+                                        </ActionableHeaderCell>
                                     )
-                                else
-                                    setSelectedRecordIds((prev) => [
-                                        ...prev,
-                                        row.id,
-                                    ])
-                            }}
-                            row={row}
-                            scheme={scheme}
-                        />
-                    ))}
-                </tbody>
-            </TableContent>
-            {selectedRecordIds.length !== 0 && (
-                <ActionToolbars gap={2} padding={4}>
-                    {scheme.actions.length ? (
-                        scheme.actions?.map((action) => (
-                            <Button
-                                key={action.button.label}
-                                onClick={async () => {
-                                    await action.func(
-                                        data.filter((d) =>
-                                            selectedRecordIds.includes(d.id)
-                                        ),
-                                        scheme
-                                    )
-                                    onReloadRequested()
+                            )}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((row) => (
+                            <Row
+                                selected={selectedRecordIds.includes(row.id)}
+                                onReloadRequested={onReloadRequested}
+                                onCheckboxClicked={(selected) => {
+                                    if (selected)
+                                        setSelectedRecordIds((prev) =>
+                                            prev.filter((id) => id !== row.id)
+                                        )
+                                    else
+                                        setSelectedRecordIds((prev) => [
+                                            ...prev,
+                                            row.id,
+                                        ])
                                 }}
-                            >
-                                <Important white>
-                                    {action.button.label}
-                                </Important>
-                            </Button>
-                        ))
-                    ) : (
-                        <Description>수행 가능한 동작이 없어요</Description>
-                    )}
-                </ActionToolbars>
-            )}
-        </TableWrapper>
+                                row={row}
+                                scheme={scheme}
+                            />
+                        ))}
+                    </tbody>
+                </TableContent>
+                {selectedRecordIds.length !== 0 && (
+                    <ActionToolbars gap={2} padding={4}>
+                        {scheme.actions.length ? (
+                            scheme.actions?.map((action) => (
+                                <Button
+                                    key={action.button.label}
+                                    onClick={async () => {
+                                        await action.func(
+                                            data.filter((d) =>
+                                                selectedRecordIds.includes(d.id)
+                                            ),
+                                            scheme
+                                        )
+                                        onReloadRequested()
+                                    }}
+                                >
+                                    <Important white>
+                                        {action.button.label}
+                                    </Important>
+                                </Button>
+                            ))
+                        ) : (
+                            <Description>수행 가능한 동작이 없어요</Description>
+                        )}
+                    </ActionToolbars>
+                )}
+            </TableWrapper>
+            {element}
+        </Vexile>
     )
 }

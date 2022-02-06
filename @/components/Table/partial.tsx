@@ -1,3 +1,6 @@
+import React, { useState } from "react"
+import { useSetRecoilState } from "recoil"
+
 import { subContentAtom } from "@/coil"
 import {
     DataValue,
@@ -6,11 +9,10 @@ import {
     Scheme,
     TableRecord,
 } from "@/types"
-import { Regular } from "@/typo"
-import React from "react"
-import { useSetRecoilState } from "recoil"
-import { RecordEditer } from ".."
-import { Cell } from "./style"
+import { Important, Regular } from "@/typo"
+
+import { TooltipWrapper, Cell, HeaderCell } from "./style"
+import { DividerLine, RecordEditer } from ".."
 
 const getFieldValue = (field: Field, value: DataValue) => {
     if (field.computed) return field.computed(value)
@@ -78,5 +80,29 @@ export const Row: React.FC<{
                     )
             )}
         </tr>
+    )
+}
+
+export const ActionableHeaderCell: React.FC<{
+    onSort(): void
+    onFilter(): void
+}> = (props) => {
+    const [isActionsVisible, showActions] = useState(false)
+
+    return (
+        <HeaderCell onClick={() => showActions((prev) => !prev)}>
+            <Regular dark={4}>{props.children}</Regular>
+            {isActionsVisible && (
+                <TooltipWrapper gap={3} paddingx={4} paddingy={3}>
+                    <Important accent onClick={props.onSort}>
+                        정렬
+                    </Important>
+                    <DividerLine />
+                    <Important accent onClick={props.onFilter}>
+                        필터
+                    </Important>
+                </TooltipWrapper>
+            )}
+        </HeaderCell>
     )
 }

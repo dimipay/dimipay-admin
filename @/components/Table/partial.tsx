@@ -1,5 +1,11 @@
 import { subContentAtom } from "@/coil"
-import { DataValue, Field, Scheme, TableRecord } from "@/types"
+import {
+    DataValue,
+    Field,
+    isMultipleSelect,
+    Scheme,
+    TableRecord,
+} from "@/types"
 import { Regular } from "@/typo"
 import React from "react"
 import { useSetRecoilState } from "recoil"
@@ -9,15 +15,14 @@ import { Cell } from "./style"
 const getFieldValue = (field: Field, value: DataValue) => {
     if (field.computed) return field.computed(value)
 
-    if (
-        value instanceof Array &&
-        field.additional.type === "multiple" &&
-        field.additional.map
-    )
+    const additional = field.additional
+
+    if (value instanceof Array && isMultipleSelect(additional))
         return value
             .map(
-                (v: string | number | boolean) =>
-                    field.additional.map[v.toString()] || v
+                (v: string | number | boolean | Date) =>
+                    (field.computed?.(v) ?? additional.map[v.toString()]) ||
+                    v.toString()
             )
             .join(", ")
 
@@ -60,7 +65,8 @@ export const Row: React.FC<{
             </Cell>
             {Object.keys(row).map(
                 (key) =>
-                    key in props.scheme?.fields && (
+                    key in props.scheme?.fields &&
+                    !props.scheme.fields[key].invisibleInTable && (
                         <Cell key={key}>
                             <Regular>
                                 {getFieldValue(

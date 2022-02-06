@@ -10,19 +10,23 @@ export const DataView = styled(InputWraper, {
 export const Wrapper = styled(Vexile, {
     border: "0.5rem solid $dark5",
     borderRadius: "2rem",
-    "&:focus": {
-        elevated: true,
-    },
-    "&:focus > div:first-of-type": {
-        borderColor: "$accent",
-        backgroundColor: "white",
-        zIndex: 1,
-    },
     variants: {
         hasError: {
             true: {
                 "&:focus > div:first-of-type": {
                     borderColor: "$error",
+                },
+            },
+        },
+        disabled: {
+            false: {
+                "&:focus": {
+                    elevated: true,
+                },
+                "&:focus > div:first-of-type": {
+                    borderColor: "$accent",
+                    backgroundColor: "white",
+                    zIndex: 1,
                 },
             },
         },

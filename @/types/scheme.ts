@@ -30,16 +30,27 @@ export interface Option {
     amount?: number
 }
 
+interface MultipleSelectField {
+    type: "multiple"
+    options: Option[]
+    map?: Record<string | number, string>
+}
+
+export const isMultipleSelect = (d: any): d is MultipleSelectField =>
+    d.type === "multiple"
+
 export interface Field {
     display: string
+    invisibleInTable?: boolean
     description?: string
     computed?(value: unknown): string
-    disabled?: boolean
-    additional?: {
-        type: "multiple"
-        options: Option[]
-        map?: Record<string | number, string>
-    }
+    autoGenerative?: boolean
+    readOnly?: boolean
+    additional:
+        | MultipleSelectField
+        | {
+              type: "string" | "number" | "boolean" | "date"
+          }
     placeholder?: string
     required?: boolean
     validateFunc?: (

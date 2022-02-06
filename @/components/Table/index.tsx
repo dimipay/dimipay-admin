@@ -39,7 +39,8 @@ export const Table: React.FC<{
                         </HeaderCell>
                         {Object.keys(data[0]).map(
                             (key) =>
-                                key in scheme?.fields && (
+                                key in scheme?.fields &&
+                                !scheme.fields[key].invisibleInTable && (
                                     <HeaderCell key={key}>
                                         <Regular>
                                             {scheme?.fields?.[key]?.display ||

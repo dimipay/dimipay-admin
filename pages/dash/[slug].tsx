@@ -1,10 +1,10 @@
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useSetRecoilState } from "recoil"
 import { NextPage } from "next"
 
 import { table, useKone } from "@/functions"
-import { Button, LoadSVG, Table } from "@/components"
+import { Button, LoadSVG, RecordEditer, Table } from "@/components"
 import { TABLES } from "@/constants"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
 import { Important, PageHeader } from "@/typo"
@@ -12,27 +12,27 @@ import { subContentAtom } from "@/coil"
 import { Sidebar } from "./partial"
 import { SubcontentWrapper } from "./style"
 import { SLUG } from "@/types"
+import { NewRecord } from "@/components/Subcontent/NewRecord"
 
 const TableViewer: NextPage = () => {
     const router = useRouter()
     const [subcontent, setSubcontent] = useRecoilState(subContentAtom)
+    const setSubContent = useSetRecoilState(subContentAtom)
     const slug = router.query.slug as string
 
-    const tableInfo = TABLES.find((table) => table.tableName === SLUG[slug])
+    const scheme = TABLES.find((table) => table.tableName === SLUG[slug])
 
-    console.log(table[tableInfo?.tableName])
-
-    const [tableData, reload] = useKone(table[tableInfo?.tableName]?.GET, {
+    const [tableData, reload] = useKone(table[scheme?.tableName]?.GET, {
         amount: 3,
     })
 
     return (
         <Hexile fillx filly>
             {Sidebar}
-            {tableInfo && (
+            {scheme && (
                 <Vexile fillx filly padding={10} gap={4} scrollx>
                     <Hexile x="space">
-                        <PageHeader>{tableInfo.name}</PageHeader>
+                        <PageHeader>{scheme.name}</PageHeader>
                         <Hexile gap={2}>
                             <Button color="black">
                                 <LoadSVG
@@ -43,7 +43,19 @@ const TableViewer: NextPage = () => {
                                 />
                                 <Important white>다운로드</Important>
                             </Button>
-                            <Button>
+                            <Button
+                                onClick={() =>
+                                    setSubContent({
+                                        element: (
+                                            <NewRecord
+                                                onReloadRequested={reload}
+                                                scheme={scheme}
+                                            />
+                                        ),
+                                        name: scheme.name + " 생성",
+                                    })
+                                }
+                            >
                                 <LoadSVG
                                     src={addIcon}
                                     alt="추가 아이콘"
@@ -57,7 +69,7 @@ const TableViewer: NextPage = () => {
                     {tableData && (
                         <Table
                             records={tableData}
-                            scheme={tableInfo}
+                            scheme={scheme}
                             onReloadRequested={reload}
                         />
                     )}

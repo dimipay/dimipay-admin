@@ -8,7 +8,11 @@ export const USER_SCHEME: Scheme = {
     fields: {
         id: {
             display: "#",
-            disabled: true,
+            readOnly: true,
+            autoGenerative: true,
+            additional: {
+                type: "number",
+            },
         },
         student_id: {
             display: "교내관리번호",
@@ -18,10 +22,16 @@ export const USER_SCHEME: Scheme = {
             validateFunc(data) {
                 if (data < 0) return "교내관리번호는 0 이상이여야 합니다"
             },
+            additional: {
+                type: "number",
+            },
         },
         username: {
             display: "ID",
             required: true,
+            additional: {
+                type: "string",
+            },
             validateFunc(data: string) {
                 if (data.length < 2) return "ID는 2글자 이상이여야 합니다"
 
@@ -30,6 +40,14 @@ export const USER_SCHEME: Scheme = {
                 if (!/^[a-zA-Z0-9!@#$%^&*()]+$/.test(data))
                     return "ID는 영문과 숫자만, 특수문자 사용할 수 있습니다"
             },
+        },
+        profile_image: {
+            display: "프로필 이미지",
+            invisibleInTable: true,
+            additional: {
+                type: "string",
+            },
+            required: true,
         },
         roles: {
             display: "유형",
@@ -60,6 +78,24 @@ export const USER_SCHEME: Scheme = {
                     A: "관리자",
                 },
             },
+        },
+        created_at: {
+            display: "가입일",
+            readOnly: true,
+            autoGenerative: true,
+            additional: {
+                type: "date",
+            },
+            invisibleInTable: true,
+        },
+        updated_at: {
+            display: "마지막 정보 수정",
+            readOnly: true,
+            autoGenerative: true,
+            additional: {
+                type: "date",
+            },
+            invisibleInTable: true,
         },
     },
     actions: [

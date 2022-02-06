@@ -84,7 +84,7 @@ const actions = {
 
             if (!field) continue
 
-            if (field.disabled)
+            if (field.readOnly)
                 throw new HandlerError(
                     `${field.display.은는} 수정이 불가능해요`,
                     400

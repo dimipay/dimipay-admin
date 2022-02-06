@@ -37,23 +37,33 @@ export const Input: React.FC<{
                 )}
                 <Token>{props.name}</Token>
             </Hexile>
-            <LogicalInput
-                disabled={props.disabled}
-                defaultValue={props.defaultValue}
-                placeholder={props.placeholder}
-                onInput={
-                    props.type === "number"
-                        ? (e) => {
-                              e.currentTarget.value =
-                                  e.currentTarget.value.replace(/[^0-9]/g, "")
-                          }
-                        : undefined
-                }
-                {...props.hooker}
-                {...(props.hideContent && {
-                    type: "password",
-                })}
-            />
+            {props.type === undefined ? (
+                <LogicalInput
+                    disabled={props.disabled}
+                    defaultValue={props.defaultValue}
+                    placeholder={props.placeholder}
+                    {...props.hooker}
+                    {...(props.hideContent && {
+                        type: "password",
+                    })}
+                />
+            ) : (
+                props.type === "number" && (
+                    <LogicalInput
+                        disabled={props.disabled}
+                        defaultValue={props.defaultValue}
+                        placeholder={props.placeholder}
+                        onInput={(e) => {
+                            e.currentTarget.value =
+                                e.currentTarget.value.replace(/[^0-9]/g, "")
+                        }}
+                        {...props.hooker}
+                        {...(props.hideContent && {
+                            type: "password",
+                        })}
+                    />
+                )
+            )}
             {props.error && <Token color="error">{props.error}</Token>}
         </InputWraper>
     </label>

@@ -17,7 +17,7 @@ export const table = Object.fromEntries(
 ) as Record<
     SLUG,
     {
-        [key in "GET" | "PATCH" | "DELETE"]: (
+        [key in typeof METHOD[number]]: (
             input: Parameters<tableKone[key]>[0]
         ) => ReturnType<tableKone[key]>
     }

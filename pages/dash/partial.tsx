@@ -1,8 +1,11 @@
-import { logo } from "@/assets"
+import { Vexile } from "@haechi/flexile"
+
 import { LoadSVG, PlainLink } from "@/components"
 import { GROUPED_TABLES } from "@/constants"
 import { Important, Regular } from "@/typo"
-import { Vexile } from "@haechi/flexile"
+import { SLUG } from "@/types"
+import { logo } from "@/assets"
+
 import { SidebarWrapper } from "./style"
 
 export const Sidebar = (
@@ -17,7 +20,13 @@ export const Sidebar = (
             <Vexile gap={2}>
                 <Important>{group.groupName}</Important>
                 {group.content.map((table) => (
-                    <PlainLink href={`/dash/${table.tableName}`}>
+                    <PlainLink
+                        href={`/dash/${
+                            Object.entries(SLUG).find(
+                                ([key, v]) => v === table.tableName
+                            )[0]
+                        }`}
+                    >
                         <Regular dark={3}>{table.name}</Regular>
                     </PlainLink>
                 ))}

@@ -12,15 +12,16 @@ import { DividerLine } from ".."
 
 export const MultipleSelect: React.FC<{
     options: Option[]
-    data: (string | number)[]
+    data?: (string | number)[]
     name: string
     placeholder: string
     hooker: UseFormRegisterReturn
     displayMap?: Record<string | number, string>
     error?: string
+    disabled?: boolean
 }> = (props) => {
     const [opened, setOpened] = useState(false)
-    const [logicalValue, setValue] = useState(props.data)
+    const [logicalValue, setValue] = useState(props.data || [])
     useConsole(
         "SELECTIVE",
         props.options.map((value) =>
@@ -48,9 +49,10 @@ export const MultipleSelect: React.FC<{
             <Wrapper
                 hasError={!!props.error}
                 onKeyDown={clickWithSpace}
-                onFocus={() => setOpened(true)}
-                onBlur={() => setOpened(false)}
-                tabIndex={0}
+                onFocus={props.disabled ? undefined : () => setOpened(true)}
+                onBlur={props.disabled ? undefined : () => setOpened(false)}
+                tabIndex={props.disabled ? -1 : 0}
+                disabled={props.disabled}
             >
                 <select
                     style={{ display: "none" }}
@@ -71,7 +73,12 @@ export const MultipleSelect: React.FC<{
                         </option>
                     ))}
                 </select>
-                <DataView gap={1.5} padding={3} hasError={!!props.error}>
+                <DataView
+                    gap={1.5}
+                    padding={3}
+                    hasError={!!props.error}
+                    disabled={props.disabled}
+                >
                     <Token>{props.name}</Token>
                     <Regular dark={logicalValue.length ? 1 : 3}>
                         {logicalValue.length

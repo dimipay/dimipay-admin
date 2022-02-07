@@ -24,8 +24,8 @@ const actions = {
         try {
             const filter = {
                 AND:
-                    props.sort &&
-                    props.sort.map((e) => ({
+                    props.filter &&
+                    props.filter.map((e) => ({
                         [e[0]]: {
                             [{
                                 "=": "equals",
@@ -38,6 +38,8 @@ const actions = {
                     })),
             }
 
+            console.log(filter)
+
             const sort =
                 props.sort &&
                 props.sort.map((e) => ({
@@ -45,7 +47,7 @@ const actions = {
                 }))
 
             try {
-                return await prisma[table.tableName].findMany({
+                const res = await prisma[table.tableName].findMany({
                     orderBy: sort,
                     where: filter,
                     take: props.amount || 20,
@@ -53,6 +55,7 @@ const actions = {
                         id: props.lastId,
                     },
                 })
+                return res || []
             } catch (e) {
                 console.log(e)
                 throw e

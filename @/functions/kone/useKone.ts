@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import { useThrottledEffect } from ".."
 
 export const useKone = <Input, Output>(
     koneFunction: ((data: Input) => Promise<Output>) | undefined,
@@ -7,16 +8,18 @@ export const useKone = <Input, Output>(
     const [result, setResult] = useState<Output>()
     const serialized = JSON.stringify(input)
 
-    const load = useCallback(() => {
-        ;(async () => {
-            const res = await koneFunction?.(input)
-            setResult(res)
-        })()
-    }, [koneFunction, serialized])
+    const load = async () => {
+        const res = await koneFunction?.(input)
+        setResult(res)
+    }
 
-    useEffect(() => {
-        load()
-    }, [koneFunction, serialized])
+    useThrottledEffect(
+        () => {
+            load()
+        },
+        1000,
+        [koneFunction, serialized]
+    )
 
     return [result, load]
 }

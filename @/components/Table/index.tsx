@@ -13,11 +13,11 @@ export const Table: React.FC<{
     scheme: Scheme
     records: TableRecord[]
     onReloadRequested(): void
-}> = ({ records: data, scheme, onReloadRequested }) => {
+    addFilter(key: string): void
+}> = ({ records: data, ...props }) => {
     const [selectedRecordIds, setSelectedRecordIds] = React.useState<number[]>(
         []
     )
-    const { filter, addFilter, element } = useFilter(scheme)
     const [sort, setSort] = useState<string>(null)
 
     return (
@@ -38,17 +38,17 @@ export const Table: React.FC<{
                                     }
                                 />
                             </HeaderCell>
-                            {Object.keys(data[0]).map(
-                                (key) =>
-                                    key in scheme?.fields &&
-                                    !scheme.fields[key].invisibleInTable && (
+                            {Object.entries(props.scheme.fields).map(
+                                ([key, field]) =>
+                                    !field.invisibleInTable && (
                                         <ActionableHeaderCell
                                             key={key}
-                                            onFilter={() => addFilter(key)}
+                                            onFilter={() =>
+                                                props.addFilter(key)
+                                            }
                                             onSort={() => setSort(key)}
                                         >
-                                            {scheme?.fields?.[key]?.display ||
-                                                key}
+                                            {field?.display || key}
                                         </ActionableHeaderCell>
                                     )
                             )}
@@ -58,7 +58,7 @@ export const Table: React.FC<{
                         {data.map((row) => (
                             <Row
                                 selected={selectedRecordIds.includes(row.id)}
-                                onReloadRequested={onReloadRequested}
+                                onReloadRequested={props.onReloadRequested}
                                 onCheckboxClicked={(selected) => {
                                     if (selected)
                                         setSelectedRecordIds((prev) =>
@@ -71,15 +71,15 @@ export const Table: React.FC<{
                                         ])
                                 }}
                                 row={row}
-                                scheme={scheme}
+                                scheme={props.scheme}
                             />
                         ))}
                     </tbody>
                 </TableContent>
                 {selectedRecordIds.length !== 0 && (
                     <ActionToolbars gap={2} padding={4}>
-                        {scheme.actions.length ? (
-                            scheme.actions?.map((action) => (
+                        {props.scheme.actions.length ? (
+                            props.scheme.actions?.map((action) => (
                                 <Button
                                     key={action.button.label}
                                     onClick={async () => {
@@ -87,9 +87,9 @@ export const Table: React.FC<{
                                             data.filter((d) =>
                                                 selectedRecordIds.includes(d.id)
                                             ),
-                                            scheme
+                                            props.scheme
                                         )
-                                        onReloadRequested()
+                                        props.onReloadRequested()
                                     }}
                                 >
                                     <Important white>
@@ -103,7 +103,6 @@ export const Table: React.FC<{
                     </ActionToolbars>
                 )}
             </TableWrapper>
-            {element}
         </Vexile>
     )
 }

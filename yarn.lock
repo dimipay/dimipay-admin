@@ -1083,10 +1083,10 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
-josa-complete@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/josa-complete/-/josa-complete-1.4.1.tgz#ae56c6b5da4217beff1378d0247ce33bee07369c"
-  integrity sha512-tLIzKA6YyvV6/pbr3pPw8vuoCs/frXMfOdzcT/hfKEmbaxsNLpEnUfAmX/KcRrCt6wamSHvM3LXf+SRBk5zV1g==
+josa-complete@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/josa-complete/-/josa-complete-2.0.1.tgz#a6f184e6f464a0e4044891b7c281caa4d9a21a1e"
+  integrity sha512-3lxFfjbbQKppszFzGT+9fzICOALijCJqW+8mPj+RA9C7VMzSDxwLti/uB34jfVhk6i6A1BB2R1ZTOFjmQpj/+g==
 
 "js-tokens@^3.0.0 || ^4.0.0":
   version "4.0.0"

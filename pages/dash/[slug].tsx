@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import { NextPage } from "next"
 
-import { table, useKone } from "@/functions"
+import { table, useFilter, useKone } from "@/functions"
 import { Button, LoadSVG, RecordEditer, Table } from "@/components"
 import { TABLES } from "@/constants"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
@@ -21,9 +21,11 @@ const TableViewer: NextPage = () => {
     const slug = router.query.slug as string
 
     const scheme = TABLES.find((table) => table.tableName === SLUG[slug])
+    const { filter, addFilter, element } = useFilter(scheme)
 
     const [tableData, reload] = useKone(table[scheme?.tableName]?.GET, {
         amount: 3,
+        filter,
     })
 
     return (
@@ -71,8 +73,10 @@ const TableViewer: NextPage = () => {
                             records={tableData}
                             scheme={scheme}
                             onReloadRequested={reload}
+                            addFilter={addFilter}
                         />
                     )}
+                    {element}
                 </Vexile>
             )}
             {subcontent && (

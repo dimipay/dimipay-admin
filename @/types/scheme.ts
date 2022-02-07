@@ -58,6 +58,8 @@ export interface Field {
     ) => boolean | undefined | string | Promise<boolean | undefined | string>
 }
 
+type FieldType = Field['additional']['type']
+
 export interface ToolbarAction {
     button: {
         label: string

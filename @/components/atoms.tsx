@@ -13,3 +13,8 @@ export const DividerLine = styled("div", {
         display: "none",
     },
 })
+
+export const HitSlop = styled("div", {
+    padding: "2rem",
+    margin: "-2rem",
+})

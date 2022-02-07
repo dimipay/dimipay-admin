@@ -13,6 +13,7 @@ import { Sidebar } from "./partial"
 import { SubcontentWrapper } from "./style"
 import { SLUG } from "@/types"
 import { NewRecord } from "@/components/Subcontent/NewRecord"
+import { FilterItem } from "@/functions/useFilter/partial"
 
 const TableViewer: NextPage = () => {
     const router = useRouter()
@@ -21,7 +22,12 @@ const TableViewer: NextPage = () => {
     const slug = router.query.slug as string
 
     const scheme = TABLES.find((table) => table.tableName === SLUG[slug])
-    const { filter, addFilter, element } = useFilter(scheme)
+    const {
+        filter,
+        addFilter,
+        element: filterElement,
+        opened: filterOpened,
+    } = useFilter(scheme)
 
     const [tableData, reload] = useKone(table[scheme?.tableName]?.GET, {
         amount: 3,
@@ -32,7 +38,7 @@ const TableViewer: NextPage = () => {
         <Hexile fillx filly>
             {Sidebar}
             {scheme && (
-                <Vexile fillx filly padding={10} gap={4} scrollx>
+                <Vexile fillx filly padding={10} gap={4} scrollx relative>
                     <Hexile x="space">
                         <PageHeader>{scheme.name}</PageHeader>
                         <Hexile gap={2}>
@@ -76,7 +82,18 @@ const TableViewer: NextPage = () => {
                             addFilter={addFilter}
                         />
                     )}
-                    {element}
+                    {/* dummy for space */}
+                    {filterOpened && (
+                        <div style={{ visibility: "hidden" }}>
+                            <FilterItem
+                                disabled
+                                field={Object.values(scheme.fields)[0]}
+                                filter={["", undefined, undefined]}
+                                updateFilter={() => {}}
+                            />
+                        </div>
+                    )}
+                    {filterElement}
                 </Vexile>
             )}
             {subcontent && (

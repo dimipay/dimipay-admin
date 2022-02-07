@@ -1,0 +1,88 @@
+import { eyeIcon, trashIcon } from "@/assets"
+import { HitSlop, LoadSVG, MiniInput } from "@/components"
+import { MiniSelect } from "@/components/MiniSelect"
+import { Field, korOperatorMap, PartialFilter } from "@/types"
+import { Regular } from "@/typo"
+import { ItemWrapper } from "./style"
+
+export interface FilterWithDisablity {
+    content: PartialFilter
+    disabled: boolean
+}
+
+export const FilterItem: React.FC<{
+    filter: PartialFilter
+    disabled: boolean
+    field: Field
+    updateFilter: (content: FilterWithDisablity | null) => void
+}> = ({ filter: [key, operator, value], ...props }) => {
+    return (
+        <ItemWrapper
+            padding={4}
+            gap={2}
+            y="center"
+            keepsize
+            disabled={props.disabled}
+        >
+            <HitSlop
+                onClick={() =>
+                    props.updateFilter({
+                        content: [key, operator, value],
+                        disabled: !props.disabled,
+                    })
+                }
+            >
+                <LoadSVG
+                    src={eyeIcon}
+                    width={4}
+                    height={4}
+                    alt="필터 적용 해제 버튼"
+                />
+            </HitSlop>
+            <HitSlop onClick={() => props.updateFilter(null)}>
+                <LoadSVG
+                    src={trashIcon}
+                    width={4}
+                    height={4}
+                    alt="필터 삭제 버튼"
+                />
+            </HitSlop>
+            <Regular>{props.field.display.이가}</Regular>
+            <MiniInput
+                onChange={(enteredValue) => {
+                    props.updateFilter({
+                        content: [
+                            key,
+                            operator,
+                            props.field.additional.type === "number"
+                                ? +enteredValue
+                                : enteredValue,
+                        ],
+                        disabled: props.disabled,
+                    })
+                }}
+                placeholder="비교값"
+            />
+            <Regular>
+                {value &&
+                    (operator
+                        ? korOperatorMap[operator].appender?.(value.toString())
+                        : "...")}
+            </Regular>
+            <MiniSelect
+                onChange={(selectedOperator) => {
+                    props.updateFilter({
+                        content: [key, selectedOperator, value],
+                        disabled: props.disabled,
+                    })
+                }}
+                placeholder="조건"
+                selected={operator && korOperatorMap[operator].display}
+                options={Object.entries(korOperatorMap).map(([key, value]) => ({
+                    label: value.display,
+                    key,
+                }))}
+            />
+        </ItemWrapper>
+    )
+}

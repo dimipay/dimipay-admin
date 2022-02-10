@@ -1,7 +1,7 @@
 import { Validate } from "react-hook-form"
 
 export enum SLUG {
-    user = "dimipay_users",
+    user = "user",
     product = "product",
 }
 
@@ -81,5 +81,7 @@ export interface SchemeGroup {
 }
 
 export type TableRecord = Record<string, DataValue> & {
-    id: number
+    id: string
+    createdAt: Date
+    updatedAt: Date
 }

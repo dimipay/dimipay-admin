@@ -5,9 +5,9 @@ import { endpoint } from "."
 
 const actions = {
     POST: async (content: { username: string; password: string }) => {
-        const user = await prisma.dimipay_users.findFirst({
+        const user = await prisma.user.findFirst({
             where: {
-                username: content.username,
+                accountName: content.username,
             },
         })
 

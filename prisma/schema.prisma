@@ -7,100 +7,145 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model dimipay_users {
-  id            Int      @id @default(autoincrement())
-  student_id    Int?
-  username      String?  @db.VarChar(255)
-  profile_image String?  @db.VarChar(255)
-  roles         Json?    @db.Json
-  created_at    DateTime @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+model Card {
+  id            String        @id
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime
+  type          CardType
+  ownerId       String
+  generalCardId String?       @unique
+  prepaidCardId String?       @unique
+  User          User          @relation(fields: [ownerId], references: [id])
+  GeneralCard   GeneralCard?
+  PrepaidCard   PrepaidCard?
+  Transaction   Transaction[]
 }
 
-enum OrderCarrier {
-  hanjin
+model Category {
+  id        String    @id
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  name      String
+  color     String
+  Product   Product[]
 }
 
-enum OrderInspection {
-  inspection1
-  inspection2
-  inspection3
-  inspection4
+model Coupon {
+  id                           String        @id
+  createdAt                    DateTime      @default(now())
+  updatedAt                    DateTime
+  issuerId                     String
+  receiverId                   String
+  name                         String
+  expiresAt                    DateTime?
+  transactionId                String?
+  balance                      Int
+  originAmount                 Int
+  User_Coupon_issuerIdToUser   User          @relation("Coupon_issuerIdToUser", fields: [issuerId], references: [id])
+  User_Coupon_receiverIdToUser User          @relation("Coupon_receiverIdToUser", fields: [receiverId], references: [id])
+  Transaction                  Transaction[]
 }
 
-enum OrderStatus {
-  booked
-  freight_on_hand
-  partial_arrival
-  freight_payment
-  booking_confirmed
-  dispatched
-  in_transit
-  arrived_at_terminal
-  tax_payment
-  tax_closed
-  clearance
-  release
-  delivered
-  return_received
-  return_shipping_payment
-  return_shipping_closed
-  return_complete
-  exception
-  handling_payment
+model GeneralCard {
+  id         String   @id
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+  cardNumber String?
+  validMonth Int?
+  validYear  Int?
+  billingKey String?
+  cardId     String   @unique
+  isDeleted  Boolean  @default(false)
+  Card       Card     @relation(fields: [cardId], references: [id])
 }
 
-enum OrderType {
-  simplified_clearance
-  general_clearance
+model PrepaidCard {
+  id                       String                     @id
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime
+  balance                  Int
+  cardId                   String                     @unique
+  Card                     Card                       @relation(fields: [cardId], references: [id])
+  PrepaidCardChargeHistory PrepaidCardChargeHistory[]
 }
 
-enum Userstatus {
-  normal
-  banned
-  dormanted
+model PrepaidCardChargeHistory {
+  id            String            @id
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime
+  delta         Int
+  prepaidCardId String
+  status        TransactionStatus
+  method        String
+  detailInfo    String
+  PrepaidCard   PrepaidCard       @relation(fields: [prepaidCardId], references: [id])
 }
 
-enum ordercarrier {
-  hanjin
+model Product {
+  id              String            @id
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  name            String
+  barcode         String?
+  price           Int
+  categoryId      String
+  transactionId   String?
+  Category        Category          @relation(fields: [categoryId], references: [id])
+  Transaction     Transaction?      @relation(fields: [transactionId], references: [id])
+  ProductInOutLog ProductInOutLog[]
 }
 
-enum orderinspection {
-  inspection1
-  inspection2
-  inspection3
-  inspection4
+model ProductInOutLog {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  delta     Int
+  productId String
+  Product   Product  @relation(fields: [productId], references: [id])
 }
 
-enum orderstatus {
-  booked
-  freight_on_hand
-  partial_arrival
-  freight_payment
-  booking_confirmed
-  dispatched
-  in_transit
-  arrived_at_terminal
-  tax_payment
-  tax_closed
-  clearance
-  release
-  delivered
-  return_received
-  return_shipping_payment
-  return_shipping_closed
-  return_complete
-  exception
-  handling_payment
+model Transaction {
+  id         String            @id
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime
+  cardId     String
+  billingId  Int
+  totalPrice Int
+  status     TransactionStatus
+  statusText String?
+  Card       Card              @relation(fields: [cardId], references: [id])
+  Product    Product[]
+  Coupon     Coupon[]
 }
 
-enum ordertype {
-  simplified_clearance
-  general_clearance
+model User {
+  id                             String   @id
+  createdAt                      DateTime @default(now())
+  updatedAt                      DateTime
+  accountName                    String   @unique
+  name                           String
+  roles                          Role[]
+  profileImage                   String
+  studentNumber                  String   @unique
+  studentUid                     String   @unique
+  Card                           Card[]
+  Coupon_Coupon_issuerIdToUser   Coupon[] @relation("Coupon_issuerIdToUser")
+  Coupon_Coupon_receiverIdToUser Coupon[] @relation("Coupon_receiverIdToUser")
 }
 
-enum userstatus {
-  normal
-  banned
-  dormanted
+enum CardType {
+  PREPAID
+  GENERAL
+}
+
+enum Role {
+  USER
+  TEACHER
+  ADMIN
+}
+
+enum TransactionStatus {
+  CONFIRMED
+  CANCELED
+  ERROR
 }

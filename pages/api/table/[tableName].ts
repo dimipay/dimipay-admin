@@ -67,7 +67,7 @@ const actions = {
     },
     async PATCH(
         props: {
-            id: number
+            id: string
             data: Omit<TableRecord, "id">
         },
         slug: {
@@ -123,7 +123,7 @@ const actions = {
         return res
     },
     async DELETE(
-        props: { ids: number[] },
+        props: { ids: string[] },
         {
             tableName,
         }: {

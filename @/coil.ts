@@ -1,11 +1,11 @@
-import { dimipay_users } from "@prisma/client"
+import { User } from "@prisma/client"
 import { atom } from "recoil"
 import { recoilPersist } from "recoil-persist"
 
 const { persistAtom } = recoilPersist()
 
 export const userAtom = atom<{
-    user: dimipay_users
+    user: User
     token: string
 }>({
     default: null,

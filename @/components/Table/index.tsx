@@ -15,7 +15,7 @@ export const Table: React.FC<{
     onReloadRequested(): void
     addFilter(key: string): void
 }> = ({ records: data, ...props }) => {
-    const [selectedRecordIds, setSelectedRecordIds] = React.useState<number[]>(
+    const [selectedRecordIds, setSelectedRecordIds] = React.useState<string[]>(
         []
     )
     const [sort, setSort] = useState<string>(null)

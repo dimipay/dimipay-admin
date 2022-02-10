@@ -1,5 +1,5 @@
 import { Scheme, SLUG, TableRecord } from "@/types"
-import { dimipay_users } from "@prisma/client"
+import { User } from "@prisma/client"
 import { DELETE_SELECTED_RECORDS_ACTION } from "./common"
 
 export const USER_SCHEME: Scheme = {
@@ -107,8 +107,8 @@ export const USER_SCHEME: Scheme = {
             },
             func(selectedRecords: TableRecord[]) {
                 alert(
-                    (selectedRecords as dimipay_users[])
-                        .map((e) => e.username)
+                    (selectedRecords as User[])
+                        .map((e) => e.accountName)
                         .join(",") + "라네요. 글 내려주세요."
                 )
             },

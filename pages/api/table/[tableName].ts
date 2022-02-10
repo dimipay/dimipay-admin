@@ -38,8 +38,6 @@ const actions = {
                     })),
             }
 
-            console.log(filter)
-
             const sort =
                 props.sort &&
                 props.sort.map((e) => ({
@@ -47,7 +45,7 @@ const actions = {
                 }))
 
             try {
-                const res = await prisma[table.tableName].findMany({
+                const res = await (prisma[table.tableName].findMany as any)({
                     orderBy: sort,
                     where: filter,
                     take: props.amount || 20,
@@ -111,7 +109,7 @@ const actions = {
                 )
         }
 
-        const res: TableRecord = await prisma[table.tableName].update({
+        const res: TableRecord = await (prisma[table.tableName].update as any)({
             where: {
                 id: props.id,
             },

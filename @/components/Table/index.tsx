@@ -19,7 +19,6 @@ export const Table: React.FC<{
         []
     )
     const [sort, setSort] = useState<string>(null)
-
     return (
         <Vexile gap={4} filly>
             <TableWrapper fillx filly scrollx y="space">

@@ -1,8 +1,7 @@
-import { Validate } from "react-hook-form"
-
 export enum SLUG {
     user = "user",
     product = "product",
+    category = "category",
 }
 
 interface Relation {
@@ -36,6 +35,11 @@ interface MultipleSelectField {
     map?: Record<string | number, string>
 }
 
+interface SingleRelationField {
+    type: "relation-single"
+    target: SLUG
+}
+
 export const isMultipleSelect = (d: any): d is MultipleSelectField =>
     d.type === "multiple"
 
@@ -46,19 +50,23 @@ export interface Field {
     computed?(value: unknown): string
     autoGenerative?: boolean
     readOnly?: boolean
-    additional:
+    additional: (
         | MultipleSelectField
+        | SingleRelationField
         | {
               type: "string" | "number" | "boolean" | "date"
+              pattern?: "color"
           }
+    ) & {
+        suffix?: string
+        prefix?: string
+    }
     placeholder?: string
     required?: boolean
     validateFunc?: (
         data: DataValue
     ) => boolean | undefined | string | Promise<boolean | undefined | string>
 }
-
-type FieldType = Field['additional']['type']
 
 export interface ToolbarAction {
     button: {

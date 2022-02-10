@@ -1,20 +1,13 @@
 import { Scheme, SLUG, TableRecord } from "@/types"
-import { User } from "@prisma/client"
-import { DELETE_SELECTED_RECORDS_ACTION } from "./common"
+import { Role, User } from "@prisma/client"
+import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
 
 export const USER_SCHEME: Scheme = {
     name: "사용자",
     tableName: SLUG.user,
     fields: {
-        id: {
-            display: "#",
-            readOnly: true,
-            autoGenerative: true,
-            additional: {
-                type: "number",
-            },
-        },
-        student_id: {
+        ...RECORD_BASE_FIELDS,
+        studentUid: {
             display: "교내관리번호",
             description:
                 "학번이 아닌 중앙데이터베이스 관리용 번호입니다. 임의로 변경할 시 시스템에 오류가 발생할 수 있습니다.",
@@ -23,10 +16,10 @@ export const USER_SCHEME: Scheme = {
                 if (data < 0) return "교내관리번호는 0 이상이여야 합니다"
             },
             additional: {
-                type: "number",
+                type: "string",
             },
         },
-        username: {
+        accountName: {
             display: "ID",
             required: true,
             additional: {
@@ -41,7 +34,7 @@ export const USER_SCHEME: Scheme = {
                     return "ID는 영문과 숫자만, 특수문자 사용할 수 있습니다"
             },
         },
-        profile_image: {
+        profileImage: {
             display: "프로필 이미지",
             invisibleInTable: true,
             additional: {
@@ -60,42 +53,24 @@ export const USER_SCHEME: Scheme = {
                 type: "multiple",
                 options: [
                     {
-                        label: "S",
+                        label: Role.USER,
                         color: "#E54444",
                     },
                     {
-                        label: "T",
+                        label: Role.TEACHER,
                         color: "#E5E544",
                     },
                     {
-                        label: "A",
+                        label: Role.ADMIN,
                         color: "#44A2E5",
                     },
                 ],
                 map: {
-                    S: "학생",
-                    T: "교사",
-                    A: "관리자",
+                    [Role.USER]: "사용자",
+                    [Role.TEACHER]: "교사",
+                    [Role.ADMIN]: "관리자",
                 },
             },
-        },
-        created_at: {
-            display: "가입일",
-            readOnly: true,
-            autoGenerative: true,
-            additional: {
-                type: "date",
-            },
-            invisibleInTable: true,
-        },
-        updated_at: {
-            display: "마지막 정보 수정",
-            readOnly: true,
-            autoGenerative: true,
-            additional: {
-                type: "date",
-            },
-            invisibleInTable: true,
         },
     },
     actions: [

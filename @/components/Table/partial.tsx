@@ -39,6 +39,7 @@ export const Row: React.FC<{
     scheme: Scheme
 }> = ({ row, ...props }) => {
     const setSubContent = useSetRecoilState(subContentAtom)
+    
     return (
         <tr
             key={row.id}
@@ -65,7 +66,7 @@ export const Row: React.FC<{
                     }}
                 />
             </Cell>
-            {Object.keys(row).map(
+            {Object.keys(props.scheme.fields).map(
                 (key) =>
                     key in props.scheme?.fields &&
                     !props.scheme.fields[key].invisibleInTable && (

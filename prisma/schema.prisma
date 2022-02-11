@@ -8,134 +8,196 @@ datasource db {
 }
 
 model Card {
-  id            String        @id
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
   type          CardType
-  ownerId       String
-  generalCardId String?       @unique
-  prepaidCardId String?       @unique
-  User          User          @relation(fields: [ownerId], references: [id])
-  GeneralCard   GeneralCard?
-  PrepaidCard   PrepaidCard?
-  Transaction   Transaction[]
+  generalCardId String?  @unique
+  prepaidCardId String?  @unique
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  generalCard  GeneralCard?
+  prepaidCard  PrepaidCard?
+  transactions Transaction[]
 }
 
 model Category {
-  id        String    @id
-  createdAt DateTime  @default(now())
-  updatedAt DateTime
-  name      String
-  color     String
-  Product   Product[]
+  id               String           @id
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime
+  name             String
+  color            String
+  belongProducts   Product[]
+  discountPolicy   DiscountPolicy[]
+  discountPolicyId String?
 }
 
 model Coupon {
-  id                           String        @id
-  createdAt                    DateTime      @default(now())
-  updatedAt                    DateTime
-  issuerId                     String
-  receiverId                   String
-  name                         String
-  expiresAt                    DateTime?
-  transactionId                String?
-  balance                      Int
-  originAmount                 Int
-  User_Coupon_issuerIdToUser   User          @relation("Coupon_issuerIdToUser", fields: [issuerId], references: [id])
-  User_Coupon_receiverIdToUser User          @relation("Coupon_receiverIdToUser", fields: [receiverId], references: [id])
-  Transaction                  Transaction[]
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  name      String
+  expiresAt DateTime?
+  amount    Int
+
+  usedTransaction   Transaction? @relation(fields: [usedTransactionId], references: [id])
+  usedTransactionId String?
+
+  issuerId String
+  issuer   User   @relation("Coupon_issuerIdToUser", fields: [issuerId], references: [id])
+
+  receiverId String
+  receiver   User   @relation("Coupon_receiverIdToUser", fields: [receiverId], references: [id])
 }
 
 model GeneralCard {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime
-  cardNumber String?
-  validMonth Int?
-  validYear  Int?
-  billingKey String?
-  cardId     String   @unique
-  isDeleted  Boolean  @default(false)
-  Card       Card     @relation(fields: [cardId], references: [id])
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  cardNumber String
+  validMonth Int
+  validYear  Int
+  billingKey String
+
+  Card   Card   @relation(fields: [cardId], references: [id])
+  cardId String @unique
 }
 
 model PrepaidCard {
-  id                       String                     @id
-  createdAt                DateTime                   @default(now())
-  updatedAt                DateTime
-  balance                  Int
-  cardId                   String                     @unique
-  Card                     Card                       @relation(fields: [cardId], references: [id])
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  balance Int
+  cardId  String @unique
+  card    Card   @relation(fields: [cardId], references: [id])
+
   PrepaidCardChargeHistory PrepaidCardChargeHistory[]
 }
 
 model PrepaidCardChargeHistory {
-  id            String            @id
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime
-  delta         Int
-  prepaidCardId String
-  status        TransactionStatus
-  method        String
-  detailInfo    String
-  PrepaidCard   PrepaidCard       @relation(fields: [prepaidCardId], references: [id])
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  delta      Int
+  status     TransactionStatus
+  method     String
+  detailInfo String
+
+  targetPrepaidCardId String
+  targetPrepaidCard   PrepaidCard @relation(fields: [targetPrepaidCardId], references: [id])
+}
+
+model DiscountPolicy {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  endsAt      DateTime?
+  fixedPrice  Int?
+  percentRate Int?
+
+  targetCategory  Category[]
+  targetProduct   Product[]  @relation("discountTargetProduct")
+  excludeProducts Product[]  @relation("discountExcludedProduct")
 }
 
 model Product {
-  id              String            @id
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime
-  name            String
-  barcode         String?
-  price           Int
-  categoryId      String
-  transactionId   String?
-  Category        Category          @relation(fields: [categoryId], references: [id])
-  Transaction     Transaction?      @relation(fields: [transactionId], references: [id])
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  name           String
+  barcode        String?
+  price          Int
+  sellingStopped Boolean @default(false)
+
+  categoryId String
+  Category   Category @relation(fields: [categoryId], references: [id])
+
+  transactions    Transaction[]
   ProductInOutLog ProductInOutLog[]
+
+  discountPolicy         DiscountPolicy[] @relation("discountTargetProduct")
+  discountExcludedPolicy DiscountPolicy[] @relation("discountExcludedProduct")
 }
 
 model ProductInOutLog {
   id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime
-  delta     Int
+
+  delta   Int
+  message String?
+
   productId String
-  Product   Product  @relation(fields: [productId], references: [id])
+  Product   Product @relation(fields: [productId], references: [id])
 }
 
 model Transaction {
-  id         String            @id
-  createdAt  DateTime          @default(now())
-  updatedAt  DateTime
-  cardId     String
-  billingId  Int
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  billingId  String
   totalPrice Int
   status     TransactionStatus
   statusText String?
-  Card       Card              @relation(fields: [cardId], references: [id])
-  Product    Product[]
-  Coupon     Coupon[]
+  authMethod AuthMethod
+
+  products    Product[]
+  usedCoupons Coupon[]
+
+  usedCard    Card      @relation(fields: [usedCardId], references: [id])
+  usedCardId  String
+  posDevice   PosDevice @relation(fields: [posDeviceId], references: [id])
+  posDeviceId String
 }
 
 model User {
-  id                             String   @id
-  createdAt                      DateTime @default(now())
-  updatedAt                      DateTime
-  accountName                    String   @unique
-  name                           String
-  roles                          Role[]
-  profileImage                   String
-  studentNumber                  String   @unique
-  studentUid                     String   @unique
-  Card                           Card[]
-  Coupon_Coupon_issuerIdToUser   Coupon[] @relation("Coupon_issuerIdToUser")
-  Coupon_Coupon_receiverIdToUser Coupon[] @relation("Coupon_receiverIdToUser")
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  isDisabled    Boolean @default(false)
+  accountName   String  @unique
+  name          String
+  roles         Role[]
+  profileImage  String
+  studentNumber String?
+  systemUid     String? @unique
+
+  cards           Card[]
+  issuedCoupons   Coupon[] @relation("Coupon_issuerIdToUser")
+  receivedCoupons Coupon[] @relation("Coupon_receiverIdToUser")
+}
+
+model PosDevice {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  name               String
+  disabled           Boolean       @default(false)
+  transactions       Transaction[]
+  enabledAuthMethods AuthMethod
 }
 
 enum CardType {
   PREPAID
   GENERAL
+}
+
+enum AuthMethod {
+  SMS
+  APP_QR
+  FACESIGN
 }
 
 enum Role {

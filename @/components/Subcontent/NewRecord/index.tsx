@@ -22,7 +22,6 @@ export const NewRecord = (props: {
     })
 
     const onSubmit: SubmitHandler<TableRecord> = async (data) => {
-        console.log(data)
         const res = await table[props.scheme.tableName].POST({
             data: Object.fromEntries(
                 Object.entries(data)

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { forwardRef, useState } from "react"
 import { useSetRecoilState } from "recoil"
 
 import { subContentAtom } from "@/coil"
@@ -31,18 +31,21 @@ const getFieldValue = (field: Field, value: DataValue) => {
     return value
 }
 
-export const Row: React.FC<{
-    selected: boolean
-    onCheckboxClicked: (selected: boolean) => void
-    onReloadRequested: () => void
-    row: TableRecord
-    scheme: Scheme
-}> = ({ row, ...props }) => {
+export const Row = forwardRef<
+    HTMLTableRowElement,
+    {
+        selected: boolean
+        onCheckboxClicked: (selected: boolean) => void
+        onReloadRequested: () => void
+        row: TableRecord
+        scheme: Scheme
+    }
+>(({ row, ...props }, ref) => {
     const setSubContent = useSetRecoilState(subContentAtom)
-    
+
     return (
         <tr
-            key={row.id}
+            ref={ref}
             onClick={() =>
                 setSubContent({
                     element: (
@@ -82,7 +85,7 @@ export const Row: React.FC<{
             )}
         </tr>
     )
-}
+})
 
 export const ActionableHeaderCell: React.FC<{
     onSort(): void

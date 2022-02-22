@@ -24,7 +24,10 @@ export const HeaderCell = styled("th", {
     textAlign: "left",
     whiteSpace: "nowrap",
     borderBottom: "0.5rem solid $dark6",
-    position: "relative",
+    position: "sticky",
+    overflow: "auto",
+    top: "0rem",
+    backgroundColor: "white",
     "&:last-child": {
         width: "100%",
     },

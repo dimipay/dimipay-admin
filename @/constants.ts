@@ -1,17 +1,14 @@
 import { CATEGORY_SCHEME, PRODUCT_SCHEME, USER_SCHEME } from "./schemes"
 import { SchemeGroup, SLUG } from "./types"
 
-export const assert = (
-    name: string,
-    content: string,
-    isServersideOnly: boolean
-) => {
+export const assert = (name: string, isServersideOnly: boolean) => {
+    const content = process.env[name]
     if (!content && !isServersideOnly)
         throw new Error(`Cannot find "${name}" in environment variables`)
     return content
 }
 
-export const JWT_SECRET = assert("JWT_SECRET", process.env.JWT_SECRET, true)
+export const JWT_SECRET = assert("JWT_SECRET", true)
 
 export const GROUPED_TABLES: SchemeGroup[] = [
     {

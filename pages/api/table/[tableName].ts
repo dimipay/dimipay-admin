@@ -13,7 +13,7 @@ const actions = {
                 order: "123" | "321"
             }[]
             amount: number
-            lastId?: number
+            lastId?: string
         },
         slug: {
             tableName: string

@@ -1,19 +1,21 @@
+import { useRecoilState, useSetRecoilState } from "recoil"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
-import { useRecoilState, useSetRecoilState } from "recoil"
+import { useCallback, useEffect, useState } from "react"
 import { NextPage } from "next"
 
-import { table, useFilter, useKone } from "@/functions"
-import { Button, LoadSVG, RecordEditer, Table } from "@/components"
-import { TABLES } from "@/constants"
+import { NewRecord } from "@/components/Subcontent/NewRecord"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
+import { FilterItem } from "@/functions/useFilter/partial"
+import { table, useConsole, useFilter, useKone } from "@/functions"
+import { Button, LoadSVG, Table } from "@/components"
 import { Important, PageHeader } from "@/typo"
 import { subContentAtom } from "@/coil"
-import { Sidebar } from "./partial"
+import { TABLES } from "@/constants"
+import { SLUG, TableRecord } from "@/types"
+
 import { SubcontentWrapper } from "./style"
-import { SLUG } from "@/types"
-import { NewRecord } from "@/components/Subcontent/NewRecord"
-import { FilterItem } from "@/functions/useFilter/partial"
+import { Sidebar } from "./partial"
 
 const TableViewer: NextPage = () => {
     const router = useRouter()
@@ -29,10 +31,45 @@ const TableViewer: NextPage = () => {
         opened: filterOpened,
     } = useFilter(scheme)
 
-    const [tableData, reload] = useKone(table[scheme?.tableName]?.GET, {
-        amount: 3,
-        filter,
-    })
+    const [records, setRecords] = useState<TableRecord[]>([])
+
+    const load = useCallback(() => {
+        if (!scheme) return
+
+        table[scheme.tableName]
+            .GET({
+                filter,
+                amount: 20,
+            })
+            .then(setRecords)
+    }, [filter, scheme])
+
+    const loadMore = useCallback(async () => {
+        if (records.length === 0) return
+
+        const additionalRecords = await table[scheme.tableName].GET({
+            filter,
+            amount: 20,
+            lastId: records[records.length - 1].id,
+        })
+
+        const merged = [
+            ...records,
+            ...additionalRecords.slice(
+                additionalRecords.findIndex(
+                    (e) => e.id === records[records.length - 1].id
+                ) + 1
+            ),
+        ]
+
+        setRecords(merged)
+    }, [setRecords, records, filter, scheme])
+
+    useConsole("FILTERERDFSJ", filter)
+
+    useEffect(() => {
+        load()
+    }, [scheme, filter.length])
 
     return (
         <Hexile fillx filly>
@@ -56,7 +93,7 @@ const TableViewer: NextPage = () => {
                                     setSubContent({
                                         element: (
                                             <NewRecord
-                                                onReloadRequested={reload}
+                                                onReloadRequested={load}
                                                 scheme={scheme}
                                             />
                                         ),
@@ -74,12 +111,13 @@ const TableViewer: NextPage = () => {
                             </Button>
                         </Hexile>
                     </Hexile>
-                    {tableData && (
+                    {records && (
                         <Table
-                            records={tableData}
+                            records={records}
                             scheme={scheme}
-                            onReloadRequested={reload}
+                            onReloadRequested={load}
                             addFilter={addFilter}
+                            onReachEnd={loadMore}
                         />
                     )}
                     {/* dummy for space */}

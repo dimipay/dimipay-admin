@@ -49,7 +49,7 @@ const TableViewer: NextPage = () => {
 
         const additionalRecords = await table[scheme.tableName].GET({
             filter,
-            amount: 20,
+            amount: 40,
             lastId: records[records.length - 1].id,
         })
 

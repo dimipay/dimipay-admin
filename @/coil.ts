@@ -1,11 +1,11 @@
-import { User } from "@prisma/client"
+import { AdminAccount } from "@prisma/client"
 import { atom } from "recoil"
 import { recoilPersist } from "recoil-persist"
 
 const { persistAtom } = recoilPersist()
 
 export const userAtom = atom<{
-    user: User
+    user: AdminAccount
     token: string
 }>({
     default: null,

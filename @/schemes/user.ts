@@ -1,5 +1,5 @@
 import { Scheme, SLUG, TableRecord } from "@/types"
-import { Role, User } from "@prisma/client"
+import { User } from "@prisma/client"
 import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
 
 export const USER_SCHEME: Scheme = {
@@ -7,7 +7,7 @@ export const USER_SCHEME: Scheme = {
     tableName: SLUG.user,
     fields: {
         ...RECORD_BASE_FIELDS,
-        studentUid: {
+        systemId: {
             display: "교내관리번호",
             description:
                 "학번이 아닌 중앙데이터베이스 관리용 번호입니다. 임의로 변경할 시 시스템에 오류가 발생할 수 있습니다.",
@@ -42,34 +42,11 @@ export const USER_SCHEME: Scheme = {
             },
             required: true,
         },
-        roles: {
-            display: "유형",
+        isTeacher: {
+            display: "교사여부",
             required: true,
-            validateFunc(data: string[]) {
-                if (data.includes("S") && data.includes("T"))
-                    return "학생과 교사 권한을 동시에 부여할 수 없습니다"
-            },
             additional: {
-                type: "multiple",
-                options: [
-                    {
-                        label: Role.USER,
-                        color: "#E54444",
-                    },
-                    {
-                        label: Role.TEACHER,
-                        color: "#E5E544",
-                    },
-                    {
-                        label: Role.ADMIN,
-                        color: "#44A2E5",
-                    },
-                ],
-                map: {
-                    [Role.USER]: "사용자",
-                    [Role.TEACHER]: "교사",
-                    [Role.ADMIN]: "관리자",
-                },
+                type: "boolean",
             },
         },
     },

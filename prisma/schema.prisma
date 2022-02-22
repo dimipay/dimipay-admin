@@ -1,213 +1,235 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
-model Card {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-
-  type          CardType
-  generalCardId String?  @unique
-  prepaidCardId String?  @unique
-
-  ownerId String
-  owner   User   @relation(fields: [ownerId], references: [id])
-
-  generalCard  GeneralCard?
-  prepaidCard  PrepaidCard?
-  transactions Transaction[]
+model AdminAccount {
+  id                   String   @id
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime
+  relatedUserSystemUid String?  @unique
+  username             String
+  hashedPassword       String
+  description          String?
 }
 
 model Category {
-  id               String           @id
-  createdAt        DateTime         @default(now())
+  id               String   @id
+  createdAt        DateTime @default(now())
   updatedAt        DateTime
   name             String
   color            String
-  belongProducts   Product[]
-  discountPolicy   DiscountPolicy[]
   discountPolicyId String?
 }
 
 model Coupon {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-
-  name      String
-  expiresAt DateTime?
-  amount    Int
-
-  usedTransaction   Transaction? @relation(fields: [usedTransactionId], references: [id])
+  id                String    @id
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime
+  name              String
+  expiresAt         DateTime?
+  amount            Int
   usedTransactionId String?
-
-  issuerId String
-  issuer   User   @relation("Coupon_issuerIdToUser", fields: [issuerId], references: [id])
-
-  receiverId String
-  receiver   User   @relation("Coupon_receiverIdToUser", fields: [receiverId], references: [id])
-}
-
-model GeneralCard {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-
-  cardNumber String
-  validMonth Int
-  validYear  Int
-  billingKey String
-
-  Card   Card   @relation(fields: [cardId], references: [id])
-  cardId String @unique
-}
-
-model PrepaidCard {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-
-  balance Int
-  cardId  String @unique
-  card    Card   @relation(fields: [cardId], references: [id])
-
-  PrepaidCardChargeHistory PrepaidCardChargeHistory[]
-}
-
-model PrepaidCardChargeHistory {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-
-  delta      Int
-  status     TransactionStatus
-  method     String
-  detailInfo String
-
-  targetPrepaidCardId String
-  targetPrepaidCard   PrepaidCard @relation(fields: [targetPrepaidCardId], references: [id])
+  issuerId          String
+  receiverId        String
 }
 
 model DiscountPolicy {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-
+  id          String    @id
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
   endsAt      DateTime?
   fixedPrice  Int?
   percentRate Int?
-
-  targetCategory  Category[]
-  targetProduct   Product[]  @relation("discountTargetProduct")
-  excludeProducts Product[]  @relation("discountExcludedProduct")
+  eventId     String?
 }
 
-model Product {
+model Event {
   id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime
+  content   String
+  url       String
+}
 
+model GeneralCard {
+  id              String   @id
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+  cardNumber      String
+  validMonth      Int
+  validYear       Int
+  billingKey      String
+  paymentMethodId String   @unique
+}
+
+model Notice {
+  id          String    @id
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  startsAt    DateTime  @default(now())
+  endsAt      DateTime?
+  title       String
+  description String?
+  url         String
+  authorId    String
+  content     String    @db.LongText
+}
+
+model PaymentMethod {
+  id        String             @id
+  createdAt DateTime           @default(now())
+  updatedAt DateTime
+  type      PaymentMethod_type
+  ownerId   String
+  color     String?
+  name      String?
+}
+
+model PosDevice {
+  id                 String                       @id
+  createdAt          DateTime                     @default(now())
+  updatedAt          DateTime
+  name               String
+  disabled           Boolean                      @default(false)
+  enabledAuthMethods PosDevice_enabledAuthMethods
+}
+
+model PrepaidCard {
+  id              String   @id
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+  balance         Int
+  paymentMethodId String   @unique
+}
+
+model PrepaidCardChargeHistory {
+  id                  String                          @id
+  createdAt           DateTime                        @default(now())
+  updatedAt           DateTime
+  delta               Int
+  status              PrepaidCardChargeHistory_status
+  method              String
+  detailInfo          String
+  targetPrepaidCardId String
+}
+
+model Product {
+  id             String   @id
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
   name           String
   barcode        String?
   price          Int
-  sellingStopped Boolean @default(false)
-
-  categoryId String
-  Category   Category @relation(fields: [categoryId], references: [id])
-
-  transactions    Transaction[]
-  ProductInOutLog ProductInOutLog[]
-
-  discountPolicy         DiscountPolicy[] @relation("discountTargetProduct")
-  discountExcludedPolicy DiscountPolicy[] @relation("discountExcludedProduct")
+  sellingStopped Boolean  @default(false)
+  categoryId     String
 }
 
 model ProductInOutLog {
   id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime
-
-  delta   Int
-  message String?
-
+  delta     Int
+  message   String?
   productId String
-  Product   Product @relation(fields: [productId], references: [id])
 }
 
 model Transaction {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-
-  billingId  String
-  totalPrice Int
-  status     TransactionStatus
-  statusText String?
-  authMethod AuthMethod
-
-  products    Product[]
-  usedCoupons Coupon[]
-
-  usedCard    Card      @relation(fields: [usedCardId], references: [id])
+  id          String                 @id
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime
+  billingId   String
+  totalPrice  Int
+  status      Transaction_status
+  statusText  String?
+  authMethod  Transaction_authMethod
   usedCardId  String
-  posDevice   PosDevice @relation(fields: [posDeviceId], references: [id])
   posDeviceId String
+  userId      String
 }
 
 model User {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-
-  isDisabled    Boolean @default(false)
-  accountName   String  @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+  isDisabled    Boolean  @default(false)
+  accountName   String   @unique
   name          String
-  roles         Role[]
-  profileImage  String
+  isTeacher     Boolean? @default(false)
+  profileImage  String?
   studentNumber String?
-  systemUid     String? @unique
-
-  cards           Card[]
-  issuedCoupons   Coupon[] @relation("Coupon_issuerIdToUser")
-  receivedCoupons Coupon[] @relation("Coupon_receiverIdToUser")
+  id            String   @id
+  systemId      String   @unique
+  paymentPin    String?
+  phoneNumber   String?
 }
 
-model PosDevice {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime
+model CategoryToDiscountPolicy {
+  A String
+  B String
 
-  name               String
-  disabled           Boolean       @default(false)
-  transactions       Transaction[]
-  enabledAuthMethods AuthMethod
+  @@unique([A, B], map: "_CategoryToDiscountPolicy_AB_unique")
+  @@index([B], map: "_CategoryToDiscountPolicy_B_index")
+  @@map("_CategoryToDiscountPolicy")
 }
 
-enum CardType {
+model ProductToTransaction {
+  A String
+  B String
+
+  @@unique([A, B], map: "_ProductToTransaction_AB_unique")
+  @@index([B], map: "_ProductToTransaction_B_index")
+  @@map("_ProductToTransaction")
+}
+
+model discountExcludedProduct {
+  A String
+  B String
+
+  @@unique([A, B], map: "_discountExcludedProduct_AB_unique")
+  @@index([B], map: "_discountExcludedProduct_B_index")
+  @@map("_discountExcludedProduct")
+}
+
+model discountTargetProduct {
+  A String
+  B String
+
+  @@unique([A, B], map: "_discountTargetProduct_AB_unique")
+  @@index([B], map: "_discountTargetProduct_B_index")
+  @@map("_discountTargetProduct")
+}
+
+enum PaymentMethod_type {
   PREPAID
   GENERAL
 }
 
-enum AuthMethod {
+enum PosDevice_enabledAuthMethods {
   SMS
   APP_QR
   FACESIGN
 }
 
-enum Role {
-  USER
-  TEACHER
-  ADMIN
-}
-
-enum TransactionStatus {
+enum PrepaidCardChargeHistory_status {
   CONFIRMED
   CANCELED
   ERROR
+}
+
+enum Transaction_status {
+  CONFIRMED
+  CANCELED
+  ERROR
+}
+
+enum Transaction_authMethod {
+  SMS
+  APP_QR
+  FACESIGN
 }

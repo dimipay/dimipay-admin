@@ -14,8 +14,15 @@ export const TableContent = styled("table", {
 export const Cell = styled("td", {
     padding: "3rem 5rem",
     whiteSpace: "nowrap",
+    maxWidth: "50rem",
+    "&>p": {
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+    },
     "&:last-child": {
         width: "100%",
+        maxWidth: "unset",
     },
 })
 

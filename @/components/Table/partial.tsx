@@ -19,6 +19,9 @@ const getFieldValue = (field: Field, value: DataValue) => {
 
     const additional = field.additional
 
+    if (additional.type === "boolean")
+        return <input type="checkbox" checked={value as boolean} />
+
     if (value instanceof Array && isMultipleSelect(additional))
         return value
             .map(

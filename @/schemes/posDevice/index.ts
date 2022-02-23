@@ -1,6 +1,6 @@
-import { prisma } from "@/storage"
+// import { CreateOtp, SHIT2143 } from "@/components/PanelComponents"
 import { Scheme, SLUG } from "@/types"
-import {} from "@prisma/client"
+import { CreateOtp } from "./panels"
 
 export const POS_DEVICE_SCHEME: Scheme = {
     name: "결제 단말기",
@@ -30,4 +30,5 @@ export const POS_DEVICE_SCHEME: Scheme = {
             },
         },
     },
+    panelComponents: [CreateOtp],
 }

@@ -47,8 +47,6 @@ export const NewRecord = (props: {
         }
     }
 
-    console.log(errors)
-
     return (
         <InlineForm onSubmit={handleSubmit(onSubmit)}>
             <Vexile gap={4}>

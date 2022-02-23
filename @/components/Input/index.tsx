@@ -18,6 +18,7 @@ export const Input: React.FC<{
     disabled?: boolean
     type?: "number"
     error?: string
+    value?: string
 }> = (props) => (
     <label>
         <InputWraper
@@ -42,6 +43,7 @@ export const Input: React.FC<{
                     disabled={props.disabled}
                     defaultValue={props.defaultValue}
                     placeholder={props.placeholder}
+                    value={props.value}
                     {...props.hooker}
                     {...(props.hideContent && {
                         type: "password",
@@ -53,6 +55,7 @@ export const Input: React.FC<{
                         disabled={props.disabled}
                         defaultValue={props.defaultValue}
                         placeholder={props.placeholder}
+                        value={props.value}
                         onInput={(e) => {
                             e.currentTarget.value =
                                 e.currentTarget.value.replace(/[^0-9]/g, "")

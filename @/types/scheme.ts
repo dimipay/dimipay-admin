@@ -88,11 +88,17 @@ export interface ToolbarAction {
     func(selectedRecords: TableRecord[], scheme: Scheme): void
 }
 
+export type PanelComponent = React.FC<{
+    scheme: Scheme
+    record: TableRecord
+}>
+
 export interface Scheme {
     name: string
     tableName: SLUG
     fields?: Record<string, Field>
     actions?: ToolbarAction[]
+    panelComponents?: PanelComponent[]
 }
 
 export interface SchemeGroup {

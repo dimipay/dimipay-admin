@@ -1,9 +1,10 @@
-import { Button, InlineForm } from "@/components"
+import { Button, DividerLine, InlineForm } from "@/components"
 import { table } from "@/functions"
+import { loadRedis } from "@/storage"
 import { DataValue, Scheme, TableRecord } from "@/types"
 import { Important } from "@/typo"
 import { Vexile } from "@haechi/flexile"
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import { FieldError, SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "react-toastify"
 import { PropertyEditer } from "./partial"
@@ -56,27 +57,38 @@ export const RecordEditer = (props: {
         }
     }
 
+    console.log(props.scheme)
+
     return (
-        <InlineForm onSubmit={handleSubmit(onSubmit)}>
-            <Vexile gap={4}>
-                {Object.entries(props.data)
-                    .filter(([column]) => column in props.scheme.fields)
-                    .map(([key, data]) => (
-                        <PropertyEditer
-                            hooker={register(key, {
-                                validate: props.scheme.fields[key].validateFunc,
-                            })}
-                            error={errors[key] as FieldError}
-                            data={data}
-                            field={props.scheme.fields[key]}
-                        />
-                    ))}
-                <Button block>
-                    <Important white center>
-                        저장
-                    </Important>
-                </Button>
-            </Vexile>
-        </InlineForm>
+        <>
+            <InlineForm onSubmit={handleSubmit(onSubmit)}>
+                <Vexile gap={4}>
+                    {Object.entries(props.data)
+                        .filter(([column]) => column in props.scheme.fields)
+                        .map(([key, data]) => (
+                            <PropertyEditer
+                                hooker={register(key, {
+                                    validate:
+                                        props.scheme.fields[key].validateFunc,
+                                })}
+                                error={errors[key] as FieldError}
+                                data={data}
+                                field={props.scheme.fields[key]}
+                            />
+                        ))}
+                    <Button block>
+                        <Important white center>
+                            저장
+                        </Important>
+                    </Button>
+                </Vexile>
+            </InlineForm>
+            {props.scheme.panelComponents?.map((Component) => (
+                <Fragment key={Component.name}>
+                    <DividerLine />
+                    <Component scheme={props.scheme} record={props.data} />
+                </Fragment>
+            ))}
+        </>
     )
 }

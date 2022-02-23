@@ -12,6 +12,8 @@ export async function loadRedis() {
     await client.connect()
 
     redisIntance = client
+
+    return redisIntance
 }
 
 export const key = {

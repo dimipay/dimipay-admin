@@ -2,6 +2,7 @@ export enum SLUG {
     user = "user",
     product = "product",
     category = "category",
+    posDevice = "posDevice",
 }
 
 interface Relation {
@@ -33,11 +34,13 @@ interface MultipleSelectField {
     type: "multiple"
     options: Option[]
     map?: Record<string | number, string>
+    default?: string
 }
 
 interface SingleRelationField {
     type: "relation-single"
     target: SLUG
+    default?: string
 }
 
 export const isMultipleSelect = (d: any): d is MultipleSelectField =>
@@ -54,8 +57,17 @@ export interface Field {
         | MultipleSelectField
         | SingleRelationField
         | {
-              type: "string" | "number" | "boolean" | "date"
+              type: "boolean"
+              default?: boolean
+          }
+        | {
+              type: "string" | "date"
+              default?: string
               pattern?: "color"
+          }
+        | {
+              type: "number"
+              default?: number
           }
     ) & {
         suffix?: string

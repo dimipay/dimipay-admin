@@ -24,7 +24,7 @@ export const Input: React.FC<{
             gap={1.5}
             padding={3}
             disabled={props.disabled}
-            hasError={!!props.error}
+            hasError={typeof props.error === "string"}
         >
             <Hexile gap={1} y="center">
                 {TYPE_ICON_MAP[props.type] && (

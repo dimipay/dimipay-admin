@@ -19,6 +19,11 @@ export const NewRecord = (props: {
         formState: { errors },
     } = useForm<TableRecord>({
         reValidateMode: "onChange",
+        defaultValues: Object.fromEntries(
+            Object.entries(props.scheme.fields)
+                .filter(([_, field]) => field.additional.default !== undefined)
+                .map(([name, field]) => [name, field.additional.default])
+        ),
     })
 
     const onSubmit: SubmitHandler<TableRecord> = async (data) => {
@@ -35,12 +40,14 @@ export const NewRecord = (props: {
             ),
         })
         if (res.id) {
-            toast("수정사항을 저장했어요", {
+            toast("새 항목을 추가했어요", {
                 type: "success",
             })
             props.onReloadRequested()
         }
     }
+
+    console.log(errors)
 
     return (
         <InlineForm onSubmit={handleSubmit(onSubmit)}>
@@ -49,6 +56,9 @@ export const NewRecord = (props: {
                     <PropertyEditer
                         hooker={register(key, {
                             validate: props.scheme.fields[key].validateFunc,
+                            required:
+                                !props.scheme.fields[key].autoGenerative &&
+                                props.scheme.fields[key].required,
                         })}
                         newRegister
                         error={errors[key] as FieldError}

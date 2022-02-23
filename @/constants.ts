@@ -1,14 +1,20 @@
-import { CATEGORY_SCHEME, PRODUCT_SCHEME, USER_SCHEME } from "./schemes"
-import { SchemeGroup, SLUG } from "./types"
+import {
+    CATEGORY_SCHEME,
+    POS_DEVICE_SCHEME,
+    PRODUCT_SCHEME,
+    USER_SCHEME,
+} from "./schemes"
+import { SchemeGroup } from "./types"
 
-export const assert = (name: string, isServersideOnly: boolean) => {
+export const assert = (name: string, isServersideOnly: boolean = true) => {
     const content = process.env[name]
     if (!content && !isServersideOnly)
         throw new Error(`Cannot find "${name}" in environment variables`)
     return content
 }
 
-export const JWT_SECRET = assert("JWT_SECRET", true)
+export const JWT_SECRET = assert("JWT_SECRET")
+export const REDIS_URI = assert("REDIS_URI")
 
 export const GROUPED_TABLES: SchemeGroup[] = [
     {
@@ -17,7 +23,7 @@ export const GROUPED_TABLES: SchemeGroup[] = [
     },
     {
         groupName: "관리",
-        content: [],
+        content: [POS_DEVICE_SCHEME],
     },
 ]
 

@@ -1,8 +1,8 @@
 import { DateInput, Input, MultipleSelect } from "@/components"
 import { useConsole } from "@/functions"
 import { DataValue, Field } from "@/types"
-import { Description } from "@/typo"
-import { Vexile } from "@haechi/flexile"
+import { Description, Regular, Token } from "@/typo"
+import { Hexile, Vexile } from "@haechi/flexile"
 import React from "react"
 import { FieldError, UseFormRegisterReturn } from "react-hook-form"
 
@@ -85,6 +85,18 @@ export const PropertyEditer: React.FC<{
                 )}
             </Vexile>
         )
+
+    if (dataType === "boolean") {
+        return (
+            <Hexile gap={2} x="space">
+                <Regular>{props.field.display}</Regular>
+                <input type="checkbox" {...props.hooker} />
+                {props.field.description && (
+                    <Description>{props.field.description}</Description>
+                )}
+            </Hexile>
+        )
+    }
 
     console.log(dataType, "IS NOT IMPLEMENTED")
 

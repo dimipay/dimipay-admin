@@ -105,7 +105,7 @@ model PrepaidCard {
   id              String   @id @default(uuid())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now())
-  balance         Int
+  balance         Int      @default(0)
   paymentMethodId String   @unique
 }
 

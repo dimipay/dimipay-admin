@@ -26,7 +26,7 @@ export const endpoint =
                     isHandlerError: true,
                 })
             } else {
-                console.log(e)
+                console.log("오류 발생!", e)
                 res.status(e.code || 500).json({
                     message: "알 수 없는 오류가 발생했어요",
                     isHandlerError: true,

@@ -13,30 +13,33 @@ const actions = {
         if (!pos)
             throw new HandlerError("일치하는 결제 단말기를 찾을 수 없어요", 400)
 
-        const randomKey = Math.floor(Math.random() * 1000)
+        const randomKey = Math.floor(Math.random() * 10000)
             .toString()
             .padStart(4, "0")
 
         try {
             const redis = await loadRedis()
+            const regOtpHash = await redis.get(key.posRegistrationOtp)
 
-            if (await redis.get(key.posRegistrationCode(pos.id)))
-                throw new HandlerError("이미 인증코드가 생성되었어요", 400)
+            if (regOtpHash.startsWith(content.posId)) {
+                throw new HandlerError(
+                    "등록중인 포스가 있어요, 잠깐만 기다려주세요",
+                    400
+                )
+            }
 
             await redis.set(
-                key.posRegistrationCode(pos.id),
-                bcrypt.hashSync(randomKey, 10)
+                key.posRegistrationOtp,
+                `${content.posId}:${randomKey}`
             )
 
-            await redis.expire(key.posRegistrationCode(pos.id), 100)
+            await redis.expire(key.posRegistrationOtp, 100)
 
             return {
                 otp: randomKey,
             }
         } catch (e) {
             if (e instanceof HandlerError) throw e
-
-            console.log(e)
             throw new HandlerError("서버에 오류가 발생했어요", 500)
         }
     },

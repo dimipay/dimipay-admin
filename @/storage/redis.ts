@@ -17,5 +17,5 @@ export async function loadRedis() {
 }
 
 export const key = {
-    posRegistrationOtp: "req_pos",
+    posRegistrationPasscode: "req_pos",
 }

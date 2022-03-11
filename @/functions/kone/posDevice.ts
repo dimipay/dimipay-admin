@@ -1,4 +1,7 @@
-import { otpKone } from "pages/api/pos-device/create-otp"
+import { passcodeKone } from "pages/api/pos-device/create-passcode"
 import { kone } from "./core"
 
-export const createOtp = kone<otpKone["POST"]>("pos-device/create-otp", "POST")
+export const createPasscode = kone<passcodeKone["POST"]>(
+    "pos-device/create-passcode",
+    "POST"
+)

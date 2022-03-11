@@ -1,1 +1,1 @@
-export * from "./createOtp"
+export * from "./createPasscode"

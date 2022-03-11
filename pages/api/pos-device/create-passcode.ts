@@ -19,9 +19,9 @@ const actions = {
 
         try {
             const redis = await loadRedis()
-            const regOtpHash = await redis.get(key.posRegistrationOtp)
+            const regPasscodeHash = await redis.get(key.posRegistrationPasscode)
 
-            if (regOtpHash.startsWith(content.posId)) {
+            if (regPasscodeHash.startsWith(content.posId)) {
                 throw new HandlerError(
                     "등록중인 포스가 있어요, 잠깐만 기다려주세요",
                     400
@@ -29,21 +29,21 @@ const actions = {
             }
 
             await redis.set(
-                key.posRegistrationOtp,
+                key.posRegistrationPasscode,
                 `${content.posId}:${randomKey}`
             )
 
-            await redis.expire(key.posRegistrationOtp, 100)
+            await redis.expire(key.posRegistrationPasscode, 100)
 
             return {
-                otp: randomKey,
+                passcode: randomKey,
             }
         } catch (e) {
             if (e instanceof HandlerError) throw e
-            throw new HandlerError("서버에 오류가 발생했어요", 500)
+            throw new HandlerError("서버에 오류가 발생했어요", 500, e)
         }
     },
 }
 
 export default endpoint(actions)
-export type otpKone = typeof actions
+export type passcodeKone = typeof actions

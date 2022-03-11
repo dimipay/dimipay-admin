@@ -1,7 +1,6 @@
-// import { CreateOtp, SHIT2143 } from "@/components/PanelComponents"
 import { Scheme, SLUG } from "@/types"
 import { DELETE_SELECTED_RECORDS_ACTION } from "../common"
-import { CreateOtp } from "./panels"
+import { CreatePasscode } from "./panels"
 
 export const POS_DEVICE_SCHEME: Scheme = {
     name: "결제 단말기",
@@ -31,6 +30,6 @@ export const POS_DEVICE_SCHEME: Scheme = {
             },
         },
     },
-    panelComponents: [CreateOtp],
+    panelComponents: [CreatePasscode],
     actions: [DELETE_SELECTED_RECORDS_ACTION],
 }

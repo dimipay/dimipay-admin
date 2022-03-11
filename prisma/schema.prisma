@@ -77,9 +77,8 @@ model Notice {
   endsAt      DateTime?
   title       String
   description String?
-  url         String
+  url         String?
   authorId    String
-  content     String    @db.LongText
 }
 
 model PaymentMethod {

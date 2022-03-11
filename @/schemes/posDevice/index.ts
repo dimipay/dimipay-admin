@@ -1,5 +1,6 @@
 // import { CreateOtp, SHIT2143 } from "@/components/PanelComponents"
 import { Scheme, SLUG } from "@/types"
+import { DELETE_SELECTED_RECORDS_ACTION } from "../common"
 import { CreateOtp } from "./panels"
 
 export const POS_DEVICE_SCHEME: Scheme = {
@@ -31,4 +32,5 @@ export const POS_DEVICE_SCHEME: Scheme = {
         },
     },
     panelComponents: [CreateOtp],
+    actions: [DELETE_SELECTED_RECORDS_ACTION],
 }

@@ -100,7 +100,7 @@ export const Table: React.FC<{
                     </TableContent>
                     {selectedRecordIds.length !== 0 && (
                         <ActionToolbars gap={2} padding={4}>
-                            {props.scheme.actions.length ? (
+                            {props.scheme.actions?.length ? (
                                 props.scheme.actions?.map((action) => (
                                     <Button
                                         key={action.button.label}

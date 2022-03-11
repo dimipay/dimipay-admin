@@ -13,9 +13,12 @@ const actions = {
         if (!pos)
             throw new HandlerError("일치하는 결제 단말기를 찾을 수 없어요", 400)
 
-        const randomKey = Math.floor(Math.random() * 10000)
-            .toString()
-            .padStart(4, "0")
+        const randomKey = bcrypt.hash(
+            Math.floor(Math.random() * 10000)
+                .toString()
+                .padStart(4, "0"),
+            10
+        )
 
         try {
             const redis = await loadRedis()

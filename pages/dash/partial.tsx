@@ -28,7 +28,7 @@ export const Sidebar = (
                             )[0]
                         }`}
                     >
-                        <Regular dark={3}>{table.name}</Regular>
+                        <Regular dark={3}>{table.displayName}</Regular>
                     </PlainLink>
                 ))}
             </Vexile>

@@ -14,28 +14,28 @@ export const DELETE_SELECTED_RECORDS_ACTION: ToolbarAction = {
 
 export const RECORD_BASE_FIELDS: Record<string, Field> = {
     id: {
-        display: "ID",
+        displayName: "ID",
         readOnly: true,
         autoGenerative: true,
-        additional: {
+        typeOption: {
             type: "string",
         },
         invisibleInTable: true,
     },
     createdAt: {
-        display: "가입일",
+        displayName: "생성일",
         readOnly: true,
         autoGenerative: true,
-        additional: {
+        typeOption: {
             type: "date",
         },
         invisibleInTable: true,
     },
     updatedAt: {
-        display: "마지막 정보 수정",
+        displayName: "마지막 정보 수정",
         readOnly: true,
         autoGenerative: true,
-        additional: {
+        typeOption: {
             type: "date",
         },
         invisibleInTable: true,

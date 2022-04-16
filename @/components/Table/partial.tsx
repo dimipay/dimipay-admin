@@ -17,7 +17,7 @@ import { DividerLine, RecordEditer } from ".."
 const getFieldValue = (field: Field, value: DataValue) => {
     if (field.computed) return field.computed(value)
 
-    const additional = field.additional
+    const additional = field.typeOption
 
     if (additional.type === "boolean")
         return <input type="checkbox" checked={value as boolean} />
@@ -58,7 +58,7 @@ export const Row = forwardRef<
                             scheme={props.scheme}
                         />
                     ),
-                    name: props.scheme.name + " 상세",
+                    name: props.scheme.displayName + " 상세",
                 })
             }
         >

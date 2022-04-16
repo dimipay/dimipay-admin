@@ -13,13 +13,13 @@ export const PropertyEditer: React.FC<{
     error?: FieldError
     newRegister?: boolean
 }> = (props) => {
-    const dataType = props.field.additional.type
+    const dataType = props.field.typeOption.type
 
     const placeholder =
         props.newRegister && props.field.autoGenerative
             ? "자동으로 설정됩니다"
             : props.field.placeholder ||
-              props.field.display.을를 + " 입력해주세요"
+              props.field.displayName.을를 + " 입력해주세요"
 
     const disabled =
         (props.newRegister && props.field.autoGenerative) ||
@@ -32,7 +32,7 @@ export const PropertyEditer: React.FC<{
             <Vexile gap={1}>
                 <Input
                     hooker={props.hooker}
-                    name={props.field.display}
+                    name={props.field.displayName}
                     defaultValue={props.data as string}
                     disabled={disabled}
                     placeholder={placeholder}
@@ -50,14 +50,14 @@ export const PropertyEditer: React.FC<{
         return (
             <Vexile gap={1}>
                 <MultipleSelect
-                    options={props.field.additional.options}
+                    options={props.field.typeOption.options}
                     data={props.data as string[] | number[]}
                     placeholder={
                         props.field.placeholder ||
-                        props.field.display.을를 + " 선택해주세요"
+                        props.field.displayName.을를 + " 선택해주세요"
                     }
-                    name={props.field.display}
-                    displayMap={props.field.additional.map}
+                    name={props.field.displayName}
+                    displayMap={props.field.typeOption.map}
                     hooker={props.hooker}
                     error={props.error?.message}
                     disabled={disabled}
@@ -73,7 +73,7 @@ export const PropertyEditer: React.FC<{
             <Vexile gap={1}>
                 <DateInput
                     // hooker={props.hooker}
-                    name={props.field.display}
+                    name={props.field.displayName}
                     defaultValue={props.data as Date}
                     placeholder={placeholder}
                     error={props.error?.message}
@@ -89,7 +89,7 @@ export const PropertyEditer: React.FC<{
     if (dataType === "boolean") {
         return (
             <Hexile gap={2} x="space">
-                <Regular>{props.field.display}</Regular>
+                <Regular>{props.field.displayName}</Regular>
                 <input type="checkbox" {...props.hooker} />
                 {props.field.description && (
                     <Description>{props.field.description}</Description>

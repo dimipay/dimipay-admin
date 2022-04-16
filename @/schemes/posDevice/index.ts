@@ -3,28 +3,28 @@ import { DELETE_SELECTED_RECORDS_ACTION } from "../common"
 import { CreatePasscode } from "./panels"
 
 export const POS_DEVICE_SCHEME: Scheme = {
-    name: "결제 단말기",
+    displayName: "결제 단말기",
     tableName: SLUG.posDevice,
     fields: {
         id: {
-            display: "고유번호",
+            displayName: "고유번호",
             required: true,
             autoGenerative: true,
             readOnly: true,
-            additional: {
+            typeOption: {
                 type: "string",
             },
         },
         name: {
-            display: "이름",
+            displayName: "이름",
             required: true,
-            additional: {
+            typeOption: {
                 type: "string",
             },
         },
         disabled: {
-            display: "결제 중지 여부",
-            additional: {
+            displayName: "결제 중지 여부",
+            typeOption: {
                 type: "boolean",
                 default: false,
             },

@@ -87,7 +87,7 @@ const actions = {
 
             if (field.readOnly)
                 throw new HandlerError(
-                    `${field.display.은는} 수정이 불가능해요`,
+                    `${field.displayName.은는} 수정이 불가능해요`,
                     400
                 )
 
@@ -97,14 +97,14 @@ const actions = {
 
             if (typeof validateResult === "string")
                 throw new HandlerError(
-                    `${table.fields[key].display.이가} 올바르지 않아요. ` +
+                    `${table.fields[key].displayName.이가} 올바르지 않아요. ` +
                         validateResult,
                     400
                 )
 
             if (validateResult === false)
                 throw new HandlerError(
-                    `${table.fields[key].display.이가} 올바르지 않아요`,
+                    `${table.fields[key].displayName.이가} 올바르지 않아요`,
                     400
                 )
         }

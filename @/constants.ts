@@ -3,6 +3,7 @@ import {
     POS_DEVICE_SCHEME,
     PRODUCT_SCHEME,
     USER_SCHEME,
+    DISCOUNT_POLICY,
 } from "./schemes"
 import { SchemeGroup } from "./types"
 
@@ -19,7 +20,12 @@ export const REDIS_URI = assert("REDIS_URI")
 export const GROUPED_TABLES: SchemeGroup[] = [
     {
         groupName: "판매",
-        content: [USER_SCHEME, PRODUCT_SCHEME, CATEGORY_SCHEME],
+        content: [
+            USER_SCHEME,
+            PRODUCT_SCHEME,
+            CATEGORY_SCHEME,
+            DISCOUNT_POLICY,
+        ],
     },
     {
         groupName: "관리",

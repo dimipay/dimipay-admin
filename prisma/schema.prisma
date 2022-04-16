@@ -41,21 +41,23 @@ model Coupon {
 }
 
 model DiscountPolicy {
-  id          String    @id @default(uuid())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
-  endsAt      DateTime?
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
   fixedPrice  Int?
   percentRate Int?
   eventId     String?
 }
 
 model Event {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  content   String
-  url       String
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  url         String
+  description String
+  title       String
+  endsAt      DateTime?
+  startsAt    DateTime?
 }
 
 model GeneralCard {

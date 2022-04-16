@@ -3,6 +3,7 @@ export enum SLUG {
     product = "product",
     category = "category",
     posDevice = "posDevice",
+    discountPolicy = "discountPolicy",
 }
 
 interface Relation {
@@ -47,13 +48,13 @@ export const isMultipleSelect = (d: any): d is MultipleSelectField =>
     d.type === "multiple"
 
 export interface Field {
-    display: string
+    displayName: string
     invisibleInTable?: boolean
     description?: string
     computed?(value: unknown): string
     autoGenerative?: boolean
     readOnly?: boolean
-    additional: (
+    typeOption: (
         | MultipleSelectField
         | SingleRelationField
         | {
@@ -94,7 +95,7 @@ export type PanelComponent = React.FC<{
 }>
 
 export interface Scheme {
-    name: string
+    displayName: string
     tableName: SLUG
     fields?: Record<string, Field>
     actions?: ToolbarAction[]

@@ -64,7 +64,7 @@ export const Table: React.FC<{
                                                 }
                                                 onSort={() => setSort(key)}
                                             >
-                                                {field?.display || key}
+                                                {field?.displayName || key}
                                             </ActionableHeaderCell>
                                         )
                                 )}

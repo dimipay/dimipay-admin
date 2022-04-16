@@ -1,28 +1,28 @@
 import { Scheme, SLUG, TableRecord } from "@/types"
 import { User } from "@prisma/client"
-import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
+import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "../common"
 
 export const USER_SCHEME: Scheme = {
-    name: "사용자",
+    displayName: "사용자",
     tableName: SLUG.user,
     fields: {
         ...RECORD_BASE_FIELDS,
         systemId: {
-            display: "교내관리번호",
+            displayName: "교내관리번호",
             description:
                 "학번이 아닌 중앙데이터베이스 관리용 번호입니다. 임의로 변경할 시 시스템에 오류가 발생할 수 있습니다.",
             required: true,
             validateFunc(data) {
                 if (data < 0) return "교내관리번호는 0 이상이여야 합니다"
             },
-            additional: {
+            typeOption: {
                 type: "string",
             },
         },
         accountName: {
-            display: "ID",
+            displayName: "ID",
             required: true,
-            additional: {
+            typeOption: {
                 type: "string",
             },
             validateFunc(data: string) {
@@ -35,17 +35,17 @@ export const USER_SCHEME: Scheme = {
             },
         },
         profileImage: {
-            display: "프로필 이미지",
+            displayName: "프로필 이미지",
             invisibleInTable: true,
-            additional: {
+            typeOption: {
                 type: "string",
             },
             required: true,
         },
         isTeacher: {
-            display: "교사여부",
+            displayName: "교사여부",
             required: true,
-            additional: {
+            typeOption: {
                 type: "boolean",
             },
         },
@@ -66,4 +66,5 @@ export const USER_SCHEME: Scheme = {
             },
         },
     ],
+    panelComponents: [],
 }

@@ -42,7 +42,7 @@ export const RecordEditer = (props: {
                     )
                     .map(([key, value]) => [
                         key,
-                        props.scheme.fields[key].additional.type === "number"
+                        props.scheme.fields[key].typeOption.type === "number"
                             ? Number(value)
                             : value,
                     ])

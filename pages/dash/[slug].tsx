@@ -77,7 +77,7 @@ const TableViewer: NextPage = () => {
             {scheme && (
                 <Vexile fillx filly padding={10} gap={4} scrollx relative>
                     <Hexile x="space">
-                        <PageHeader>{scheme.name}</PageHeader>
+                        <PageHeader>{scheme.displayName}</PageHeader>
                         <Hexile gap={2}>
                             <Button color="black">
                                 <LoadSVG
@@ -97,7 +97,7 @@ const TableViewer: NextPage = () => {
                                                 scheme={scheme}
                                             />
                                         ),
-                                        name: scheme.name + " 생성",
+                                        name: scheme.displayName + " 생성",
                                     })
                                 }
                             >

@@ -21,8 +21,8 @@ export const NewRecord = (props: {
         reValidateMode: "onChange",
         defaultValues: Object.fromEntries(
             Object.entries(props.scheme.fields)
-                .filter(([_, field]) => field.additional.default !== undefined)
-                .map(([name, field]) => [name, field.additional.default])
+                .filter(([_, field]) => field.typeOption.default !== undefined)
+                .map(([name, field]) => [name, field.typeOption.default])
         ),
     })
 
@@ -33,7 +33,7 @@ export const NewRecord = (props: {
                     .filter(([key]) => !props.scheme.fields[key].autoGenerative)
                     .map(([key, value]) => [
                         key,
-                        props.scheme.fields[key].additional.type === "number"
+                        props.scheme.fields[key].typeOption.type === "number"
                             ? Number(value)
                             : value,
                     ])

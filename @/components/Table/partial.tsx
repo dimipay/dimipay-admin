@@ -6,6 +6,7 @@ import {
     DataValue,
     Field,
     isMultipleSelect,
+    Relation,
     Scheme,
     SingleRelationField,
     TableRecord,
@@ -15,6 +16,7 @@ import { Important, Regular } from "@/typo"
 import { TooltipWrapper, Cell, HeaderCell } from "./style"
 import { DividerLine, RecordEditer } from ".."
 import { ColorBubble } from "../atoms"
+import { Hexile, Vexile } from "@haechi/flexile"
 
 const getFieldValue = (field: Field, value: DataValue) => {
     if (field.computed) return field.computed(value)
@@ -24,8 +26,15 @@ const getFieldValue = (field: Field, value: DataValue) => {
     if (typeOption.type === "boolean")
         return <input type="checkbox" checked={value as boolean} />
 
-    if (typeOption.type === "relation-single") return "뷍"
-    // return value[(field.typeOption as SingleRelationField).displayNameField]
+    if (typeOption.type === "relation-single") {
+        const target = (value as Relation).target[0]
+        return (
+            <Hexile gap={2} y="center">
+                <ColorBubble color={target.color} />
+                <Regular>{target.displayName}</Regular>
+            </Hexile>
+        )
+    }
 
     if (value instanceof Array && isMultipleSelect(typeOption))
         return value

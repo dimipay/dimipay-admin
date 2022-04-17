@@ -111,6 +111,7 @@ const actions = {
                                                               field
                                                                   .displayNameField
                                                           ],
+                                                      color: relatedDocument.color,
                                                   })
                                               )
                                             : [
@@ -121,6 +122,7 @@ const actions = {
                                                               field
                                                                   .displayNameField
                                                           ],
+                                                      color: typedValue.color,
                                                   },
                                               ]
                                     return [

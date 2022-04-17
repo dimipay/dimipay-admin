@@ -12,6 +12,7 @@ export interface Relation {
     target: {
         id: string
         displayName: string
+        color?: string
     }[]
 }
 

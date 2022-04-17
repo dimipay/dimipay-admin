@@ -23,10 +23,11 @@ export const Wrapper = styled(Vexile, {
                 "&:focus": {
                     elevated: true,
                 },
-                "&:focus > div:first-of-type": {
+                "&:focus > div:first-of-type, &:focus-within": {
                     borderColor: "$accent",
                     backgroundColor: "white",
                     zIndex: 1,
+                    elevated: true,
                 },
             },
         },
@@ -41,5 +42,24 @@ export const Item = styled(Hexile, {
                 backgroundColor: "$dark6",
             },
         },
+    },
+})
+
+export const SearchInput = styled("input", {
+    width: "100%",
+    boxSizing: "border-box",
+    display: "block",
+    border: "none",
+    outline: "none",
+    fontSize: "3.5rem",
+    background: "transparent",
+})
+
+export const Searhbox = styled(Hexile, {
+    borderBottom: "0.5rem solid $dark5",
+    boxSizing: "content-box",
+    overflow: "hidden",
+    "&:focus-within": {
+        elevated: 1,
     },
 })

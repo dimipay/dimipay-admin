@@ -4,7 +4,7 @@ import { Regular } from "@/typo"
 import { Hexile } from "@haechi/flexile"
 import React, { useState } from "react"
 import { LoadSVG } from ".."
-import { SelectableList } from "../MultipleSelect/partial"
+import { SelectableList } from "../Dropdown/partial"
 import { ListWrapper, LogicalInput, Wrapper } from "./style"
 
 export const MiniSelect: React.FC<{

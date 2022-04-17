@@ -1,13 +1,38 @@
 import { Button, DividerLine, InlineForm } from "@/components"
 import { table } from "@/functions"
 import { loadRedis } from "@/storage"
-import { DataValue, Scheme, TableRecord } from "@/types"
+import {
+    DataValue,
+    MultipleRelationField,
+    Relation,
+    Scheme,
+    TableRecord,
+} from "@/types"
 import { Important } from "@/typo"
 import { Vexile } from "@haechi/flexile"
 import { Fragment, useEffect } from "react"
 import { FieldError, SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "react-toastify"
 import { PropertyEditer } from "./partial"
+
+const relationSanitizer = (data: TableRecord) => {
+    return {
+        ...data,
+        ...Object.fromEntries(
+            Object.entries(data)
+                .map(([key, value]) => {
+                    if (value instanceof Object)
+                        return [
+                            key,
+                            (value as unknown as Relation).target.map(
+                                (e) => e.id
+                            ),
+                        ]
+                })
+                .filter(Boolean)
+        ),
+    }
+}
 
 export const RecordEditer = (props: {
     data: TableRecord
@@ -20,13 +45,14 @@ export const RecordEditer = (props: {
         setValue,
         formState: { errors },
     } = useForm<TableRecord>({
-        defaultValues: props.data,
+        defaultValues: relationSanitizer(props.data),
         reValidateMode: "onChange",
     })
 
     useEffect(() => {
-        for (const key in props.data) {
-            setValue(key, props.data[key])
+        const sanitized = relationSanitizer(props.data)
+        for (const key in sanitized) {
+            setValue(key, sanitized[key])
         }
     }, [props.data])
 

@@ -1,4 +1,4 @@
-import { DateInput, Input, MultipleSelect } from "@/components"
+import { DateInput, Input, Dropdown } from "@/components"
 import { TEXT_INPUT_COMPATIBLE_TYPES } from "@/components/Input"
 import { useConsole } from "@/functions"
 import { DataValue, Field } from "@/types"
@@ -28,16 +28,20 @@ export const PropertyEditer: React.FC<{
 
     useConsole("FIELD_ERROR", props.error?.message)
 
+    const commonProps = {
+        hooker: props.hooker,
+        name: props.field.displayName,
+        error: props.error?.message,
+        disabled,
+        placeholder,
+    }
+
     if (TEXT_INPUT_COMPATIBLE_TYPES.includes(dataType)) {
         return (
             <Vexile gap={1}>
                 <Input
-                    hooker={props.hooker}
-                    name={props.field.displayName}
+                    {...commonProps}
                     defaultValue={props.data as string}
-                    disabled={disabled}
-                    placeholder={placeholder}
-                    error={props.error?.message}
                     type={dataType}
                 />
                 {props.field.description && (
@@ -50,18 +54,15 @@ export const PropertyEditer: React.FC<{
     if (dataType === "multiple")
         return (
             <Vexile gap={1}>
-                <MultipleSelect
+                <Dropdown
                     options={props.field.typeOption.options}
                     data={props.data as string[] | number[]}
+                    {...commonProps}
                     placeholder={
                         props.field.placeholder ||
                         props.field.displayName.을를 + " 선택해주세요"
                     }
-                    name={props.field.displayName}
                     displayMap={props.field.typeOption.map}
-                    hooker={props.hooker}
-                    error={props.error?.message}
-                    disabled={disabled}
                 />
                 {props.field.description && (
                     <Description>{props.field.description}</Description>
@@ -82,7 +83,24 @@ export const PropertyEditer: React.FC<{
     }
 
     if (dataType === "relation-single") {
-        return <>네!?</>
+        return (
+            <Vexile gap={1}>
+                <Dropdown
+                    options={[
+                        {
+                            label: "집",
+                            amount: 10,
+                            color: "red",
+                        },
+                    ]}
+                    {...commonProps}
+                    placeholder={props.field.displayName.을를 + " 선택해주세요"}
+                />
+                {props.field.description && (
+                    <Description>{props.field.description}</Description>
+                )}
+            </Vexile>
+        )
     }
 
     console.log(dataType, "IS NOT IMPLEMENTED")

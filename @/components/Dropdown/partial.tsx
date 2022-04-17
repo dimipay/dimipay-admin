@@ -3,7 +3,10 @@ import { ColorBubble } from "@/components"
 import { Description } from "@/typo"
 import { Option } from "@/types"
 import { DividerLine } from ".."
-import { Item } from "./style"
+import { Item, SearchInput, Searhbox } from "./style"
+import { clickWithSpace } from "@/functions"
+import { LoadSVG } from "../LoadSVG"
+import { searchIcon } from "@/assets"
 
 export const SelectableList: React.FC<{
     options: Option[]
@@ -14,10 +17,26 @@ export const SelectableList: React.FC<{
     coDisplayKey?: boolean
 }> = (props) => {
     return (
-        <Vexile style={props.style}>
+        <Vexile
+            style={props.style}
+            onClick={(e) => {
+                e.stopPropagation()
+            }}
+        >
+            <Searhbox padding={3} y="center" gap={2}>
+                <LoadSVG
+                    alt="검색 아이콘"
+                    src={searchIcon}
+                    height={3}
+                    width={3}
+                />
+                <SearchInput onKeyDown={(e) => e.stopPropagation()} />
+            </Searhbox>
             {props.options.map((option) => (
                 <>
                     <Item
+                        tabIndex={0}
+                        onKeyDown={clickWithSpace}
                         x="space"
                         padding={3}
                         selected={props.selectedItems.includes(

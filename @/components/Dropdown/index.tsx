@@ -7,8 +7,9 @@ import { Option } from "@/types"
 
 import { DataView, Wrapper } from "./style"
 import { SelectableList } from "./partial"
+import { MiniInput } from "../MiniInput"
 
-export const MultipleSelect: React.FC<{
+export const Dropdown: React.FC<{
     options: Option[]
     data?: (string | number)[]
     name: string
@@ -17,15 +18,10 @@ export const MultipleSelect: React.FC<{
     displayMap?: Record<string | number, string>
     error?: string
     disabled?: boolean
+    maxSelectAmount?: number
 }> = (props) => {
     const [opened, setOpened] = useState(false)
     const [logicalValue, setValue] = useState(props.data || [])
-    useConsole(
-        "SELECTIVE",
-        props.options.map((value) =>
-            logicalValue.includes(value.key || value.label)
-        )
-    )
 
     const logicalSelect = React.useRef<HTMLSelectElement>(null)
 
@@ -47,8 +43,16 @@ export const MultipleSelect: React.FC<{
             <Wrapper
                 hasError={!!props.error}
                 onKeyDown={clickWithSpace}
-                onFocus={props.disabled ? undefined : () => setOpened(true)}
-                onBlur={props.disabled ? undefined : () => setOpened(false)}
+                onFocus={props.disabled ? undefined : (e) => setOpened(true)}
+                onBlur={
+                    props.disabled
+                        ? undefined
+                        : (e) => {
+                              if (e.currentTarget.contains(e.relatedTarget))
+                                  return
+                              setOpened(false)
+                          }
+                }
                 tabIndex={props.disabled ? -1 : 0}
                 disabled={!!props.disabled}
             >
@@ -56,7 +60,9 @@ export const MultipleSelect: React.FC<{
                     style={{ display: "none" }}
                     name={props.hooker.name}
                     ref={(r) => {
+                        if (!r) return
                         logicalSelect.current = r
+                        console.log(props.hooker)
                         props.hooker.ref(r)
                     }}
                     multiple

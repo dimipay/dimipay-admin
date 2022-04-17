@@ -1,4 +1,5 @@
 import { Regular, Token } from "@/typo"
+import { UseFormRegisterReturn } from "react-hook-form"
 import { InputWraper } from "../Input/style"
 
 export const DateInput: React.FC<{
@@ -7,6 +8,7 @@ export const DateInput: React.FC<{
     defaultValue?: Date
     placeholder: string
     disabled?: boolean
+    hooker?: UseFormRegisterReturn
 }> = (props) => {
     return (
         <InputWraper

@@ -1,4 +1,5 @@
 import { DateInput, Input, MultipleSelect } from "@/components"
+import { TEXT_INPUT_COMPATIBLE_TYPES } from "@/components/Input"
 import { useConsole } from "@/functions"
 import { DataValue, Field } from "@/types"
 import { Description, Regular, Token } from "@/typo"
@@ -27,7 +28,7 @@ export const PropertyEditer: React.FC<{
 
     useConsole("FIELD_ERROR", props.error?.message)
 
-    if (dataType === "string" || dataType === "number") {
+    if (TEXT_INPUT_COMPATIBLE_TYPES.includes(dataType)) {
         return (
             <Vexile gap={1}>
                 <Input
@@ -37,7 +38,7 @@ export const PropertyEditer: React.FC<{
                     disabled={disabled}
                     placeholder={placeholder}
                     error={props.error?.message}
-                    type={dataType === "number" ? "number" : undefined}
+                    type={dataType}
                 />
                 {props.field.description && (
                     <Description>{props.field.description}</Description>
@@ -68,23 +69,23 @@ export const PropertyEditer: React.FC<{
             </Vexile>
         )
 
-    if (dataType === "date")
-        return (
-            <Vexile gap={1}>
-                <DateInput
-                    // hooker={props.hooker}
-                    name={props.field.displayName}
-                    defaultValue={props.data as Date}
-                    placeholder={placeholder}
-                    error={props.error?.message}
-                    disabled={disabled}
-                    // type="datetime-local"
-                />
-                {props.field.description && (
-                    <Description>{props.field.description}</Description>
-                )}
-            </Vexile>
-        )
+    // if (dataType === "date")
+    //     return (
+    //         <Vexile gap={1}>
+    //             <DateInput
+    //                 hooker={props.hooker}
+    //                 name={props.field.displayName}
+    //                 defaultValue={props.data as Date}
+    //                 placeholder={placeholder}
+    //                 error={props.error?.message}
+    //                 disabled={disabled}
+    //                 type="datetime-local"
+    //             />
+    //             {props.field.description && (
+    //                 <Description>{props.field.description}</Description>
+    //             )}
+    //         </Vexile>
+    //     )
 
     if (dataType === "boolean") {
         return (

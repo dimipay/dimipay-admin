@@ -29,19 +29,13 @@ export const PRODUCT_SCHEME: Scheme = {
             },
             description: "할인이 적용되지 않은 기준 판매단가",
         },
-        Category: {
+        category: {
             displayName: "분류",
             required: true,
             typeOption: {
                 type: "relation-single",
                 target: SLUG.category,
-            },
-        },
-        inventory: {
-            displayName: "현재 재고",
-            required: true,
-            typeOption: {
-                type: "number",
+                displayNameField: "name",
             },
         },
     },

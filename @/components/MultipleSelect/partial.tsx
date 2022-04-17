@@ -1,19 +1,9 @@
-import { Option } from "@/types"
-import { Description } from "@/typo"
 import { Vexile, Hexile } from "@haechi/flexile"
+import { ColorBubble } from "@/components"
+import { Description } from "@/typo"
+import { Option } from "@/types"
 import { DividerLine } from ".."
 import { Item } from "./style"
-
-export const ColorBubble: React.FC<{ color: string }> = ({ color }) => (
-    <div
-        style={{
-            width: "2rem",
-            height: "2rem",
-            backgroundColor: color,
-            borderRadius: "2rem",
-        }}
-    />
-)
 
 export const SelectableList: React.FC<{
     options: Option[]

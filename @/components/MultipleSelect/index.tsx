@@ -1,14 +1,12 @@
 import { UseFormRegisterReturn } from "react-hook-form"
 import React, { useEffect, useState } from "react"
-import { Hexile, Vexile } from "@haechi/flexile"
 
-import { Description, Regular, Token } from "@/typo"
 import { clickWithSpace, useConsole } from "@/functions"
+import { Regular, Token } from "@/typo"
 import { Option } from "@/types"
 
-import { DataView, Item, Wrapper } from "./style"
-import { ColorBubble, SelectableList } from "./partial"
-import { DividerLine } from ".."
+import { DataView, Wrapper } from "./style"
+import { SelectableList } from "./partial"
 
 export const MultipleSelect: React.FC<{
     options: Option[]

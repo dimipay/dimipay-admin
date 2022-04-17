@@ -7,9 +7,12 @@ export enum SLUG {
     event = "event",
 }
 
-interface Relation {
-    target: string
-    ids: string[]
+export interface Relation {
+    slug: string
+    target: {
+        id: string
+        displayName: string
+    }[]
 }
 
 export type DataValue =
@@ -39,10 +42,16 @@ interface MultipleSelectField {
     default?: string
 }
 
-interface SingleRelationField {
+export interface SingleRelationField {
     type: "relation-single"
     target: SLUG
     default?: string
+    displayNameField: string
+}
+
+export interface MultipleRelationField
+    extends Omit<SingleRelationField, "type"> {
+    type: "relation-multiple"
 }
 
 export const isMultipleSelect = (d: any): d is MultipleSelectField =>
@@ -58,6 +67,7 @@ export interface Field {
     typeOption: (
         | MultipleSelectField
         | SingleRelationField
+        | MultipleRelationField
         | {
               type: "boolean"
               default?: boolean

@@ -57,8 +57,6 @@ export const RecordEditer = (props: {
         }
     }
 
-    console.log(props.scheme)
-
     return (
         <>
             <InlineForm onSubmit={handleSubmit(onSubmit)}>

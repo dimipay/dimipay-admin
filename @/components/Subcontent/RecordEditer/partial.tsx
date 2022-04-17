@@ -69,24 +69,6 @@ export const PropertyEditer: React.FC<{
             </Vexile>
         )
 
-    // if (dataType === "date")
-    //     return (
-    //         <Vexile gap={1}>
-    //             <DateInput
-    //                 hooker={props.hooker}
-    //                 name={props.field.displayName}
-    //                 defaultValue={props.data as Date}
-    //                 placeholder={placeholder}
-    //                 error={props.error?.message}
-    //                 disabled={disabled}
-    //                 type="datetime-local"
-    //             />
-    //             {props.field.description && (
-    //                 <Description>{props.field.description}</Description>
-    //             )}
-    //         </Vexile>
-    //     )
-
     if (dataType === "boolean") {
         return (
             <Hexile gap={2} x="space">
@@ -97,6 +79,10 @@ export const PropertyEditer: React.FC<{
                 )}
             </Hexile>
         )
+    }
+
+    if (dataType === "relation-single") {
+        return <>네!?</>
     }
 
     console.log(dataType, "IS NOT IMPLEMENTED")

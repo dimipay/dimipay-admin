@@ -1,6 +1,13 @@
 import { TABLES } from "@/constants"
 import { prisma } from "@/storage"
-import { Field, Filter, HandlerError, TableRecord } from "@/types"
+import {
+    Field,
+    Filter,
+    HandlerError,
+    Relation,
+    SingleRelationField,
+    TableRecord,
+} from "@/types"
 import { Prisma } from "@prisma/client"
 import { endpoint } from ".."
 
@@ -45,15 +52,90 @@ const actions = {
                 }))
 
             try {
-                const res = await (prisma[table.tableName].findMany as any)({
+                // prisma.category.findMany({
+                //     include: {
+                //         products: true,
+                //     }
+                // })
+
+                const res: TableRecord[] = await (
+                    prisma[table.tableName].findMany as any
+                )({
                     orderBy: sort,
                     where: filter,
                     take: props.amount || 20,
                     cursor: props.lastId && {
                         id: props.lastId,
                     },
+                    select: Object.keys(table.fields).reduce(
+                        (acc, current) => ({
+                            ...acc,
+                            [current]: true,
+                        }),
+                        {}
+                    ),
                 })
-                return res || []
+
+                const relationKeys = Object.entries(table.fields)
+                    .filter(([key, value]) =>
+                        ["relation-single", "relation-multiple"].includes(
+                            table.fields[key].typeOption.type
+                        )
+                    )
+                    .map((e) => e[0])
+
+                const relationProcessedRecords = res.map((record) => {
+                    return {
+                        ...record,
+                        ...Object.fromEntries(
+                            Object.entries(record)
+                                .filter(([key]) => relationKeys.includes(key))
+                                .map(([key, value]) => {
+                                    const field = table.fields[key]
+                                        .typeOption as SingleRelationField
+
+                                    const typedValue = value as unknown as
+                                        | TableRecord
+                                        | TableRecord[]
+
+                                    const isMultipleRelation =
+                                        typedValue instanceof Array
+
+                                    const relatedRecords =
+                                        typedValue instanceof Array
+                                            ? typedValue.map(
+                                                  (relatedDocument) => ({
+                                                      id: relatedDocument.id,
+                                                      displayName:
+                                                          relatedDocument[
+                                                              field
+                                                                  .displayNameField
+                                                          ],
+                                                  })
+                                              )
+                                            : [
+                                                  {
+                                                      id: typedValue.id,
+                                                      displayName:
+                                                          typedValue[
+                                                              field
+                                                                  .displayNameField
+                                                          ],
+                                                  },
+                                              ]
+                                    return [
+                                        key,
+                                        {
+                                            slug: field.target,
+                                            target: relatedRecords,
+                                        } as Relation,
+                                    ]
+                                })
+                        ),
+                    }
+                })
+
+                return relationProcessedRecords || []
             } catch (e) {
                 console.log(e)
                 throw e

@@ -7,26 +7,31 @@ import {
     Field,
     isMultipleSelect,
     Scheme,
+    SingleRelationField,
     TableRecord,
 } from "@/types"
 import { Important, Regular } from "@/typo"
 
 import { TooltipWrapper, Cell, HeaderCell } from "./style"
 import { DividerLine, RecordEditer } from ".."
+import { ColorBubble } from "../atoms"
 
 const getFieldValue = (field: Field, value: DataValue) => {
     if (field.computed) return field.computed(value)
 
-    const additional = field.typeOption
+    const typeOption = field.typeOption
 
-    if (additional.type === "boolean")
+    if (typeOption.type === "boolean")
         return <input type="checkbox" checked={value as boolean} />
 
-    if (value instanceof Array && isMultipleSelect(additional))
+    if (typeOption.type === "relation-single") return "뷍"
+    // return value[(field.typeOption as SingleRelationField).displayNameField]
+
+    if (value instanceof Array && isMultipleSelect(typeOption))
         return value
             .map(
                 (v: string | number | boolean | Date) =>
-                    (field.computed?.(v) ?? additional.map[v.toString()]) ||
+                    (field.computed?.(v) ?? typeOption.map[v.toString()]) ||
                     v.toString()
             )
             .join(", ")

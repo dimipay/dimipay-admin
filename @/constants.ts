@@ -4,6 +4,7 @@ import {
     PRODUCT_SCHEME,
     USER_SCHEME,
     DISCOUNT_POLICY,
+    EVENT,
 } from "./schemes"
 import { SchemeGroup } from "./types"
 
@@ -25,6 +26,7 @@ export const GROUPED_TABLES: SchemeGroup[] = [
             PRODUCT_SCHEME,
             CATEGORY_SCHEME,
             DISCOUNT_POLICY,
+            EVENT,
         ],
     },
     {

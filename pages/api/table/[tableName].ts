@@ -1,6 +1,6 @@
 import { TABLES } from "@/constants"
 import { prisma } from "@/storage"
-import { Filter, HandlerError, TableRecord } from "@/types"
+import { Field, Filter, HandlerError, TableRecord } from "@/types"
 import { Prisma } from "@prisma/client"
 import { endpoint } from ".."
 
@@ -136,8 +136,6 @@ const actions = {
             },
         })
 
-        console.log(result)
-
         return {
             ok: true,
         }
@@ -152,8 +150,27 @@ const actions = {
             tableName: string
         }
     ) {
+        const table = TABLES.find((table) => table.tableName === tableName)
+
+        const data = Object.fromEntries(
+            Object.entries(props.data).map(([key, value]) => {
+                const field: Field = table.fields[key]
+                const typedValue =
+                    field.typeOption.type === "date"
+                        ? new Date(value.toString())
+                        : value
+
+                return [
+                    key,
+                    field.saveWithComputed
+                        ? field.saveWithComputed(typedValue)
+                        : typedValue,
+                ]
+            })
+        )
+
         const res: TableRecord = await prisma[tableName].create({
-            data: props.data,
+            data,
         })
 
         return res

@@ -20,6 +20,14 @@ export const EVENT: Scheme = {
             },
             required: true,
         },
+        url: {
+            displayName: "이벤트 설명 페이지 URL",
+            typeOption: {
+                type: "string",
+            },
+            required: true,
+            placeholder: "페이지 주소를 입력해주세요",
+        },
         endsAt: {
             displayName: "종료일",
             typeOption: {

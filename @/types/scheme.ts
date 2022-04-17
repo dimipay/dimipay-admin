@@ -80,6 +80,7 @@ export interface Field {
     validateFunc?: (
         data: DataValue
     ) => boolean | undefined | string | Promise<boolean | undefined | string>
+    saveWithComputed?: (data: DataValue) => DataValue
 }
 
 export interface ToolbarAction {

@@ -1,13 +1,21 @@
-import { Vexile } from "@haechi/flexile"
 import { FieldError, SubmitHandler, useForm } from "react-hook-form"
+import { Vexile } from "@haechi/flexile"
 import { toast } from "react-toastify"
 
+import { DataValue, Field, Scheme, TableRecord } from "@/types"
 import { Button, InlineForm } from "@/components"
 import { table } from "@/functions"
-import { Scheme, TableRecord } from "@/types"
 import { Important } from "@/typo"
 
 import { PropertyEditer } from "../RecordEditer/partial"
+
+const dataTyper = (field: Field, value: DataValue) => {
+    if (field.typeOption.type === "number") return +value
+    if (field.typeOption.type === "date")
+        return new Date(value.toString()).toISOString()
+
+    return value
+}
 
 export const NewRecord = (props: {
     scheme: Scheme
@@ -27,17 +35,23 @@ export const NewRecord = (props: {
     })
 
     const onSubmit: SubmitHandler<TableRecord> = async (data) => {
+        const processedData = Object.fromEntries(
+            Object.entries(data)
+                .filter(([key]) => !props.scheme.fields[key].autoGenerative)
+                .map(([key, value]) => {
+                    const field = props.scheme.fields[key]
+                    const typedValue = dataTyper(field, value)
+
+                    if (field.saveWithComputed) {
+                        return [key, field.saveWithComputed(typedValue)]
+                    }
+
+                    return [key, typedValue]
+                })
+        )
+        console.log(processedData)
         const res = await table[props.scheme.tableName].POST({
-            data: Object.fromEntries(
-                Object.entries(data)
-                    .filter(([key]) => !props.scheme.fields[key].autoGenerative)
-                    .map(([key, value]) => [
-                        key,
-                        props.scheme.fields[key].typeOption.type === "number"
-                            ? Number(value)
-                            : value,
-                    ])
-            ),
+            data: processedData,
         })
         if (res.id) {
             toast("새 항목을 추가했어요", {

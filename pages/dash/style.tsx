@@ -9,6 +9,7 @@ export const SidebarWrapper = styled(Vexile, {
 export const SubcontentWrapper = styled(Vexile, {
     backgroundColor: "White",
     width: "120rem",
+    overflowY: "auto",
 })
 
 export default Redirector

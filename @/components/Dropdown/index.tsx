@@ -5,12 +5,15 @@ import { clickWithSpace, useConsole } from "@/functions"
 import { Regular, Token } from "@/typo"
 import { Option } from "@/types"
 
-import { DataView, Wrapper } from "./style"
+import { DataView, SearchInput, Searhbox, Wrapper } from "./style"
 import { SelectableList } from "./partial"
 import { MiniInput } from "../MiniInput"
+import { searchIcon } from "@/assets"
+import { LoadSVG } from "../LoadSVG"
 
 export const Dropdown: React.FC<{
-    options: Option[]
+    options?: Option[]
+    optionsRetriever?: (query?: string) => Promise<Option[]>
     data?: (string | number)[]
     name: string
     placeholder: string
@@ -21,7 +24,7 @@ export const Dropdown: React.FC<{
     maxSelectAmount?: number
 }> = (props) => {
     const [opened, setOpened] = useState(false)
-    const [logicalValue, setValue] = useState(props.data || [])
+    const [logicalValue, setLogicalValue] = useState(props.data || [])
 
     const logicalSelect = React.useRef<HTMLSelectElement>(null)
 
@@ -37,6 +40,17 @@ export const Dropdown: React.FC<{
     useEffect(() => {
         if (props.error) logicalSelect.current.parentElement.focus()
     }, [props.error, logicalSelect])
+
+    const [loadedOptions, setLoadedOptions] = useState<Option[]>(props.options)
+    const [searchQuery, setSearchQuery] = useState<string>()
+
+    useEffect(() => {
+        if (props.optionsRetriever) {
+            props.optionsRetriever(searchQuery).then((options) => {
+                setLoadedOptions(options)
+            })
+        }
+    }, [props.optionsRetriever, searchQuery])
 
     return (
         <label>
@@ -62,19 +76,12 @@ export const Dropdown: React.FC<{
                     ref={(r) => {
                         if (!r) return
                         logicalSelect.current = r
-                        console.log(props.hooker)
                         props.hooker.ref(r)
                     }}
                     multiple
                 >
-                    {props.options.map((value) => (
-                        <option
-                            selected={logicalValue.includes(
-                                value.key || value.label
-                            )}
-                        >
-                            {value.key || value.label}
-                        </option>
+                    {logicalValue.map((e) => (
+                        <option selected>{e}</option>
                     ))}
                 </select>
                 <DataView
@@ -98,30 +105,48 @@ export const Dropdown: React.FC<{
                     {props.error && <Token color="error">{props.error}</Token>}
                 </DataView>
                 {opened && (
-                    <SelectableList
-                        options={props.options}
-                        itemLabelMap={props.displayMap}
-                        selectedItems={logicalValue}
-                        onItemSelected={(option) => {
-                            if (
-                                logicalValue.includes(
-                                    option.key || option.label
-                                )
-                            ) {
-                                setValue((prev) =>
-                                    prev.filter(
-                                        (v) =>
-                                            v !== (option.key || option.label)
+                    <>
+                        <Searhbox padding={3} y="center" gap={2}>
+                            <LoadSVG
+                                alt="검색 아이콘"
+                                src={searchIcon}
+                                height={3}
+                                width={3}
+                            />
+                            <SearchInput
+                                placeholder="검색"
+                                onKeyDown={(e) => e.stopPropagation()}
+                                onChange={(e) => {
+                                    setSearchQuery(() => e.target?.value)
+                                }}
+                            />
+                        </Searhbox>
+                        <SelectableList
+                            options={loadedOptions}
+                            itemLabelMap={props.displayMap}
+                            selectedItems={logicalValue}
+                            onItemSelected={(option) => {
+                                if (
+                                    logicalValue.includes(
+                                        option.key || option.label
                                     )
-                                )
-                            } else {
-                                setValue((prev) => [
-                                    ...prev,
-                                    option.key || option.label,
-                                ])
-                            }
-                        }}
-                    />
+                                ) {
+                                    setLogicalValue((prev) =>
+                                        prev.filter(
+                                            (v) =>
+                                                v !==
+                                                (option.key || option.label)
+                                        )
+                                    )
+                                } else {
+                                    setLogicalValue((prev) => [
+                                        ...prev,
+                                        option.key || option.label,
+                                    ])
+                                }
+                            }}
+                        />
+                    </>
                 )}
             </Wrapper>
         </label>

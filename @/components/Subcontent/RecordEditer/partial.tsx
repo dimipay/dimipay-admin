@@ -86,10 +86,25 @@ export const PropertyEditer: React.FC<{
         return (
             <Vexile gap={1}>
                 <Dropdown
-                    options={[
+                    optionsRetriever={async (keyword) => [
+                        {
+                            label: "가" + keyword,
+                            amount: 20,
+                            color: "red",
+                        },
                         {
                             label: "집",
                             amount: 10,
+                            color: "red",
+                        },
+                        {
+                            label: "고",
+                            amount: 30,
+                            color: "red",
+                        },
+                        {
+                            label: "싶",
+                            amount: 40,
                             color: "red",
                         },
                     ]}

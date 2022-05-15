@@ -1,10 +1,12 @@
 import { globalCss } from "@/stitches.config"
 import { ToastContainer, toast } from "react-toastify"
-import { RecoilRoot } from "recoil"
+import { RecoilRoot, useRecoilState } from "recoil"
 import "josa-complete"
 
 import "react-toastify/dist/ReactToastify.css"
 import "@/assets/font/SUIT-Variable.css"
+import { useRouter } from "next/router"
+import { userAtom } from "@/coil"
 
 globalCss({
     ":root": {
@@ -25,11 +27,25 @@ globalCss({
     },
 })()
 
+const LoginChecker: React.FC = (props) => {
+    const router = useRouter()
+    const [user] = useRecoilState(userAtom)
+
+    if (!router.asPath.startsWith("/login") && !user) {
+        if (global.location) router.push("/login")
+        return <></>
+    }
+
+    return <>{props.children}</>
+}
+
 function MyApp({ Component, pageProps }) {
     return (
         <RecoilRoot>
             <ToastContainer />
-            <Component {...pageProps} />
+            <LoginChecker>
+                <Component {...pageProps} />
+            </LoginChecker>
         </RecoilRoot>
     )
 }

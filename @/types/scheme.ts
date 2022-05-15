@@ -5,6 +5,7 @@ export enum SLUG {
     posDevice = "posDevice",
     discountPolicy = "discountPolicy",
     event = "event",
+    adminAccount = "adminAccount",
 }
 
 export interface Relation {

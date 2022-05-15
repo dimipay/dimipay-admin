@@ -1,12 +1,3 @@
-// model Category {
-//     id        String    @id
-//     createdAt DateTime  @default(now())
-//     updatedAt DateTime
-//     name      String
-//     color     String
-//     Product   Product[]
-// }
-
 import { Scheme, SLUG } from "@/types"
 import { RECORD_BASE_FIELDS } from "./common"
 

@@ -6,6 +6,7 @@ import {
     DISCOUNT_POLICY,
     EVENT,
 } from "./schemes"
+import { ADMIN_ACCOUNT_SCHEME } from "./schemes/adminAccount"
 import { SchemeGroup } from "./types"
 
 export const assert = (name: string, isServersideOnly: boolean = true) => {
@@ -31,8 +32,8 @@ export const GROUPED_TABLES: SchemeGroup[] = [
     },
     {
         groupName: "관리",
-        content: [POS_DEVICE_SCHEME],
+        content: [POS_DEVICE_SCHEME, ADMIN_ACCOUNT_SCHEME],
     },
 ]
 
-export const TABLES = GROUPED_TABLES.map((group) => group.content).flat()
+export const TABLES = GROUPED_TABLES.flatMap((group) => group.content)

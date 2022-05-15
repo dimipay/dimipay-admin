@@ -14,13 +14,13 @@ export const TEXT_INPUT_COMPATIBLE_TYPES = ["string", "number", "date"]
 export const Input: React.FC<{
     placeholder: string
     name: string
-    hideContent?: boolean
-    hooker?: UseFormRegisterReturn
-    defaultValue?: string
-    disabled?: boolean
-    type?: typeof TEXT_INPUT_COMPATIBLE_TYPES[number]
     error?: string
     value?: string
+    disabled?: boolean
+    hideContent?: boolean
+    defaultValue?: string
+    hooker?: UseFormRegisterReturn
+    type?: typeof TEXT_INPUT_COMPATIBLE_TYPES[number]
 }> = (props) => {
     const commonProps = {
         disabled: props.disabled,
@@ -72,7 +72,7 @@ export const Input: React.FC<{
                                 type="datetime-local"
                             />
                         ),
-                    }[props.type]
+                    }[props.type || "string"]
                 }
                 {props.error && <Token color="error">{props.error}</Token>}
             </InputWraper>

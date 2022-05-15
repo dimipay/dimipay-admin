@@ -1,12 +1,10 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -20,14 +18,16 @@ model User {
   isTeacher           Boolean?        @default(false)
   profileImage        String?
   studentNumber       String?
+  paymentPin          String?
+  deviceUid           String?
+  bioKey              String?
+  phoneNumber         String?
   relatedAdminAccount AdminAccount?
-  transactions        Transaction[]
   issuedCoupons       Coupon[]        @relation("issue")
   receivedCoupons     Coupon[]        @relation("receive")
-  paymentMethods      PaymentMethod[]
-  paymentPin          String?
-  phoneNumber         String?
   notice              Notice[]
+  paymentMethods      PaymentMethod[]
+  transactions        Transaction[]
 }
 
 model PaymentMethod {
@@ -37,10 +37,10 @@ model PaymentMethod {
   type        PaymentMethodType
   color       String?
   name        String?
+  ownerId     String
+  owner       User              @relation(fields: [ownerId], references: [systemId])
   generalCard GeneralCard?      @relation("generalCard")
   prepaidCard PrepaidCard?      @relation("prepaidCard")
-  owner       User              @relation(fields: [ownerId], references: [systemId])
-  ownerId     String
   transaction Transaction[]
 }
 
@@ -87,29 +87,31 @@ model Coupon {
   amount            Int
   usedTransactionId String?
   issuerId          String
+  receiverId        String
   issuer            User         @relation("issue", fields: [issuerId], references: [systemId])
   receiver          User         @relation("receive", fields: [receiverId], references: [systemId])
-  receiverId        String
   transaction       Transaction? @relation(fields: [usedTransactionId], references: [id])
 }
 
 model Transaction {
-  id            String                 @id @default(uuid())
-  createdAt     DateTime               @default(now())
-  updatedAt     DateTime               @default(now()) @updatedAt
-  billingId     String
-  totalPrice    Int
-  status        Transaction_status
-  statusText    String?
-  authMethod    Transaction_authMethod
-  usedCardId    String
-  posDeviceId   String
-  userId        String
-  user          User                   @relation(fields: [userId], references: [systemId])
-  posDevice     PosDevice              @relation(fields: [posDeviceId], references: [id])
-  paymentMethod PaymentMethod          @relation(fields: [usedCardId], references: [id])
-  coupon        Coupon[]
-  products      Product[]
+  id                  String               @id @default(uuid())
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @default(now()) @updatedAt
+  billingId           String?
+  totalPrice          Int
+  status              Transaction_status
+  statusText          String?
+  transactionMethod   TransactionMethod
+  usedCardId          String
+  posDeviceId         String?
+  userId              String
+  specialPurchase     String?
+  specialPurchaseType SpecialPurchaseType?
+  posDevice           PosDevice?           @relation(fields: [posDeviceId], references: [id])
+  paymentMethod       PaymentMethod        @relation(fields: [usedCardId], references: [id])
+  user                User                 @relation(fields: [userId], references: [systemId])
+  coupon              Coupon[]
+  products            Product[]
 }
 
 model Category {
@@ -200,47 +202,11 @@ model AdminAccount {
   id                   String   @id @default(uuid())
   createdAt            DateTime @default(now())
   updatedAt            DateTime @default(now())
-  relatedUser          User?    @relation(fields: [relatedUserSystemUid], references: [systemId])
   relatedUserSystemUid String?  @unique
   username             String
   hashedPassword       String
   description          String?
-}
-
-model CategoryToDiscountPolicy {
-  A String
-  B String
-
-  @@unique([A, B], map: "_CategoryToDiscountPolicy_AB_unique")
-  @@index([B], map: "_CategoryToDiscountPolicy_B_index")
-  @@map("_CategoryToDiscountPolicy")
-}
-
-model ProductToTransaction {
-  A String
-  B String
-
-  @@unique([A, B], map: "_ProductToTransaction_AB_unique")
-  @@index([B], map: "_ProductToTransaction_B_index")
-  @@map("_ProductToTransaction")
-}
-
-model discountExcludedProduct {
-  A String
-  B String
-
-  @@unique([A, B], map: "_discountExcludedProduct_AB_unique")
-  @@index([B], map: "_discountExcludedProduct_B_index")
-  @@map("_discountExcludedProduct")
-}
-
-model discountTargetProduct {
-  A String
-  B String
-
-  @@unique([A, B], map: "_discountTargetProduct_AB_unique")
-  @@index([B], map: "_discountTargetProduct_B_index")
-  @@map("_discountTargetProduct")
+  relatedUser          User?    @relation(fields: [relatedUserSystemUid], references: [systemId])
 }
 
 enum PaymentMethodType {
@@ -251,17 +217,25 @@ enum PaymentMethodType {
 enum TransactionStatus {
   CONFIRMED
   CANCELED
+  PENDING
   ERROR
+}
+
+enum TransactionMethod {
+  SMS
+  APP_QR
+  FACESIGN
+  INAPP
+}
+
+enum SpecialPurchaseType {
+  COUPON
+  PRINTER
 }
 
 enum Transaction_status {
   CONFIRMED
   CANCELED
+  PENDING
   ERROR
-}
-
-enum Transaction_authMethod {
-  SMS
-  APP_QR
-  FACESIGN
 }

@@ -6,7 +6,7 @@ export type Operator = keyof typeof korOperatorMap
 interface OperatorMap {
     appender?: (value: string) => string
     display: string
-    type: Field["additional"]["type"][]
+    type: Field["typeOption"]["type"][]
 }
 
 export const korOperatorMap: Record<string, OperatorMap> = {

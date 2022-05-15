@@ -1,7 +1,7 @@
 import { DateInput, Input, Dropdown } from "@/components"
 import { TEXT_INPUT_COMPATIBLE_TYPES } from "@/components/Input"
-import { useConsole } from "@/functions"
-import { DataValue, Field } from "@/types"
+import { table, useConsole } from "@/functions"
+import { DataValue, Field, Relation, SingleRelationField } from "@/types"
 import { Description, Regular, Token } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
 import React from "react"
@@ -51,12 +51,13 @@ export const PropertyEditer: React.FC<{
         )
     }
 
-    if (dataType === "multiple")
+    if (dataType === "multiple") {
+        // console.log(, props.data)
         return (
             <Vexile gap={1}>
                 <Dropdown
                     options={props.field.typeOption.options}
-                    data={props.data as string[] | number[]}
+                    data={[]}
                     {...commonProps}
                     placeholder={
                         props.field.placeholder ||
@@ -69,6 +70,7 @@ export const PropertyEditer: React.FC<{
                 )}
             </Vexile>
         )
+    }
 
     if (dataType === "boolean") {
         return (
@@ -83,31 +85,43 @@ export const PropertyEditer: React.FC<{
     }
 
     if (dataType === "relation-single") {
+        console.log(
+            "아그래요?",
+            (props.data as Relation).target.map((e) => ({
+                key: e.id,
+                display: e.displayName,
+            }))
+        )
         return (
             <Vexile gap={1}>
                 <Dropdown
-                    optionsRetriever={async (keyword) => [
-                        {
-                            label: "가" + keyword,
-                            amount: 20,
-                            color: "red",
-                        },
-                        {
-                            label: "집",
-                            amount: 10,
-                            color: "red",
-                        },
-                        {
-                            label: "고",
-                            amount: 30,
-                            color: "red",
-                        },
-                        {
-                            label: "싶",
-                            amount: 40,
-                            color: "red",
-                        },
-                    ]}
+                    data={(props.data as Relation).target.map((e) => ({
+                        key: e.id,
+                        display: e.displayName,
+                    }))}
+                    optionsRetriever={async (keyword) => {
+                        const option = props.field
+                            .typeOption as SingleRelationField
+
+                        const relationData = (
+                            await table[option.target].GET({
+                                amount: 5,
+                                filter: keyword && [
+                                    [
+                                        option.displayNameField,
+                                        "contains",
+                                        keyword,
+                                    ],
+                                ],
+                            })
+                        ).map((row) => ({
+                            label: row[option.displayNameField] as string,
+                            key: row.id as string,
+                            color: row.color as string,
+                        }))
+
+                        return relationData
+                    }}
                     {...commonProps}
                     placeholder={props.field.displayName.을를 + " 선택해주세요"}
                 />

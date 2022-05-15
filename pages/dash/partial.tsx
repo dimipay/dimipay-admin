@@ -7,9 +7,10 @@ import { SLUG } from "@/types"
 import { logo } from "@/assets"
 
 import { SidebarWrapper } from "./style"
+import React from "react"
 
-export const Sidebar = (
-    <SidebarWrapper padding={10} gap={6}>
+export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = (props) => (
+    <SidebarWrapper {...props} padding={10} gap={6}>
         <LoadSVG
             alt="디미페이 관리자 페이지 로고"
             height={5}

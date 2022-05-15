@@ -1,14 +1,15 @@
 import { Vexile, Hexile } from "@haechi/flexile"
+import { clickWithSpace } from "@/functions"
 import { ColorBubble } from "@/components"
 import { Description } from "@/typo"
-import { Option } from "@/types"
 import { DividerLine } from ".."
+import { Option } from "@/types"
 import { Item } from "./style"
-import { clickWithSpace } from "@/functions"
+import { OptionItem } from "."
 
 export const SelectableList: React.FC<{
     options: Option[]
-    selectedItems: (string | number)[]
+    selectedItems: OptionItem[]
     itemLabelMap?: Record<string | number, string>
     onItemSelected?: (clicked: Option) => void
     style?: React.CSSProperties
@@ -23,8 +24,10 @@ export const SelectableList: React.FC<{
                         onKeyDown={clickWithSpace}
                         x="space"
                         padding={3}
-                        selected={props.selectedItems.includes(
-                            option.key || option.label
+                        selected={props.selectedItems.some(
+                            (e) =>
+                                e.key === option.key ||
+                                e.display === option.label
                         )}
                         onClick={(e) => {
                             e.stopPropagation()

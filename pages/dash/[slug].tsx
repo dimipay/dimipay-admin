@@ -1,18 +1,25 @@
 import { useRecoilState, useSetRecoilState } from "recoil"
+import {
+    useCallback,
+    useDebugValue,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useState,
+} from "react"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
-import { useCallback, useEffect, useState } from "react"
 import { NextPage } from "next"
 
+import { table, useConsole, useFilter, useKone } from "@/functions"
 import { NewRecord } from "@/components/Subcontent/NewRecord"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
 import { FilterItem } from "@/functions/useFilter/partial"
-import { table, useConsole, useFilter, useKone } from "@/functions"
 import { Button, LoadSVG, Table } from "@/components"
 import { Important, PageHeader } from "@/typo"
+import { SLUG, TableRecord } from "@/types"
 import { subContentAtom } from "@/coil"
 import { TABLES } from "@/constants"
-import { SLUG, TableRecord } from "@/types"
 
 import { SubcontentWrapper } from "./style"
 import { Sidebar } from "./partial"
@@ -23,7 +30,10 @@ const TableViewer: NextPage = () => {
     const setSubContent = useSetRecoilState(subContentAtom)
     const slug = router.query.slug as string
 
-    const scheme = TABLES.find((table) => table.tableName === SLUG[slug])
+    const [scheme, setScheme] = useState(
+        TABLES.find((table) => table.tableName === SLUG[slug])
+    )
+
     const {
         filter,
         addFilter,
@@ -34,15 +44,28 @@ const TableViewer: NextPage = () => {
     const [records, setRecords] = useState<TableRecord[]>([])
 
     const load = useCallback(() => {
-        if (!scheme) return
+        setSubContent(null)
+        setRecords([])
+        setScheme(undefined)
 
-        table[scheme.tableName]
+        const nextScheme = TABLES.find(
+            (table) => table.tableName === SLUG[slug]
+        )
+
+        if (!nextScheme) return
+
+        table[nextScheme.tableName]
             .GET({
                 filter,
                 amount: 20,
             })
-            .then(setRecords)
+            .then((e) => {
+                setRecords(e)
+                setScheme(nextScheme)
+            })
     }, [filter, scheme])
+
+    useConsole("RECORDS", { records, scheme })
 
     const loadMore = useCallback(async () => {
         if (records.length === 0) return
@@ -65,15 +88,13 @@ const TableViewer: NextPage = () => {
         setRecords(merged)
     }, [setRecords, records, filter, scheme])
 
-    useConsole("FILTERERDFSJ", filter)
-
     useEffect(() => {
         load()
-    }, [scheme, filter.length])
+    }, [filter.length, slug])
 
     return (
         <Hexile fillx filly>
-            {Sidebar}
+            <Sidebar />
             {scheme && (
                 <Vexile fillx filly padding={10} gap={4} scrollx relative>
                     <Hexile x="space">
@@ -111,15 +132,15 @@ const TableViewer: NextPage = () => {
                             </Button>
                         </Hexile>
                     </Hexile>
-                    {records && (
-                        <Table
-                            records={records}
-                            scheme={scheme}
-                            onReloadRequested={load}
-                            addFilter={addFilter}
-                            onReachEnd={loadMore}
-                        />
-                    )}
+                    {/* {records && ( */}
+                    <Table
+                        records={records}
+                        scheme={scheme}
+                        onReloadRequested={load}
+                        addFilter={addFilter}
+                        onReachEnd={loadMore}
+                    />
+                    {/* )} */}
                     {/* dummy for space */}
                     {filterOpened && (
                         <div style={{ visibility: "hidden" }}>

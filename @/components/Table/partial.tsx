@@ -27,6 +27,7 @@ const getFieldValue = (field: Field, value: DataValue) => {
         return <input type="checkbox" checked={value as boolean} />
 
     if (typeOption.type === "relation-single") {
+        console.log(field, value)
         const target = (value as Relation).target[0]
         return (
             <Hexile gap={2} y="center">
@@ -59,7 +60,7 @@ export const Row = forwardRef<
     }
 >(({ row, ...props }, ref) => {
     const setSubContent = useSetRecoilState(subContentAtom)
-
+    console.log(row)
     return (
         <tr
             ref={ref}

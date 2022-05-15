@@ -11,10 +11,15 @@ import { MiniInput } from "../MiniInput"
 import { searchIcon } from "@/assets"
 import { LoadSVG } from "../LoadSVG"
 
+export interface OptionItem {
+    key: string | number
+    display?: string | number
+}
+
 export const Dropdown: React.FC<{
     options?: Option[]
     optionsRetriever?: (query?: string) => Promise<Option[]>
-    data?: (string | number)[]
+    data?: OptionItem[]
     name: string
     placeholder: string
     hooker: UseFormRegisterReturn
@@ -24,11 +29,14 @@ export const Dropdown: React.FC<{
     maxSelectAmount?: number
 }> = (props) => {
     const [opened, setOpened] = useState(false)
-    const [logicalValue, setLogicalValue] = useState(props.data || [])
+    const [logicalValue, setLogicalValue] = useState<OptionItem[]>(
+        props.data || []
+    )
 
     const logicalSelect = React.useRef<HTMLSelectElement>(null)
 
     useEffect(() => {
+        console.log(logicalValue)
         if (logicalSelect.current) {
             props.hooker.onChange({
                 target: logicalSelect.current,
@@ -73,15 +81,17 @@ export const Dropdown: React.FC<{
                 <select
                     style={{ display: "none" }}
                     name={props.hooker.name}
-                    ref={(r) => {
-                        if (!r) return
-                        logicalSelect.current = r
-                        props.hooker.ref(r)
+                    ref={(ref) => {
+                        if (!ref) return
+                        logicalSelect.current = ref
+                        props.hooker.ref(ref)
                     }}
                     multiple
                 >
                     {logicalValue.map((e) => (
-                        <option selected>{e}</option>
+                        <option selected key={e.key}>
+                            {e.display || e.key}
+                        </option>
                     ))}
                 </select>
                 <DataView
@@ -93,13 +103,9 @@ export const Dropdown: React.FC<{
                     <Token>{props.name}</Token>
                     <Regular dark={logicalValue.length ? 1 : 3}>
                         {logicalValue.length
-                            ? (
-                                  (props.displayMap &&
-                                      logicalValue.map(
-                                          (d) => props.displayMap[d]
-                                      )) ||
-                                  logicalValue
-                              ).join(", ")
+                            ? logicalValue
+                                  .map((e) => e.display || e.key)
+                                  .join(", ")
                             : props.placeholder}
                     </Regular>
                     {props.error && <Token color="error">{props.error}</Token>}
@@ -127,21 +133,28 @@ export const Dropdown: React.FC<{
                             selectedItems={logicalValue}
                             onItemSelected={(option) => {
                                 if (
-                                    logicalValue.includes(
-                                        option.key || option.label
+                                    logicalValue.some(
+                                        (e) =>
+                                            e.key === option.key ||
+                                            e.display === option.label
                                     )
                                 ) {
                                     setLogicalValue((prev) =>
                                         prev.filter(
                                             (v) =>
-                                                v !==
-                                                (option.key || option.label)
+                                                !(
+                                                    v.key === option.key ||
+                                                    v.display === option.label
+                                                )
                                         )
                                     )
                                 } else {
                                     setLogicalValue((prev) => [
                                         ...prev,
-                                        option.key || option.label,
+                                        {
+                                            key: option.key,
+                                            display: option.label,
+                                        },
                                     ])
                                 }
                             }}

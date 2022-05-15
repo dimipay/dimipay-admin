@@ -77,7 +77,11 @@ export const FilterItem: React.FC<{
                     })
                 }}
                 placeholder="조건"
-                selected={operator && korOperatorMap[operator].display}
+                selected={
+                    operator && {
+                        label: korOperatorMap[operator].display,
+                    }
+                }
                 options={Object.entries(korOperatorMap).map(([key, value]) => ({
                     label: value.display,
                     key,

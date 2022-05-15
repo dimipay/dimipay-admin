@@ -11,15 +11,10 @@ import { MiniInput } from "../MiniInput"
 import { searchIcon } from "@/assets"
 import { LoadSVG } from "../LoadSVG"
 
-export interface OptionItem {
-    key: string | number
-    display?: string | number
-}
-
 export const Dropdown: React.FC<{
     options?: Option[]
     optionsRetriever?: (query?: string) => Promise<Option[]>
-    data?: OptionItem[]
+    data?: Option[]
     name: string
     placeholder: string
     hooker: UseFormRegisterReturn
@@ -29,9 +24,7 @@ export const Dropdown: React.FC<{
     maxSelectAmount?: number
 }> = (props) => {
     const [opened, setOpened] = useState(false)
-    const [logicalValue, setLogicalValue] = useState<OptionItem[]>(
-        props.data || []
-    )
+    const [logicalValue, setLogicalValue] = useState<Option[]>(props.data || [])
 
     const logicalSelect = React.useRef<HTMLSelectElement>(null)
 
@@ -90,7 +83,7 @@ export const Dropdown: React.FC<{
                 >
                     {logicalValue.map((e) => (
                         <option selected key={e.key}>
-                            {e.display || e.key}
+                            {e.label || e.key}
                         </option>
                     ))}
                 </select>
@@ -104,7 +97,7 @@ export const Dropdown: React.FC<{
                     <Regular dark={logicalValue.length ? 1 : 3}>
                         {logicalValue.length
                             ? logicalValue
-                                  .map((e) => e.display || e.key)
+                                  .map((e) => e.label || e.key)
                                   .join(", ")
                             : props.placeholder}
                     </Regular>
@@ -130,13 +123,13 @@ export const Dropdown: React.FC<{
                         <SelectableList
                             options={loadedOptions}
                             itemLabelMap={props.displayMap}
-                            selectedItems={logicalValue}
+                            selectedOptions={logicalValue}
                             onItemSelected={(option) => {
                                 if (
                                     logicalValue.some(
                                         (e) =>
                                             e.key === option.key ||
-                                            e.display === option.label
+                                            e.label === option.label
                                     )
                                 ) {
                                     setLogicalValue((prev) =>
@@ -144,7 +137,7 @@ export const Dropdown: React.FC<{
                                             (v) =>
                                                 !(
                                                     v.key === option.key ||
-                                                    v.display === option.label
+                                                    v.label === option.label
                                                 )
                                         )
                                     )
@@ -153,7 +146,7 @@ export const Dropdown: React.FC<{
                                         ...prev,
                                         {
                                             key: option.key,
-                                            display: option.label,
+                                            label: option.label,
                                         },
                                     ])
                                 }

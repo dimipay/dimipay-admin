@@ -5,11 +5,10 @@ import { Description } from "@/typo"
 import { DividerLine } from ".."
 import { Option } from "@/types"
 import { Item } from "./style"
-import { OptionItem } from "."
 
 export const SelectableList: React.FC<{
     options: Option[]
-    selectedItems: OptionItem[]
+    selectedOptions: Option[]
     itemLabelMap?: Record<string | number, string>
     onItemSelected?: (clicked: Option) => void
     style?: React.CSSProperties
@@ -24,10 +23,9 @@ export const SelectableList: React.FC<{
                         onKeyDown={clickWithSpace}
                         x="space"
                         padding={3}
-                        selected={props.selectedItems.some(
+                        selected={props.selectedOptions.some(
                             (e) =>
-                                e.key === option.key ||
-                                e.display === option.label
+                                e.key === option.key || e.label === option.label
                         )}
                         onClick={(e) => {
                             e.stopPropagation()

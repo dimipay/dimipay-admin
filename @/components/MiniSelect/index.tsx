@@ -9,7 +9,7 @@ import { ListWrapper, LogicalInput, Wrapper } from "./style"
 
 export const MiniSelect: React.FC<{
     options: Option[]
-    selected?: string
+    selected?: Option
     onChange: (value: string) => void
     placeholder?: string
 }> = (props) => {
@@ -30,7 +30,7 @@ export const MiniSelect: React.FC<{
                 <ListWrapper>
                     <SelectableList
                         options={props.options}
-                        selectedItems={[props.selected]}
+                        selectedOptions={[props.selected]}
                         onItemSelected={(clicked) => {
                             setMenuOpened(false)
                             props.onChange(clicked.key as string)

@@ -97,7 +97,7 @@ export const PropertyEditer: React.FC<{
                 <Dropdown
                     data={(props.data as Relation).target.map((e) => ({
                         key: e.id,
-                        display: e.displayName,
+                        label: e.displayName,
                     }))}
                     optionsRetriever={async (keyword) => {
                         const option = props.field

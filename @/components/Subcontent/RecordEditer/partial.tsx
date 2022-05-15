@@ -85,20 +85,15 @@ export const PropertyEditer: React.FC<{
     }
 
     if (dataType === "relation-single") {
-        console.log(
-            "아그래요?",
-            (props.data as Relation).target.map((e) => ({
-                key: e.id,
-                display: e.displayName,
-            }))
-        )
         return (
             <Vexile gap={1}>
                 <Dropdown
-                    data={(props.data as Relation).target.map((e) => ({
-                        key: e.id,
-                        label: e.displayName,
-                    }))}
+                    data={(props.data as Relation | undefined)?.target.map(
+                        (e) => ({
+                            key: e.id,
+                            label: e.displayName,
+                        })
+                    )}
                     optionsRetriever={async (keyword) => {
                         const option = props.field
                             .typeOption as SingleRelationField

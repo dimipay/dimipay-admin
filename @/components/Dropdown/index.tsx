@@ -1,13 +1,12 @@
 import { UseFormRegisterReturn } from "react-hook-form"
 import React, { useEffect, useState } from "react"
 
-import { clickWithSpace, useConsole } from "@/functions"
+import { clickWithSpace } from "@/functions"
 import { Regular, Token } from "@/typo"
 import { Option } from "@/types"
 
 import { DataView, SearchInput, Searhbox, Wrapper } from "./style"
 import { SelectableList } from "./partial"
-import { MiniInput } from "../MiniInput"
 import { searchIcon } from "@/assets"
 import { LoadSVG } from "../LoadSVG"
 
@@ -23,8 +22,11 @@ export const Dropdown: React.FC<{
     disabled?: boolean
     maxSelectAmount?: number
 }> = (props) => {
-    const [opened, setOpened] = useState(false)
     const [logicalValue, setLogicalValue] = useState<Option[]>(props.data || [])
+    const [loadedOptions, setLoadedOptions] = useState<Option[]>(props.options)
+
+    const [searchQuery, setSearchQuery] = useState<string>()
+    const [opened, setOpened] = useState(false)
 
     const logicalSelect = React.useRef<HTMLSelectElement>(null)
 
@@ -41,9 +43,6 @@ export const Dropdown: React.FC<{
     useEffect(() => {
         if (props.error) logicalSelect.current.parentElement.focus()
     }, [props.error, logicalSelect])
-
-    const [loadedOptions, setLoadedOptions] = useState<Option[]>(props.options)
-    const [searchQuery, setSearchQuery] = useState<string>()
 
     useEffect(() => {
         if (props.optionsRetriever) {
@@ -82,7 +81,7 @@ export const Dropdown: React.FC<{
                     multiple
                 >
                     {logicalValue.map((e) => (
-                        <option selected key={e.key}>
+                        <option selected key={e.key} value={e.key || e.label}>
                             {e.label || e.key}
                         </option>
                     ))}

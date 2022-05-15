@@ -8,9 +8,11 @@ import { table } from "@/functions"
 import { Important } from "@/typo"
 
 import { PropertyEditer } from "../RecordEditer/partial"
+import { prisma } from "@/storage"
 
 const dataTyper = (field: Field, value: DataValue) => {
     if (field.typeOption.type === "number") return +value
+
     if (field.typeOption.type === "date")
         return new Date(value.toString()).toISOString()
 
@@ -35,11 +37,35 @@ export const NewRecord = (props: {
     })
 
     const onSubmit: SubmitHandler<TableRecord> = async (data) => {
+        console.log(data)
         const processedData = Object.fromEntries(
             Object.entries(data)
                 .filter(([key]) => !props.scheme.fields[key].autoGenerative)
                 .map(([key, value]) => {
-                    const field = props.scheme.fields[key]
+                    const field: Field = props.scheme.fields[key]
+
+                    if (field.typeOption.type === "relation-single") {
+                        return [
+                            key,
+                            {
+                                connect: {
+                                    id: value[0],
+                                },
+                            },
+                        ]
+                    }
+
+                    if (field.typeOption.type === "relation-multiple") {
+                        return [
+                            key,
+                            {
+                                connect: {
+                                    id: value,
+                                },
+                            },
+                        ]
+                    }
+
                     const typedValue = dataTyper(field, value)
 
                     if (field.saveWithComputed) {
@@ -49,7 +75,7 @@ export const NewRecord = (props: {
                     return [key, typedValue]
                 })
         )
-        console.log(processedData)
+
         const res = await table[props.scheme.tableName].POST({
             data: processedData,
         })
@@ -58,7 +84,10 @@ export const NewRecord = (props: {
                 type: "success",
             })
             props.onReloadRequested()
+            return
         }
+
+        toast.error("새 항목을 추가하지 못했습니다")
     }
 
     return (

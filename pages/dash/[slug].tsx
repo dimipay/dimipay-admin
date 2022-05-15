@@ -132,7 +132,6 @@ const TableViewer: NextPage = () => {
                             </Button>
                         </Hexile>
                     </Hexile>
-                    {/* {records && ( */}
                     <Table
                         records={records}
                         scheme={scheme}
@@ -140,7 +139,6 @@ const TableViewer: NextPage = () => {
                         addFilter={addFilter}
                         onReachEnd={loadMore}
                     />
-                    {/* )} */}
                     {/* dummy for space */}
                     {filterOpened && (
                         <div style={{ visibility: "hidden" }}>

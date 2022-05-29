@@ -9,7 +9,12 @@ const TYPE_ICON_MAP = {
     number: numberInputIcon,
 }
 
-export const TEXT_INPUT_COMPATIBLE_TYPES = ["string", "number", "date"]
+export const TEXT_INPUT_COMPATIBLE_TYPES = [
+    "string",
+    "number",
+    "date",
+    "password",
+] as const
 
 export const Input: React.FC<{
     placeholder: string
@@ -71,6 +76,9 @@ export const Input: React.FC<{
                                 {...commonProps}
                                 type="datetime-local"
                             />
+                        ),
+                        ["password"]: (
+                            <LogicalInput {...commonProps} type="password" />
                         ),
                     }[props.type || "string"]
                 }

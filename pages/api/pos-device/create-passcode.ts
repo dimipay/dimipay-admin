@@ -1,6 +1,6 @@
 import { key, loadRedis, prisma } from "@/storage"
 import { HandlerError } from "@/types"
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import { endpoint } from ".."
 
 const actions = {

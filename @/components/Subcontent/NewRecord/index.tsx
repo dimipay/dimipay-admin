@@ -68,9 +68,9 @@ export const NewRecord = (props: {
 
                     const typedValue = dataTyper(field, value)
 
-                    if (field.saveWithComputed) {
-                        return [key, field.saveWithComputed(typedValue)]
-                    }
+                    // if (field.saveWithComputed) {
+                    //     return [key, field.saveWithComputed(typedValue)]
+                    // }
 
                     return [key, typedValue]
                 })

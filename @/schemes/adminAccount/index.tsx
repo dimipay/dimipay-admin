@@ -1,5 +1,8 @@
 import { Scheme, SLUG } from "@/types"
-import { RECORD_BASE_FIELDS } from "./common"
+import bcrypt from "bcryptjs"
+
+import { RECORD_BASE_FIELDS } from "../common"
+import { ResetPassword } from "./ResetPassword"
 
 export const ADMIN_ACCOUNT_SCHEME: Scheme = {
     displayName: "관리자 계정",
@@ -20,5 +23,17 @@ export const ADMIN_ACCOUNT_SCHEME: Scheme = {
             displayName: "사용자 UID",
             required: false,
         },
+        hashedPassword: {
+            displayName: "비밀번호",
+            required: true,
+            invisibleInTable: true,
+            typeOption: {
+                type: "password",
+            },
+            saveWithComputed(password: string) {
+                return bcrypt.hashSync(password, 10)
+            },
+        },
     },
+    panelComponents: [ResetPassword],
 }

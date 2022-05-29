@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity", "interactiveTransactions"]
 }
 
 datasource db {
@@ -8,8 +9,8 @@ datasource db {
 }
 
 model User {
-  id                  String          @id @default(uuid())
-  systemId            String          @unique
+  id                  Int             @id @default(autoincrement())
+  systemId            String          @unique @default(uuid())
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @default(now()) @updatedAt
   isDisabled          Boolean         @default(false)
@@ -17,7 +18,6 @@ model User {
   name                String
   isTeacher           Boolean?        @default(false)
   profileImage        String?
-  studentNumber       String?
   paymentPin          String?
   deviceUid           String?
   bioKey              String?
@@ -31,13 +31,14 @@ model User {
 }
 
 model PaymentMethod {
-  id          String            @id @default(uuid())
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @default(now()) @updatedAt
   type        PaymentMethodType
   color       String?
   name        String?
   ownerId     String
+  systemId    String            @unique @default(uuid())
+  id          Int               @id @default(autoincrement())
   owner       User              @relation(fields: [ownerId], references: [systemId])
   generalCard GeneralCard?      @relation("generalCard")
   prepaidCard PrepaidCard?      @relation("prepaidCard")
@@ -45,29 +46,28 @@ model PaymentMethod {
 }
 
 model PrepaidCard {
-  id                       String                     @id @default(uuid())
   createdAt                DateTime                   @default(now())
   updatedAt                DateTime                   @default(now()) @updatedAt
   balance                  Int                        @default(0)
   paymentMethodId          String                     @unique
-  paymentMethod            PaymentMethod              @relation("prepaidCard", fields: [paymentMethodId], references: [id])
+  id                       Int                        @id @default(autoincrement())
+  paymentMethod            PaymentMethod              @relation("prepaidCard", fields: [paymentMethodId], references: [systemId])
   prepaidCardChargeHistory PrepaidCardChargeHistory[]
 }
 
 model PrepaidCardChargeHistory {
-  id                  String            @id @default(uuid())
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @default(now()) @updatedAt
   delta               Int
   status              TransactionStatus
   method              String
   detailInfo          String
-  targetPrepaidCardId String
+  id                  Int               @id @default(autoincrement())
+  targetPrepaidCardId Int
   prepaidCard         PrepaidCard       @relation(fields: [targetPrepaidCardId], references: [id])
 }
 
 model GeneralCard {
-  id              String        @id @default(uuid())
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @default(now()) @updatedAt
   cardNumber      String
@@ -75,7 +75,8 @@ model GeneralCard {
   validYear       Int
   billingKey      String
   paymentMethodId String        @unique
-  paymentMethod   PaymentMethod @relation("generalCard", fields: [paymentMethodId], references: [id])
+  id              Int           @id @default(autoincrement())
+  paymentMethod   PaymentMethod @relation("generalCard", fields: [paymentMethodId], references: [systemId])
 }
 
 model Coupon {
@@ -90,11 +91,10 @@ model Coupon {
   receiverId        String
   issuer            User         @relation("issue", fields: [issuerId], references: [systemId])
   receiver          User         @relation("receive", fields: [receiverId], references: [systemId])
-  transaction       Transaction? @relation(fields: [usedTransactionId], references: [id])
+  Transaction       Transaction? @relation(fields: [usedTransactionId], references: [systemId])
 }
 
 model Transaction {
-  id                  String               @id @default(uuid())
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @default(now()) @updatedAt
   billingId           String?
@@ -107,33 +107,36 @@ model Transaction {
   userId              String
   specialPurchase     String?
   specialPurchaseType SpecialPurchaseType?
+  systemId            String               @unique @default(uuid())
+  id                  Int                  @id @default(autoincrement())
   posDevice           PosDevice?           @relation(fields: [posDeviceId], references: [id])
-  paymentMethod       PaymentMethod        @relation(fields: [usedCardId], references: [id])
+  paymentMethod       PaymentMethod        @relation(fields: [usedCardId], references: [systemId])
   user                User                 @relation(fields: [userId], references: [systemId])
   coupon              Coupon[]
   products            Product[]
 }
 
 model Category {
-  id               String           @id @default(uuid())
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @default(now()) @updatedAt
   name             String
   color            String
   discountPolicyId String?
+  id               Int              @id @default(autoincrement())
   products         Product[]
   discountPolicy   DiscountPolicy[]
 }
 
 model Product {
-  id                      String            @id @default(uuid())
   createdAt               DateTime          @default(now())
   updatedAt               DateTime          @default(now()) @updatedAt
   name                    String
   barcode                 String?
   price                   Int
   sellingStopped          Boolean           @default(false)
-  categoryId              String
+  id                      Int               @id @default(autoincrement())
+  categoryId              Int
+  systemId                String            @unique @default(uuid())
   category                Category          @relation(fields: [categoryId], references: [id])
   productInOutLog         ProductInOutLog[]
   transaction             Transaction[]
@@ -142,22 +145,22 @@ model Product {
 }
 
 model ProductInOutLog {
-  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   delta     Int
   message   String?
-  productId String
+  id        Int      @id @default(autoincrement())
+  productId Int
   product   Product  @relation(fields: [productId], references: [id])
 }
 
 model DiscountPolicy {
-  id              String     @id @default(uuid())
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @default(now())
   fixedPrice      Int?
   percentRate     Int?
   eventId         String?
+  id              Int        @id @default(autoincrement())
   relatedEvent    Event?     @relation(fields: [eventId], references: [id])
   targetCategory  Category[]
   excludedProduct Product[]  @relation("discountExcludedProduct")

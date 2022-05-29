@@ -5,11 +5,39 @@ import {
     Filter,
     HandlerError,
     Relation,
+    Scheme,
     SingleRelationField,
     TableRecord,
 } from "@/types"
 import { Prisma } from "@prisma/client"
 import { endpoint } from ".."
+
+const generalizeFormData = async (
+    data: Omit<TableRecord, "id">,
+    scheme: Scheme
+) => {
+    return Object.fromEntries(
+        await Promise.all(
+            Object.entries(data).map(async ([key, value]) => {
+                const field: Field = scheme.fields[key]
+                if (!field) return [key, value]
+                const typedValue =
+                    field.typeOption.type === "date"
+                        ? new Date(value.toString())
+                        : value
+
+                if (value === "") return [key, undefined]
+
+                return [
+                    key,
+                    field.saveWithComputed
+                        ? await field.saveWithComputed(typedValue)
+                        : typedValue,
+                ]
+            })
+        )
+    )
+}
 
 const actions = {
     async GET(
@@ -193,11 +221,13 @@ const actions = {
                 )
         }
 
+        const data = await generalizeFormData(props.data, table)
+        console.log(data)
         const res: TableRecord = await (prisma[table.tableName].update as any)({
             where: {
                 id: props.id,
             },
-            data: props.data,
+            data,
         })
 
         if (!res.id) throw new HandlerError(`수정에 오류가 발생했어요`, 500)
@@ -235,23 +265,7 @@ const actions = {
         }
     ) {
         const table = TABLES.find((table) => table.tableName === tableName)
-
-        const data = Object.fromEntries(
-            Object.entries(props.data).map(([key, value]) => {
-                const field: Field = table.fields[key]
-                const typedValue =
-                    field.typeOption.type === "date"
-                        ? new Date(value.toString())
-                        : value
-
-                return [
-                    key,
-                    field.saveWithComputed
-                        ? field.saveWithComputed(typedValue)
-                        : typedValue,
-                ]
-            })
-        )
+        const data = await generalizeFormData(props.data, table)
 
         const res: TableRecord = await prisma[tableName].create({
             data,

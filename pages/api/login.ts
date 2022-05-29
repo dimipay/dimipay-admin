@@ -1,7 +1,7 @@
 import { createJWT } from "@/functions"
 import { prisma } from "@/storage"
 import { HandlerError } from "@/types"
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import { endpoint } from "."
 
 const actions = {
@@ -12,7 +12,6 @@ const actions = {
             },
         })
 
-        console.log(bcrypt.hashSync(content.password, 10))
         if (!user || !bcrypt.compareSync(content.password, user.hashedPassword))
             throw new HandlerError("일치하는 사용자를 찾을 수 없습니다", 400)
 

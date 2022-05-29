@@ -75,7 +75,7 @@ export interface Field {
               default?: boolean
           }
         | {
-              type: "string" | "date"
+              type: "string" | "date" | "password"
               default?: string
               pattern?: "color"
           }
@@ -92,7 +92,7 @@ export interface Field {
     validateFunc?: (
         data: DataValue
     ) => boolean | undefined | string | Promise<boolean | undefined | string>
-    saveWithComputed?: (data: DataValue) => DataValue
+    saveWithComputed?: (data: DataValue) => DataValue | Promise<DataValue>
 }
 
 export interface ToolbarAction {

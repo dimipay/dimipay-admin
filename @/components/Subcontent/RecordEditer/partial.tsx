@@ -36,13 +36,17 @@ export const PropertyEditer: React.FC<{
         placeholder,
     }
 
-    if (TEXT_INPUT_COMPATIBLE_TYPES.includes(dataType)) {
+    if (
+        (TEXT_INPUT_COMPATIBLE_TYPES as unknown as string[]).includes(dataType)
+    ) {
         return (
             <Vexile gap={1}>
                 <Input
                     {...commonProps}
                     defaultValue={props.data as string}
-                    type={dataType}
+                    type={
+                        dataType as typeof TEXT_INPUT_COMPATIBLE_TYPES[number]
+                    }
                 />
                 {props.field.description && (
                     <Description>{props.field.description}</Description>
@@ -84,7 +88,7 @@ export const PropertyEditer: React.FC<{
         )
     }
 
-    if (dataType === "relation-single") {
+    if (dataType === "relation-single" || dataType === "relation-multiple") {
         return (
             <Vexile gap={1}>
                 <Dropdown
@@ -94,6 +98,9 @@ export const PropertyEditer: React.FC<{
                             label: e.displayName,
                         })
                     )}
+                    maxSelectAmount={
+                        dataType === "relation-multiple" ? undefined : 1
+                    }
                     optionsRetriever={async (keyword) => {
                         const option = props.field
                             .typeOption as SingleRelationField

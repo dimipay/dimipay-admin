@@ -9,7 +9,6 @@ datasource db {
 }
 
 model User {
-  id                  Int             @id @default(autoincrement())
   systemId            String          @unique @default(uuid())
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @default(now()) @updatedAt
@@ -22,6 +21,7 @@ model User {
   deviceUid           String?
   bioKey              String?
   phoneNumber         String?
+  id                  Int             @id @default(autoincrement())
   relatedAdminAccount AdminAccount?
   issuedCoupons       Coupon[]        @relation("issue")
   receivedCoupons     Coupon[]        @relation("receive")
@@ -134,9 +134,9 @@ model Product {
   barcode                 String?
   price                   Int
   sellingStopped          Boolean           @default(false)
+  systemId                String            @unique @default(uuid())
   id                      Int               @id @default(autoincrement())
   categoryId              Int
-  systemId                String            @unique @default(uuid())
   category                Category          @relation(fields: [categoryId], references: [id])
   productInOutLog         ProductInOutLog[]
   transaction             Transaction[]

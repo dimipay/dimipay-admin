@@ -100,7 +100,7 @@ export interface ToolbarAction {
         label: string
         color: "danger" | "normal" | "accent"
     }
-    func(selectedRecords: TableRecord[], scheme: Scheme): void
+    func(selectedRecords: TableRecord[], scheme: Scheme): void | Promise<void>
 }
 
 export type PanelComponent = React.FC<{

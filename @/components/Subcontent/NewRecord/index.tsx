@@ -13,8 +13,9 @@ import { prisma } from "@/storage"
 const dataTyper = (field: Field, value: DataValue) => {
     if (field.typeOption.type === "number") return +value
 
-    if (field.typeOption.type === "date")
+    if (field.typeOption.type === "date") {
         return new Date(value.toString()).toISOString()
+    }
 
     return value
 }
@@ -40,7 +41,10 @@ export const NewRecord = (props: {
         console.log(data)
         const processedData = Object.fromEntries(
             Object.entries(data)
-                .filter(([key]) => !props.scheme.fields[key].autoGenerative)
+                .filter(
+                    ([key, value]) =>
+                        !props.scheme.fields[key].autoGenerative && value
+                )
                 .map(([key, value]) => {
                     const field: Field = props.scheme.fields[key]
 
@@ -67,10 +71,6 @@ export const NewRecord = (props: {
                     }
 
                     const typedValue = dataTyper(field, value)
-
-                    // if (field.saveWithComputed) {
-                    //     return [key, field.saveWithComputed(typedValue)]
-                    // }
 
                     return [key, typedValue]
                 })

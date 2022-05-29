@@ -27,7 +27,6 @@ const getFieldValue = (field: Field, value: DataValue) => {
         return <input type="checkbox" checked={value as boolean} />
 
     if (typeOption.type === "relation-single") {
-        console.log(field, value)
         const target = (value as Relation).target[0]
         return (
             <Hexile gap={2} y="center">
@@ -35,6 +34,11 @@ const getFieldValue = (field: Field, value: DataValue) => {
                 <Regular>{target.displayName}</Regular>
             </Hexile>
         )
+    }
+
+    if (typeOption.type === "relation-multiple") {
+        const target = value as Relation
+        return <Regular>{target.target.map((e) => e.displayName)}</Regular>
     }
 
     if (value instanceof Array && isMultipleSelect(typeOption))

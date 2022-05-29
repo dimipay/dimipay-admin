@@ -26,14 +26,20 @@ export const DISCOUNT_POLICY: Scheme = {
             },
             required: false,
         },
-        eventId: {
+        relatedEvent: {
             displayName: "연계 이벤트",
-            // typeOption: {
-            //     type: "relation-single",
-            //     target: SLUG.
-            // }
             typeOption: {
-                type: "string",
+                type: "relation-single",
+                target: SLUG.event,
+                displayNameField: "title",
+            },
+        },
+        targetCategory: {
+            displayName: "할인 카테고리",
+            typeOption: {
+                type: "relation-multiple",
+                target: SLUG.category,
+                displayNameField: "name",
             },
         },
     },

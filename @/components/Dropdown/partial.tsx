@@ -16,36 +16,43 @@ export const SelectableList: React.FC<{
 }> = (props) => {
     return (
         <Vexile style={props.style}>
-            {props.options.map((option) => (
-                <>
-                    <Item
-                        tabIndex={0}
-                        onKeyDown={clickWithSpace}
-                        x="space"
-                        padding={3}
-                        selected={props.selectedOptions.some(
-                            (e) =>
-                                e.key === option.key || e.label === option.label
-                        )}
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            props.onItemSelected(option)
-                        }}
-                    >
-                        <Hexile gap={2} y="center">
-                            {option.color && (
-                                <ColorBubble color={option.color} />
+            {props.options.length ? (
+                props.options.map((option) => (
+                    <>
+                        <Item
+                            tabIndex={0}
+                            onKeyDown={clickWithSpace}
+                            x="space"
+                            padding={3}
+                            selected={props.selectedOptions.some(
+                                (e) =>
+                                    e.key === option.key ||
+                                    e.label === option.label
                             )}
-                            <Description dark={1}>
-                                {props.itemLabelMap?.[option.label] ||
-                                    option.label}{" "}
-                                {props.coDisplayKey && `(${option.key})`}
-                            </Description>
-                        </Hexile>
-                    </Item>
-                    <DividerLine />
-                </>
-            ))}
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                props.onItemSelected(option)
+                            }}
+                        >
+                            <Hexile gap={2} y="center">
+                                {option.color && (
+                                    <ColorBubble color={option.color} />
+                                )}
+                                <Description dark={1}>
+                                    {props.itemLabelMap?.[option.label] ||
+                                        option.label}{" "}
+                                    {props.coDisplayKey && `(${option.key})`}
+                                </Description>
+                            </Hexile>
+                        </Item>
+                        <DividerLine />
+                    </>
+                ))
+            ) : (
+                <Hexile x="center" padding={3}>
+                    <Description>결과가 없습니다</Description>
+                </Hexile>
+            )}
         </Vexile>
     )
 }

@@ -9,6 +9,7 @@ import { DataView, SearchInput, Searhbox, Wrapper } from "./style"
 import { SelectableList } from "./partial"
 import { searchIcon } from "@/assets"
 import { LoadSVG } from "../LoadSVG"
+import { toast } from "react-toastify"
 
 export const Dropdown: React.FC<{
     options?: Option[]
@@ -141,6 +142,15 @@ export const Dropdown: React.FC<{
                                         )
                                     )
                                 } else {
+                                    if (
+                                        props.maxSelectAmount ===
+                                        logicalValue.length
+                                    ) {
+                                        toast(
+                                            `${props.name.은는} 최대 ${props.maxSelectAmount}개 까지 선택할 수 있어요`
+                                        )
+                                        return
+                                    }
                                     setLogicalValue((prev) => [
                                         ...prev,
                                         {

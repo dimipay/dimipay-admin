@@ -39,12 +39,15 @@ const LoginChecker: React.FC = (props) => {
     return <>{props.children}</>
 }
 
-function MyApp({ Component, pageProps }) {
+const MyApp: React.FC<{
+    Component: React.ComponentType
+    pageProps: any
+}> = (props) => {
     return (
         <RecoilRoot>
             <ToastContainer />
             <LoginChecker>
-                <Component {...pageProps} />
+                <props.Component {...props.pageProps} />
             </LoginChecker>
         </RecoilRoot>
     )

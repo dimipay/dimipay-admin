@@ -45,7 +45,7 @@ export const ActionToolbars = styled(Hexile, {
 })
 
 export const TooltipWrapper = styled(Hexile, {
-    position: "absolute",
+    position: "fixed",
     card: "$accent",
     zIndex: 1,
 })

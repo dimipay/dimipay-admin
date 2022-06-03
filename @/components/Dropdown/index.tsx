@@ -24,12 +24,14 @@ export const Dropdown: React.FC<{
     maxSelectAmount?: number
 }> = (props) => {
     const [logicalValue, setLogicalValue] = useState<Option[]>(props.data || [])
-    const [loadedOptions, setLoadedOptions] = useState<Option[]>(props.options)
+    const [loadedOptions, setLoadedOptions] = useState<Option[]>(
+        props.options || []
+    )
 
     const [searchQuery, setSearchQuery] = useState<string>()
     const [opened, setOpened] = useState(false)
 
-    const logicalSelect = React.useRef<HTMLSelectElement>(null)
+    const logicalSelect = React.useRef<HTMLSelectElement | null>(null)
 
     useEffect(() => {
         console.log(logicalValue)
@@ -42,7 +44,8 @@ export const Dropdown: React.FC<{
     }, [props.hooker, logicalValue])
 
     useEffect(() => {
-        if (props.error) logicalSelect.current.parentElement.focus()
+        if (props.error && logicalSelect.current?.parentElement)
+            logicalSelect.current.parentElement.focus()
     }, [props.error, logicalSelect])
 
     useEffect(() => {

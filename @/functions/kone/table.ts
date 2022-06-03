@@ -6,11 +6,14 @@ const METHOD = ["GET", "PATCH", "DELETE", "POST"] as const
 
 export const table = Object.fromEntries(
     Object.keys(SLUG).map((slug) => [
-        SLUG[slug],
+        SLUG[slug as SLUG],
         Object.fromEntries(
             METHOD.map((method) => [
                 method,
-                kone<tableKone[typeof method]>("table/" + SLUG[slug], method),
+                kone<tableKone[typeof method]>(
+                    "table/" + SLUG[slug as SLUG],
+                    method
+                ),
             ])
         ),
     ])

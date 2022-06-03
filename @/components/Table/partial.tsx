@@ -30,7 +30,7 @@ const getFieldValue = (field: Field, value: DataValue) => {
         const target = (value as Relation).target[0]
         return (
             <Hexile gap={2} y="center">
-                <ColorBubble color={target.color} />
+                {target.color && <ColorBubble color={target.color} />}
                 <Regular>{target.displayName}</Regular>
             </Hexile>
         )
@@ -43,10 +43,12 @@ const getFieldValue = (field: Field, value: DataValue) => {
 
     if (value instanceof Array && isMultipleSelect(typeOption))
         return value
-            .map(
-                (v: string | number | boolean | Date) =>
-                    (field.computed?.(v) ?? typeOption.map[v.toString()]) ||
-                    v.toString()
+            .map((v: string | number | boolean | Date) =>
+                field.computed
+                    ? field.computed(v)
+                    : typeOption.map
+                    ? typeOption.map[v.toString()]
+                    : v
             )
             .join(", ")
 

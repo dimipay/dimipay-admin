@@ -26,7 +26,7 @@ export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = (props) => (
                         href={`/dash/${
                             Object.entries(SLUG).find(
                                 ([key, v]) => v === table.tableName
-                            )[0]
+                            )?.[0] || ""
                         }`}
                     >
                         <Regular dark={3}>{table.displayName}</Regular>

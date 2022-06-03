@@ -1,16 +1,13 @@
 import { HandlerError } from "@/types"
 import { NextApiHandler } from "next"
 
-export type Handlers = Record<
-    string,
-    (req: unknown, slug?: Record<string, string | string[]>) => unknown
->
+export type Handlers = Record<string, (props: any, slug: any) => unknown>
 
 export const endpoint =
     (handlers: Handlers): NextApiHandler =>
     async (req, res) => {
         try {
-            const handler = handlers[req.method]
+            const handler = handlers[req.method as string]
             if (!handler) throw new HandlerError(`동작을 찾을 수 없어요`, 404)
             const result = await handler(
                 req.method === "GET"
@@ -27,7 +24,7 @@ export const endpoint =
                 })
             } else {
                 console.log("오류 발생!", e)
-                res.status(e.code || 500).json({
+                res.status((e as { code: number }).code || 500).json({
                     message: "알 수 없는 오류가 발생했어요",
                     isHandlerError: true,
                 })

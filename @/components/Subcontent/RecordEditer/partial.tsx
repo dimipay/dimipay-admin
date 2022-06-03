@@ -108,13 +108,15 @@ export const PropertyEditer: React.FC<{
                         const relationData = (
                             await table[option.target].GET({
                                 amount: 5,
-                                filter: keyword && [
-                                    [
-                                        option.displayNameField,
-                                        "contains",
-                                        keyword,
-                                    ],
-                                ],
+                                filter: keyword
+                                    ? [
+                                          [
+                                              option.displayNameField,
+                                              "contains",
+                                              keyword,
+                                          ],
+                                      ]
+                                    : undefined,
                             })
                         ).map((row) => ({
                             label: row[option.displayNameField] as string,

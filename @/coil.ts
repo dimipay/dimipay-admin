@@ -7,7 +7,7 @@ const { persistAtom } = recoilPersist()
 export const userAtom = atom<{
     user: AdminAccount
     token: string
-}>({
+} | null>({
     default: null,
     key: "USER",
     effects_UNSTABLE: [persistAtom],
@@ -16,7 +16,7 @@ export const userAtom = atom<{
 export const subContentAtom = atom<{
     name: string
     element: JSX.Element
-}>({
+} | null>({
     default: null,
     key: "SUB_CONTENT",
     // effects_UNSTABLE: [persistAtom],

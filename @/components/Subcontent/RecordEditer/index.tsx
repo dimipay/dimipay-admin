@@ -28,7 +28,9 @@ const relationSanitizer = (data: TableRecord) => {
                                 (e) => e.id
                             ),
                         ]
+                    return []
                 })
+                .filter((e) => e[0])
                 .filter(Boolean)
         ),
     }

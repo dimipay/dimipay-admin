@@ -11,10 +11,10 @@ import { PropertyEditer } from "../RecordEditer/partial"
 import { prisma } from "@/storage"
 
 const dataTyper = (field: Field, value: DataValue) => {
-    if (field.typeOption.type === "number") return +value
+    if (field.typeOption.type === "number") return Number(value)
 
     if (field.typeOption.type === "date") {
-        return new Date(value.toString()).toISOString()
+        return value && new Date(value.toString()).toISOString() && new Date(0)
     }
 
     return value
@@ -53,7 +53,7 @@ export const NewRecord = (props: {
                             key,
                             {
                                 connect: {
-                                    id: value[0],
+                                    id: value ? (value as string[])[0] : [],
                                 },
                             },
                         ]

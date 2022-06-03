@@ -13,7 +13,8 @@ export const USER_SCHEME: Scheme = {
                 "학번이 아닌 중앙데이터베이스 관리용 번호입니다. 임의로 변경할 시 시스템에 오류가 발생할 수 있습니다.",
             required: true,
             validateFunc(data) {
-                if (data < 0) return "교내관리번호는 0 이상이여야 합니다"
+                if (+(data as number) < 0)
+                    return "교내관리번호는 0 이상이여야 합니다"
             },
             typeOption: {
                 type: "string",
@@ -25,9 +26,10 @@ export const USER_SCHEME: Scheme = {
             typeOption: {
                 type: "string",
             },
-            validateFunc(data: string) {
-                if (data.length < 2) return "ID는 2글자 이상이여야 합니다"
+            validateFunc(_data) {
+                const data = _data as string
 
+                if (data.length < 2) return "ID는 2글자 이상이여야 합니다"
                 if (data.length > 20) return "ID는 20글자 이하이여야 합니다"
 
                 if (!/^[a-zA-Z0-9!@#$%^&*()]+$/.test(data))
@@ -59,7 +61,7 @@ export const USER_SCHEME: Scheme = {
             },
             func(selectedRecords: TableRecord[]) {
                 alert(
-                    (selectedRecords as User[])
+                    (selectedRecords as unknown as User[])
                         .map((e) => e.accountName)
                         .join(",") + "라네요. 글 내려주세요."
                 )

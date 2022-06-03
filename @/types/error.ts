@@ -7,10 +7,10 @@ export class HandlerError extends Error {
     ) {
         super(message)
         console.log("오류 발생!", message, info)
-        this.code = code
+        if (code) this.code = code
     }
 
-    static isHandlerError(d: any): boolean {
+    static isHandlerError(d: any): d is HandlerError {
         return d?.isHandlerError === true
     }
 }

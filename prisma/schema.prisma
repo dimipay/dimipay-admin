@@ -95,25 +95,25 @@ model Coupon {
 }
 
 model Transaction {
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @default(now()) @updatedAt
-  billingId           String?
-  totalPrice          Int
-  status              Transaction_status
-  statusText          String?
-  transactionMethod   TransactionMethod
-  usedCardId          String
-  posDeviceId         String?
-  userId              String
-  specialPurchase     String?
-  specialPurchaseType SpecialPurchaseType?
-  systemId            String               @unique @default(uuid())
-  id                  Int                  @id @default(autoincrement())
-  posDevice           PosDevice?           @relation(fields: [posDeviceId], references: [id])
-  paymentMethod       PaymentMethod        @relation(fields: [usedCardId], references: [systemId])
-  user                User                 @relation(fields: [userId], references: [systemId])
-  coupon              Coupon[]
-  products            Product[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now()) @updatedAt
+  billingId         String?
+  totalPrice        Int
+  status            Transaction_status
+  statusText        String?
+  transactionMethod TransactionMethod
+  usedCardId        String
+  posDeviceId       String?
+  userId            String
+  systemId          String             @unique @default(uuid())
+  id                Int                @id @default(autoincrement())
+  purchaseDetail    String[]
+  purchaseType      PurchaseType?
+  posDevice         PosDevice?         @relation(fields: [posDeviceId], references: [id])
+  paymentMethod     PaymentMethod      @relation(fields: [usedCardId], references: [systemId])
+  user              User               @relation(fields: [userId], references: [systemId])
+  coupon            Coupon[]
+  products          Product[]
 }
 
 model Category {
@@ -231,14 +231,15 @@ enum TransactionMethod {
   INAPP
 }
 
-enum SpecialPurchaseType {
-  COUPON
-  PRINTER
-}
-
 enum Transaction_status {
   CONFIRMED
   CANCELED
   PENDING
   ERROR
+}
+
+enum PurchaseType {
+  COUPON
+  PRINTER
+  GENERAL
 }

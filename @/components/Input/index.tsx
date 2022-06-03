@@ -5,7 +5,7 @@ import { UseFormRegisterReturn } from "react-hook-form"
 import { LoadSVG } from ".."
 import { InputWraper, LogicalInput } from "./style"
 
-const TYPE_ICON_MAP = {
+const TYPE_ICON_MAP: Record<string, string> = {
     number: numberInputIcon,
 }
 
@@ -46,7 +46,7 @@ export const Input: React.FC<{
                 hasError={typeof props.error === "string"}
             >
                 <Hexile gap={1} y="center">
-                    {TYPE_ICON_MAP[props.type] && (
+                    {props.type && TYPE_ICON_MAP[props.type] && (
                         <LoadSVG
                             src={TYPE_ICON_MAP[props.type]}
                             width={5}

@@ -30,8 +30,8 @@ export const ADMIN_ACCOUNT_SCHEME: Scheme = {
             typeOption: {
                 type: "password",
             },
-            saveWithComputed(password: string) {
-                return bcrypt.hashSync(password, 10)
+            saveWithComputed(password) {
+                return bcrypt.hashSync(password as string, 10)
             },
         },
     },

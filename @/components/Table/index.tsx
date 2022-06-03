@@ -20,7 +20,7 @@ export const Table: React.FC<{
         []
     )
 
-    const [sort, setSort] = useState<string>(null)
+    const [sort, setSort] = useState<string | null>(null)
     const [ref, inView, entry] = useInView()
 
     useEffect(() => {

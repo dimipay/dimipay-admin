@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react"
 export const useThrottledEffect = (
     callback: () => void,
     delay: number,
-    deps = []
+    deps: unknown[] = []
 ) => {
     const lastRan = useRef(Date.now())
 

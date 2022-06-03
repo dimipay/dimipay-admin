@@ -8,7 +8,7 @@ import { Item } from "./style"
 
 export const SelectableList: React.FC<{
     options: Option[]
-    selectedOptions: Option[]
+    selectedOptions?: Option[]
     itemLabelMap?: Record<string | number, string>
     onItemSelected?: (clicked: Option) => void
     style?: React.CSSProperties
@@ -24,14 +24,14 @@ export const SelectableList: React.FC<{
                             onKeyDown={clickWithSpace}
                             x="space"
                             padding={3}
-                            selected={props.selectedOptions.some(
+                            selected={props.selectedOptions?.some(
                                 (e) =>
-                                    e.key === option.key ||
+                                    (e.key && e.key === option.key) ||
                                     e.label === option.label
                             )}
                             onClick={(e) => {
                                 e.stopPropagation()
-                                props.onItemSelected(option)
+                                props.onItemSelected?.(option)
                             }}
                         >
                             <Hexile gap={2} y="center">

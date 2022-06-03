@@ -10,7 +10,7 @@ import {
     TableRecord,
 } from "@/types"
 import { Prisma } from "@prisma/client"
-import { endpoint } from ".."
+import { endpoint, Handlers } from ".."
 
 const generalizeFormData = async (
     data: Omit<TableRecord, "id">,
@@ -20,7 +20,7 @@ const generalizeFormData = async (
         await Promise.all(
             Object.entries(data).map(async ([key, value]) => {
                 const field: Field = scheme.fields[key]
-                if (!field) return [key, value]
+                if (!field || !value) return [key, value]
                 const typedValue =
                     field.typeOption.type === "date"
                         ? new Date(value.toString())
@@ -55,6 +55,11 @@ const actions = {
         }
     ): Promise<TableRecord[]> {
         const table = TABLES.find((table) => table.tableName === slug.tableName)
+        if (!table)
+            throw new HandlerError(
+                `테이블 ${slug.tableName}을 찾을 수 없습니다.`,
+                404
+            )
 
         try {
             const filter = {
@@ -80,12 +85,6 @@ const actions = {
                 }))
 
             try {
-                // prisma.category.findMany({
-                //     include: {
-                //         products: true,
-                //     }
-                // })
-
                 const res: TableRecord[] = await (
                     prisma[table.tableName].findMany as any
                 )({
@@ -105,7 +104,7 @@ const actions = {
                 })
 
                 const relationKeys = Object.entries(table.fields)
-                    .filter(([key, value]) =>
+                    .filter(([key]) =>
                         ["relation-single", "relation-multiple"].includes(
                             table.fields[key].typeOption.type
                         )
@@ -242,7 +241,17 @@ const actions = {
             tableName: string
         }
     ) {
-        const result: Prisma.BatchPayload = await prisma[tableName].deleteMany({
+        const table = TABLES.find((table) => table.tableName === tableName)
+        if (!table) {
+            throw new HandlerError(
+                `요청한 테이블 (${tableName})을 찾을 수 없어요`,
+                400
+            )
+        }
+
+        const result: Prisma.BatchPayload = await (
+            prisma[table.tableName] as any
+        ).deleteMany({
             where: {
                 id: {
                     in: props.ids,
@@ -265,11 +274,18 @@ const actions = {
         }
     ) {
         const table = TABLES.find((table) => table.tableName === tableName)
+
+        if (!table)
+            throw new HandlerError(
+                `요청한 테이블(${tableName})을 찾을 수 없어요`,
+                404
+            )
+
         const data = await generalizeFormData(props.data, table)
 
-        const res: TableRecord = await prisma[tableName].create({
+        const res: TableRecord = await (prisma[table.tableName] as any).create({
             data,
-        })
+        } as any)
 
         return res
     },

@@ -3,7 +3,7 @@ import { Option } from "@/types"
 import { Regular } from "@/typo"
 import { Hexile } from "@haechi/flexile"
 import React, { useState } from "react"
-import { LoadSVG } from ".."
+import { ColorBubble, LoadSVG } from ".."
 import { SelectableList } from "../Dropdown/partial"
 import { ListWrapper, LogicalInput, Wrapper } from "./style"
 
@@ -17,8 +17,15 @@ export const MiniSelect: React.FC<{
 
     return (
         <Wrapper onClick={() => setMenuOpened(true)}>
-            <Hexile gap={2}>
-                <Regular accent>{props.selected || props.placeholder}</Regular>
+            <Hexile gap={2} y="center">
+                {props.selected?.color && (
+                    <ColorBubble color={props.selected.color} />
+                )}
+                <Regular accent>
+                    {props.selected?.label ||
+                        props.selected?.key ||
+                        props.placeholder}
+                </Regular>
                 <LoadSVG
                     alt="조건 목록 펼치기 아이콘"
                     src={downArrowIcon}
@@ -30,7 +37,7 @@ export const MiniSelect: React.FC<{
                 <ListWrapper>
                     <SelectableList
                         options={props.options}
-                        selectedOptions={[props.selected]}
+                        selectedOptions={props.selected && [props.selected]}
                         onItemSelected={(clicked) => {
                             setMenuOpened(false)
                             props.onChange(clicked.key as string)

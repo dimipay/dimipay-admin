@@ -4,7 +4,7 @@ import { useThrottledEffect } from ".."
 export const useKone = <Input, Output>(
     koneFunction: ((data: Input) => Promise<Output>) | undefined,
     input: Input
-): undefined | [Output, () => void] => {
+): undefined | [Output | undefined, () => void] => {
     const [result, setResult] = useState<Output>()
     const serialized = JSON.stringify(input)
 

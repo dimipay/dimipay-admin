@@ -28,7 +28,7 @@ const TableViewer: NextPage = () => {
     const router = useRouter()
     const [subcontent, setSubcontent] = useRecoilState(subContentAtom)
     const setSubContent = useSetRecoilState(subContentAtom)
-    const slug = router.query.slug as string
+    const slug = router.query.slug as SLUG
 
     const [scheme, setScheme] = useState(
         TABLES.find((table) => table.tableName === SLUG[slug])
@@ -69,6 +69,7 @@ const TableViewer: NextPage = () => {
 
     const loadMore = useCallback(async () => {
         if (records.length === 0) return
+        if (!scheme) return
 
         const additionalRecords = await table[scheme.tableName].GET({
             filter,
@@ -150,7 +151,7 @@ const TableViewer: NextPage = () => {
                             />
                         </div>
                     )}
-                    {filterElement}
+                    {/* {filterElement} */}
                 </Vexile>
             )}
             {subcontent && (
@@ -162,7 +163,7 @@ const TableViewer: NextPage = () => {
                             height={3}
                             width={3}
                             src={closeIcon}
-                            onClick={() => setSubcontent(undefined)}
+                            onClick={() => setSubcontent(null)}
                         />
                     </Hexile>
                     {subcontent.element}

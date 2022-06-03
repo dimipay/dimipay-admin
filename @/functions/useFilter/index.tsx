@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 import { FilterItem, FilterWithDisablity } from "./partial"
 import { ItemWrapper } from "./style"
 
-export const useFilter = (scheme: Scheme) => {
+export const useFilter = (scheme?: Scheme) => {
     const [filter, setFilter] = useState<FilterWithDisablity[]>([])
 
     return {
@@ -27,7 +27,7 @@ export const useFilter = (scheme: Scheme) => {
                 },
             ])
         },
-        element: (
+        element: scheme && (
             <Hexile
                 gap={2}
                 style={{

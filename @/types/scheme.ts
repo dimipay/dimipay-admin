@@ -111,7 +111,7 @@ export type PanelComponent = React.FC<{
 export interface Scheme {
     displayName: string
     tableName: SLUG
-    fields?: Record<string, Field>
+    fields: Record<string, Field>
     actions?: ToolbarAction[]
     panelComponents?: PanelComponent[]
 }

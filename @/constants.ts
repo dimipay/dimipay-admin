@@ -13,7 +13,7 @@ export const assert = (name: string, isServersideOnly: boolean = true) => {
     const content = process.env[name]
     if (!content && !isServersideOnly)
         throw new Error(`Cannot find "${name}" in environment variables`)
-    return content
+    return content!
 }
 
 export const JWT_SECRET = assert("JWT_SECRET")

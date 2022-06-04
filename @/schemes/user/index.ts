@@ -9,45 +9,57 @@ export const USER_SCHEME: Scheme = {
     fields: {
         ...RECORD_BASE_FIELDS,
         systemId: {
-            displayName: "교내관리번호",
+            displayName: "내부 관리 번호",
             description:
-                "학번이 아닌 중앙데이터베이스 관리용 번호입니다. 임의로 변경할 시 시스템에 오류가 발생할 수 있습니다.",
-            required: true,
-            validateFunc(data) {
-                if (+(data as number) < 0)
-                    return "교내관리번호는 0 이상이여야 합니다"
+                "내부적으로 사용자를 식별할 때 사용하는 번호입니다. 임의로 변경할 시 시스템이 불안정해질 수 있습니다.",
+            typeOption: {
+                type: "string",
             },
+            validateFunc(value) {
+                if (isNaN(+(value as string))) {
+                    return "숫자만 입력해야 해요"
+                }
+
+                if ((value as string).length !== 4) {
+                    return "내부 관리 번호는 4자리입니다"
+                }
+            },
+        },
+        accountName: {
+            displayName: "계정 이름",
             typeOption: {
                 type: "string",
             },
         },
-        accountName: {
-            displayName: "ID",
-            required: true,
+        name: {
+            displayName: "이름",
             typeOption: {
                 type: "string",
-            },
-            validateFunc(_data) {
-                const data = _data as string
-
-                if (data.length < 2) return "ID는 2글자 이상이여야 합니다"
-                if (data.length > 20) return "ID는 20글자 이하이여야 합니다"
-
-                if (!/^[a-zA-Z0-9!@#$%^&*()]+$/.test(data))
-                    return "ID는 영문과 숫자만, 특수문자 사용할 수 있습니다"
             },
         },
         profileImage: {
             displayName: "프로필 이미지",
-            invisibleInTable: true,
             typeOption: {
                 type: "string",
             },
-            required: true,
+            required: false,
+        },
+        phoneNumber: {
+            displayName: "전화번호",
+            typeOption: {
+                type: "string",
+            },
+            required: false,
         },
         isTeacher: {
-            displayName: "교사여부",
-            required: true,
+            displayName: "교사 여부",
+            typeOption: {
+                type: "boolean",
+            },
+            required: false,
+        },
+        isDisabled: {
+            displayName: "거래 중지 여부",
             typeOption: {
                 type: "boolean",
             },

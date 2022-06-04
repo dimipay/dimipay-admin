@@ -11,16 +11,9 @@ export const NewRecord = (props: {
     onReloadRequested(): void
 }) => {
     return (
-        <Vexile gap={4}>
-            <RecordEditer
-                scheme={props.scheme}
-                onReloadRequested={props.onReloadRequested}
-            />
-            <Button block>
-                <Important white center>
-                    생성
-                </Important>
-            </Button>
-        </Vexile>
+        <RecordEditer
+            scheme={props.scheme}
+            onReloadRequested={props.onReloadRequested}
+        />
     )
 }

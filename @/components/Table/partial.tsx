@@ -28,6 +28,7 @@ const getFieldValue = (field: Field, value: DataValue) => {
         return <input type="checkbox" checked={value as boolean} />
 
     if (typeOption.type === "relation-single") {
+        if (!value) return ""
         if ((value as Relation).target.length === 0) return <></>
 
         const target = (value as Relation).target[0]

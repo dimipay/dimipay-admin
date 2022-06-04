@@ -39,6 +39,12 @@ export const PRODUCT_SCHEME: Scheme = {
                 displayNameField: "name",
             },
         },
+        sellingStopped: {
+            displayName: "판매 중지 여부",
+            typeOption: {
+                type: "boolean",
+            },
+        },
     },
     actions: [DELETE_SELECTED_RECORDS_ACTION],
 }

@@ -20,7 +20,6 @@ export const RECORD_BASE_FIELDS: Record<string, Field> = {
         typeOption: {
             type: "string",
         },
-        invisibleInTable: true,
     },
     createdAt: {
         displayName: "생성일",

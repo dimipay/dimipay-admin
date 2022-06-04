@@ -1,6 +1,7 @@
 import { numberInputIcon } from "@/assets"
-import { Token } from "@/typo"
+import { Description, Regular, Token } from "@/typo"
 import { Hexile } from "@haechi/flexile"
+import { useState } from "react"
 import { UseFormRegisterReturn } from "react-hook-form"
 import { LoadSVG } from ".."
 import { InputWraper, LogicalInput } from "./style"
@@ -14,6 +15,7 @@ export const TEXT_INPUT_COMPATIBLE_TYPES = [
     "number",
     "date",
     "password",
+    "color",
 ] as const
 
 export const Input: React.FC<{
@@ -37,6 +39,8 @@ export const Input: React.FC<{
             type: "password",
         }),
     }
+    const [currentColor, setColor] = useState<string>()
+
     return (
         <label>
             <InputWraper
@@ -79,6 +83,22 @@ export const Input: React.FC<{
                         ),
                         ["password"]: (
                             <LogicalInput {...commonProps} type="password" />
+                        ),
+                        ["color"]: (
+                            <Hexile y="center">
+                                <LogicalInput
+                                    {...commonProps}
+                                    type="color"
+                                    colorchip
+                                    onChange={(e) => {
+                                        props.hooker?.onChange(e)
+                                        setColor(e.currentTarget.value)
+                                    }}
+                                />
+                                <Hexile fillx>
+                                    <Regular>{currentColor}</Regular>
+                                </Hexile>
+                            </Hexile>
                         ),
                     }[props.type || "string"]
                 }

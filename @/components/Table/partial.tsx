@@ -14,7 +14,7 @@ import {
 import { Important, Regular } from "@/typo"
 
 import { TooltipWrapper, Cell, HeaderCell } from "./style"
-import { DividerLine, RecordEditer } from ".."
+import { DividerLine, ModifyRecord } from ".."
 import { ColorBubble } from "../atoms"
 import { Hexile, Vexile } from "@haechi/flexile"
 
@@ -32,6 +32,15 @@ const getFieldValue = (field: Field, value: DataValue) => {
             <Hexile gap={2} y="center">
                 {target.color && <ColorBubble color={target.color} />}
                 <Regular>{target.displayName}</Regular>
+            </Hexile>
+        )
+    }
+
+    if (typeOption.type === "color") {
+        return (
+            <Hexile gap={2} y="center">
+                <ColorBubble color={value as string} />
+                <Regular>{value as string}</Regular>
             </Hexile>
         )
     }
@@ -73,7 +82,7 @@ export const Row = forwardRef<
             onClick={() =>
                 setSubContent({
                     element: (
-                        <RecordEditer
+                        <ModifyRecord
                             onReloadRequested={props.onReloadRequested}
                             data={row}
                             scheme={props.scheme}

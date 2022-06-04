@@ -5,6 +5,7 @@ import { CreatePasscode } from "./panels"
 export const POS_DEVICE_SCHEME: Scheme = {
     displayName: "결제 단말기",
     tableName: SLUG.posDevice,
+    isUUIDPk: true,
     fields: {
         id: {
             displayName: "고유번호",

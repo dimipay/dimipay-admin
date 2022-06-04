@@ -9,7 +9,7 @@
     },
     "dependencies": {
         "@haechi/flexile": "^1.4.7",
-        "@prisma/client": "3.9.1",
+        "@prisma/client": "3.14.0",
         "@stitches/react": "^1.2.6",
         "@types/bcrypt": "^5.0.0",
         "@types/bcryptjs": "^2.4.2",
@@ -34,7 +34,7 @@
         "@types/react": "^17.0.38",
         "eslint": "8.8.0",
         "eslint-config-next": "12.0.10",
-        "prisma": "^3.9.1",
+        "prisma": "^3.14.0",
         "typescript": "^4.5.5"
     }
 }

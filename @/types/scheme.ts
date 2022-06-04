@@ -75,9 +75,8 @@ export interface Field {
               default?: boolean
           }
         | {
-              type: "string" | "date" | "password"
+              type: "string" | "date" | "password" | "color"
               default?: string
-              pattern?: "color"
           }
         | {
               type: "number"
@@ -114,6 +113,7 @@ export interface Scheme {
     fields: Record<string, Field>
     actions?: ToolbarAction[]
     panelComponents?: PanelComponent[]
+    isUUIDPk?: boolean
 }
 
 export interface SchemeGroup {

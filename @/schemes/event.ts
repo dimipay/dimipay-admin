@@ -4,6 +4,7 @@ import { RECORD_BASE_FIELDS } from "./common"
 export const EVENT: Scheme = {
     displayName: "이벤트",
     tableName: SLUG.event,
+    isUUIDPk: true,
     fields: {
         ...RECORD_BASE_FIELDS,
         title: {

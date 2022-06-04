@@ -7,6 +7,7 @@ import { ResetPassword } from "./ResetPassword"
 export const ADMIN_ACCOUNT_SCHEME: Scheme = {
     displayName: "관리자 계정",
     tableName: SLUG.adminAccount,
+    isUUIDPk: true,
     fields: {
         ...RECORD_BASE_FIELDS,
         username: {

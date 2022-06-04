@@ -15,8 +15,7 @@ export const CATEGORY_SCHEME: Scheme = {
         },
         color: {
             typeOption: {
-                type: "string",
-                pattern: "color",
+                type: "color",
             },
             displayName: "표시 색",
             description: "관리자 페이지에서 상품 페이지에 표시될 색상입니다",

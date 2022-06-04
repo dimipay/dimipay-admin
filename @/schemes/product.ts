@@ -4,6 +4,7 @@ import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
 export const PRODUCT_SCHEME: Scheme = {
     displayName: "상품",
     tableName: SLUG.product,
+    isUUIDPk: true,
     fields: {
         ...RECORD_BASE_FIELDS,
         name: {

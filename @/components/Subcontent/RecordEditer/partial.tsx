@@ -56,7 +56,6 @@ export const PropertyEditer: React.FC<{
     }
 
     if (dataType === "multiple") {
-        // console.log(, props.data)
         return (
             <Vexile gap={1}>
                 <Dropdown

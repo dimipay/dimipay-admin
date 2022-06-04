@@ -5,6 +5,7 @@ import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "../common"
 export const USER_SCHEME: Scheme = {
     displayName: "사용자",
     tableName: SLUG.user,
+    isUUIDPk: true,
     fields: {
         ...RECORD_BASE_FIELDS,
         systemId: {

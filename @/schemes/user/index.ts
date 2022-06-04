@@ -9,20 +9,10 @@ export const USER_SCHEME: Scheme = {
     fields: {
         ...RECORD_BASE_FIELDS,
         systemId: {
-            displayName: "내부 관리 번호",
-            description:
-                "내부적으로 사용자를 식별할 때 사용하는 번호입니다. 임의로 변경할 시 시스템이 불안정해질 수 있습니다.",
+            displayName: "관리 번호",
+            readOnly: true,
             typeOption: {
                 type: "string",
-            },
-            validateFunc(value) {
-                if (isNaN(+(value as string))) {
-                    return "숫자만 입력해야 해요"
-                }
-
-                if ((value as string).length !== 4) {
-                    return "내부 관리 번호는 4자리입니다"
-                }
             },
         },
         accountName: {

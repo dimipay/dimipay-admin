@@ -16,11 +16,10 @@ export const PropertyEditer: React.FC<{
 }> = (props) => {
     const dataType = props.field.typeOption.type
 
-    const placeholder =
-        props.newRegister && props.field.autoGenerative
-            ? "자동으로 설정됩니다"
-            : props.field.placeholder ||
-              props.field.displayName.을를 + " 입력해주세요"
+    const placeholder = props.field.autoGenerative
+        ? "자동으로 설정됩니다"
+        : props.field.placeholder ||
+          props.field.displayName.을를 + " 입력해주세요"
 
     const disabled =
         (props.newRegister && props.field.autoGenerative) ||
@@ -60,7 +59,7 @@ export const PropertyEditer: React.FC<{
             <Vexile gap={1}>
                 <Dropdown
                     options={props.field.typeOption.options}
-                    data={[]}
+                    selected={[]}
                     {...commonProps}
                     placeholder={
                         props.field.placeholder ||
@@ -91,7 +90,7 @@ export const PropertyEditer: React.FC<{
         return (
             <Vexile gap={1}>
                 <Dropdown
-                    data={(props.data as Relation | undefined)?.target.map(
+                    selected={(props.data as Relation | undefined)?.target.map(
                         (e) => ({
                             key: e.id,
                             label: e.displayName,

@@ -17,6 +17,7 @@ import { TooltipWrapper, Cell, HeaderCell } from "./style"
 import { DividerLine, ModifyRecord } from ".."
 import { ColorBubble } from "../atoms"
 import { Hexile, Vexile } from "@haechi/flexile"
+import { formatDate } from "@/functions"
 
 const getFieldValue = (field: Field, value: DataValue) => {
     if (field.computed) return field.computed(value)
@@ -27,6 +28,8 @@ const getFieldValue = (field: Field, value: DataValue) => {
         return <input type="checkbox" checked={value as boolean} />
 
     if (typeOption.type === "relation-single") {
+        if ((value as Relation).target.length === 0) return <></>
+
         const target = (value as Relation).target[0]
         return (
             <Hexile gap={2} y="center">
@@ -60,6 +63,11 @@ const getFieldValue = (field: Field, value: DataValue) => {
                     : v
             )
             .join(", ")
+
+    // if (typeOption.type === "date") {
+    //     console.log(value)
+    //     return formatDate(value)
+    // }
 
     return value
 }

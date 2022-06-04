@@ -37,7 +37,7 @@ export const DISCOUNT_POLICY: Scheme = {
         targetCategory: {
             displayName: "할인 카테고리",
             typeOption: {
-                type: "relation-multiple",
+                type: "relation-single",
                 target: SLUG.category,
                 displayNameField: "name",
             },

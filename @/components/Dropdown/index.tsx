@@ -14,7 +14,7 @@ import { toast } from "react-toastify"
 export const Dropdown: React.FC<{
     options?: Option[]
     optionsRetriever?: (query?: string) => Promise<Option[]>
-    data?: Option[]
+    selected?: Option[]
     name: string
     placeholder: string
     hooker: UseFormRegisterReturn
@@ -23,7 +23,9 @@ export const Dropdown: React.FC<{
     disabled?: boolean
     maxSelectAmount?: number
 }> = (props) => {
-    const [logicalValue, setLogicalValue] = useState<Option[]>(props.data || [])
+    const [logicalValue, setLogicalValue] = useState<Option[]>(
+        props.selected || []
+    )
     const [loadedOptions, setLoadedOptions] = useState<Option[]>(
         props.options || []
     )
@@ -34,7 +36,6 @@ export const Dropdown: React.FC<{
     const logicalSelect = React.useRef<HTMLSelectElement | null>(null)
 
     useEffect(() => {
-        console.log(logicalValue)
         if (logicalSelect.current) {
             props.hooker.onChange({
                 target: logicalSelect.current,

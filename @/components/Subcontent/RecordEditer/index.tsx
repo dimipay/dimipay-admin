@@ -4,7 +4,6 @@ import { table } from "@/functions"
 import {
     DataValue,
     Field,
-    MultipleRelationField,
     Relation,
     Scheme,
     SingleRelationField,
@@ -17,29 +16,100 @@ import { FieldError, SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "react-toastify"
 import { PropertyEditer } from "./partial"
 
-const dataTyper = (field: Field, value: DataValue) => {
+// Input으로 들어온 값을 Prisma로 저장할 수 있게 형식을 변환하는 함수
+
+const convertToStorageType = (field: Field, value: DataValue) => {
     if (field.typeOption.type === "number") return Number(value)
 
     if (field.typeOption.type === "date") {
-        return value && new Date(value.toString()).toISOString() && new Date(0)
+        return (value && new Date(value.toString()).toISOString()) || undefined
+    }
+
+    if (field.typeOption.type === "relation-single") {
+        if (!value)
+            return {
+                set: [],
+            }
+
+        const relationTargetKey = (value as string[])[0]
+        const relationTargetScheme = TABLES.find(
+            (e) =>
+                e.tableName === (field.typeOption as SingleRelationField).target
+        )
+
+        if (!relationTargetScheme) return []
+
+        return {
+            connect: {
+                id:
+                    relationTargetScheme.isUUIDPk ||
+                    relationTargetKey.match(/[A-z]/)
+                        ? relationTargetKey
+                        : +relationTargetKey,
+            },
+        }
+    }
+
+    if (field.typeOption.type === "relation-multiple") {
+        const relationTargetScheme = TABLES.find(
+            (e) =>
+                e.tableName === (field.typeOption as SingleRelationField).target
+        )
+
+        if (!relationTargetScheme) return []
+
+        const keys = value as string[]
+
+        if (!value || !(value as string[]).length)
+            return {
+                set: [],
+            }
+
+        const isUUIDPk =
+            relationTargetScheme.isUUIDPk ||
+            keys.every((data) => data.match(/[A-z]/))
+
+        return {
+            connect: {
+                id: isUUIDPk ? keys : keys.map((key) => +key),
+            },
+        }
     }
 
     return value
 }
 
-const relationToMultiselectOption = (data: TableRecord) => {
+// DB에 저장되어 있는 값들을 보여주고 수정할 수 있게 형식을 변환하는 함수
+const storedDataToEditableValue = (data: TableRecord, scheme: Scheme) => {
     return {
         ...data,
         ...Object.fromEntries(
             Object.entries(data)
                 .map(([key, value]) => {
-                    if (value instanceof Object)
+                    if (scheme.fields[key].typeOption.type === "date") {
                         return [
                             key,
-                            (value as unknown as Relation).target.map(
-                                (e) => e.id
-                            ),
+                            value
+                                ? new Date(
+                                      3240 * 10000 + +new Date(value.toString())
+                                  )
+                                      .toISOString()
+                                      .slice(0, -1)
+                                : undefined,
                         ]
+                    }
+
+                    if (
+                        scheme.fields[key].typeOption.type.startsWith(
+                            "relation"
+                        )
+                    ) {
+                        return [
+                            key,
+                            (value as Relation)?.target.map((e) => e.id),
+                        ]
+                    }
+
                     return []
                 })
                 .filter((e) => e[0])
@@ -59,14 +129,15 @@ export const RecordEditer: React.FC<{
         setValue,
         formState: { errors },
     } = useForm<TableRecord>({
-        defaultValues: props.data && relationToMultiselectOption(props.data),
+        defaultValues:
+            props.data && storedDataToEditableValue(props.data, props.scheme),
         reValidateMode: "onChange",
     })
 
     useEffect(() => {
         if (!props.data) return
 
-        const sanitized = relationToMultiselectOption(props.data)
+        const sanitized = storedDataToEditableValue(props.data, props.scheme)
         for (const key in sanitized) {
             setValue(key, sanitized[key])
         }
@@ -82,58 +153,7 @@ export const RecordEditer: React.FC<{
                 .map(([key, value]) => {
                     const field: Field = props.scheme.fields[key]
 
-                    if (field.typeOption.type === "relation-single") {
-                        if (!value)
-                            return [
-                                key,
-                                {
-                                    set: [],
-                                },
-                            ]
-
-                        const relationTargetKey = (value as string[])[0]
-                        const relationTargetScheme = TABLES.find(
-                            (e) =>
-                                e.tableName ===
-                                (field.typeOption as SingleRelationField).target
-                        )
-
-                        if (!relationTargetScheme) return []
-
-                        return [
-                            key,
-                            {
-                                connect: {
-                                    id:
-                                        relationTargetScheme.isUUIDPk ||
-                                        !relationTargetKey.match(/0-9/)
-                                            ? relationTargetKey
-                                            : +relationTargetKey,
-                                },
-                            },
-                        ]
-                    }
-
-                    if (field.typeOption.type === "relation-multiple") {
-                        if (!value || !(value as string[]).length)
-                            return [
-                                key,
-                                {
-                                    set: [],
-                                },
-                            ]
-
-                        return [
-                            key,
-                            {
-                                connect: {
-                                    id: value,
-                                },
-                            },
-                        ]
-                    }
-
-                    const typedValue = dataTyper(field, value)
+                    const typedValue = convertToStorageType(field, value)
 
                     return [key, typedValue]
                 })
@@ -169,31 +189,22 @@ export const RecordEditer: React.FC<{
     return (
         <InlineForm onSubmit={handleSubmit(onSubmit)}>
             <Vexile gap={4}>
-                {Object.entries(props.scheme.fields).map(([key]) => (
+                {Object.entries(props.scheme.fields).map(([key, value]) => (
                     <PropertyEditer
                         hooker={register(key, {
-                            validate: props.scheme.fields[key].validateFunc,
-                            required:
-                                !props.scheme.fields[key].autoGenerative &&
-                                props.scheme.fields[key].required,
+                            validate: value.validateFunc,
+                            required: !value.autoGenerative && value.required,
                         })}
-                        newRegister={!!props.data}
+                        data={
+                            value.typeOption.type.startsWith("relation")
+                                ? props.data?.[key]
+                                : undefined
+                        }
+                        newRegister={!props.data}
                         error={errors[key] as FieldError}
                         field={props.scheme.fields[key]}
                     />
                 ))}
-                {/* {Object.entries(props.data)
-                    .filter(([column]) => column in props.scheme.fields)
-                    .map(([key, data]) => (
-                        <PropertyEditer
-                            hooker={register(key, {
-                                validate: props.scheme.fields[key].validateFunc,
-                            })}
-                            error={errors[key] as FieldError}
-                            data={data}
-                            field={props.scheme.fields[key]}
-                        />
-                    ))} */}
                 <Button block>
                     <Important white center>
                         {props.data ? "수정 사항 저장" : "새로 만들기"}

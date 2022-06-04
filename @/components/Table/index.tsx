@@ -21,7 +21,7 @@ export const Table: React.FC<{
     )
 
     const [sort, setSort] = useState<string | null>(null)
-    const [ref, inView, entry] = useInView()
+    const [ref, inView] = useInView()
 
     useEffect(() => {
         if (inView) props.onReachEnd()

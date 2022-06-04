@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
-import { useThrottledEffect } from ".."
+import { useState, useEffect } from "react"
 
 export const useKone = <Input, Output>(
     koneFunction: ((data: Input) => Promise<Output>) | undefined,
@@ -13,13 +12,9 @@ export const useKone = <Input, Output>(
         setResult(res)
     }
 
-    useThrottledEffect(
-        () => {
-            load()
-        },
-        1000,
-        [koneFunction, serialized]
-    )
+    useEffect(() => {
+        load()
+    }, [koneFunction, serialized])
 
     return [result, load]
 }

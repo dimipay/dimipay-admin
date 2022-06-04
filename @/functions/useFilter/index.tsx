@@ -1,25 +1,20 @@
-import { eyeIcon, trashIcon } from "@/assets"
-import { LoadSVG, MiniInput } from "@/components"
-import { MiniSelect } from "@/components/MiniSelect"
-import { Filter, korOperatorMap, PartialFilter, Scheme } from "@/types"
-import { Regular } from "@/typo"
+import { Filter, Scheme } from "@/types"
 import { Hexile } from "@haechi/flexile"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { FilterItem, FilterWithDisablity } from "./partial"
-import { ItemWrapper } from "./style"
 
 export const useFilter = (scheme?: Scheme) => {
-    const [filter, setFilter] = useState<FilterWithDisablity[]>([])
+    const [filters, setFilters] = useState<FilterWithDisablity[]>([])
+    const validFilter = filters
+        .filter((f) => !f.disabled && !!f.content[1] && f.content[2])
+        .map((e) => e.content) as Filter[]
 
     return {
-        opened: !!filter.length,
-        filter: filter
-            .filter(
-                (e) => !e.disabled && e.content[1] !== undefined && e.content[2]
-            )
-            .map((e) => e.content) as Filter[],
+        opened: !!filters.length,
+        filter: validFilter,
+        clearFilter: () => setFilters([]),
         addFilter(key: string) {
-            setFilter((prev) => [
+            setFilters((prev) => [
                 ...prev,
                 {
                     content: [key, undefined, undefined],
@@ -40,19 +35,21 @@ export const useFilter = (scheme?: Scheme) => {
                 }}
                 y="bottom"
             >
-                {filter.map(({ content, disabled }, index) => (
+                {filters.map(({ content, disabled }, index) => (
                     <FilterItem
                         filter={content}
                         disabled={disabled}
                         field={scheme.fields[content[0]]}
                         updateFilter={(update) => {
+                            console.log(update)
+
                             if (update === null)
-                                return setFilter((prev) => [
+                                return setFilters((prev) => [
                                     ...prev.slice(0, index),
                                     ...prev.slice(index + 1),
                                 ])
 
-                            setFilter((prev) => [
+                            setFilters((prev) => [
                                 ...prev.slice(0, index),
                                 update,
                                 ...prev.slice(index + 1),

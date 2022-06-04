@@ -1,20 +1,13 @@
 import { useRecoilState, useSetRecoilState } from "recoil"
-import {
-    useCallback,
-    useDebugValue,
-    useEffect,
-    useLayoutEffect,
-    useMemo,
-    useState,
-} from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
 import { NextPage } from "next"
 
-import { table, useConsole, useFilter, useKone } from "@/functions"
 import { NewRecord } from "@/components/Subcontent/NewRecord"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
 import { FilterItem } from "@/functions/useFilter/partial"
+import { table, useConsole, useFilter } from "@/functions"
 import { Button, LoadSVG, Table } from "@/components"
 import { Important, PageHeader } from "@/typo"
 import { SLUG, TableRecord } from "@/types"
@@ -37,17 +30,21 @@ const TableViewer: NextPage = () => {
     const {
         filter,
         addFilter,
+        clearFilter,
         element: filterElement,
         opened: filterOpened,
     } = useFilter(scheme)
 
     const [records, setRecords] = useState<TableRecord[]>([])
 
-    const load = useCallback(() => {
+    const clearScheme = useCallback(() => {
         setSubContent(null)
+        clearFilter()
         setRecords([])
         setScheme(undefined)
+    }, [setSubContent, setRecords, setScheme])
 
+    const load = useCallback(() => {
         const nextScheme = TABLES.find(
             (table) => table.tableName === SLUG[slug]
         )
@@ -92,6 +89,10 @@ const TableViewer: NextPage = () => {
     useEffect(() => {
         load()
     }, [filter.length, slug])
+
+    useEffect(() => {
+        clearScheme()
+    }, [slug])
 
     return (
         <Hexile fillx filly>
@@ -151,7 +152,7 @@ const TableViewer: NextPage = () => {
                             />
                         </div>
                     )}
-                    {/* {filterElement} */}
+                    {filterElement}
                 </Vexile>
             )}
             {subcontent && (

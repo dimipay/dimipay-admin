@@ -17,7 +17,7 @@ export const ADMIN_ACCOUNT_SCHEME: Scheme = {
             displayName: "아이디",
             required: true,
         },
-        relatedUserSystemUid: {
+        relatedUserId: {
             typeOption: {
                 type: "string",
             },

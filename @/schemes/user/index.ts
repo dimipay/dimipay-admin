@@ -10,6 +10,7 @@ export const USER_SCHEME: Scheme = {
         ...RECORD_BASE_FIELDS,
         systemId: {
             displayName: "관리 번호",
+            autoGenerative: true,
             readOnly: true,
             typeOption: {
                 type: "string",

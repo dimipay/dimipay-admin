@@ -7,6 +7,14 @@ export const PRODUCT_SCHEME: Scheme = {
     isUUIDPk: true,
     fields: {
         ...RECORD_BASE_FIELDS,
+        systemId: {
+            displayName: "관리 번호",
+            autoGenerative: true,
+            readOnly: true,
+            typeOption: {
+                type: "string",
+            },
+        },
         name: {
             displayName: "상품명",
             required: true,

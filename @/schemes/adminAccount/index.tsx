@@ -21,7 +21,7 @@ export const ADMIN_ACCOUNT_SCHEME: Scheme = {
             typeOption: {
                 type: "string",
             },
-            displayName: "사용자 UID",
+            displayName: "사용자 ID",
             required: false,
         },
         hashedPassword: {

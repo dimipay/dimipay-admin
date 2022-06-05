@@ -9,25 +9,25 @@ datasource db {
 }
 
 model User {
-  systemId            String          @unique @default(uuid())
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @default(now()) @updatedAt
-  isDisabled          Boolean         @default(false)
-  accountName         String          @unique
-  name                String
-  isTeacher           Boolean?        @default(false)
-  profileImage        String?
-  paymentPin          String?
-  deviceUid           String?
-  bioKey              String?
-  phoneNumber         String?
-  id                  Int             @id @default(autoincrement())
-  relatedAdminAccount AdminAccount?
-  issuedCoupons       Coupon[]        @relation("issue")
-  receivedCoupons     Coupon[]        @relation("receive")
-  notice              Notice[]
-  paymentMethods      PaymentMethod[]
-  transactions        Transaction[]
+  id                             Int             @id @default(autoincrement())
+  systemId                       String          @unique @default(uuid())
+  createdAt                      DateTime        @default(now())
+  updatedAt                      DateTime        @default(now()) @updatedAt
+  isDisabled                     Boolean         @default(false)
+  accountName                    String          @unique
+  name                           String
+  isTeacher                      Boolean?        @default(false)
+  profileImage                   String?
+  paymentPin                     String?
+  deviceUid                      String?
+  bioKey                         String?
+  phoneNumber                    String?
+  AdminAccount                   AdminAccount?
+  Coupon_Coupon_issuerIdToUser   Coupon[]        @relation("Coupon_issuerIdToUser")
+  Coupon_Coupon_receiverIdToUser Coupon[]        @relation("Coupon_receiverIdToUser")
+  Notice                         Notice[]
+  PaymentMethod                  PaymentMethod[]
+  Transaction                    Transaction[]
 }
 
 model PaymentMethod {
@@ -36,22 +36,22 @@ model PaymentMethod {
   type        PaymentMethodType
   color       String?
   name        String?
-  ownerId     String
   systemId    String            @unique @default(uuid())
   id          Int               @id @default(autoincrement())
-  owner       User              @relation(fields: [ownerId], references: [systemId])
-  generalCard GeneralCard?      @relation("generalCard")
-  prepaidCard PrepaidCard?      @relation("prepaidCard")
-  transaction Transaction[]
+  ownerId     Int
+  User        User              @relation(fields: [ownerId], references: [id])
+  GeneralCard GeneralCard?
+  PrepaidCard PrepaidCard?
+  Transaction Transaction[]
 }
 
 model PrepaidCard {
   createdAt                DateTime                   @default(now())
   updatedAt                DateTime                   @default(now()) @updatedAt
   balance                  Int                        @default(0)
-  paymentMethodId          String                     @unique
   id                       Int                        @id @default(autoincrement())
-  paymentMethod            PaymentMethod              @relation("prepaidCard", fields: [paymentMethodId], references: [systemId])
+  paymentMethodId          Int                        @unique
+  PaymentMethod            PaymentMethod              @relation(fields: [paymentMethodId], references: [id])
   prepaidCardChargeHistory PrepaidCardChargeHistory[]
 }
 
@@ -74,24 +74,24 @@ model GeneralCard {
   validMonth      Int
   validYear       Int
   billingKey      String
-  paymentMethodId String        @unique
   id              Int           @id @default(autoincrement())
-  paymentMethod   PaymentMethod @relation("generalCard", fields: [paymentMethodId], references: [systemId])
+  paymentMethodId Int           @unique
+  PaymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
 }
 
 model Coupon {
-  id                String       @id @default(uuid())
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @default(now()) @updatedAt
-  name              String
-  expiresAt         DateTime?
-  amount            Int
-  usedTransactionId String?
-  issuerId          String
-  receiverId        String
-  issuer            User         @relation("issue", fields: [issuerId], references: [systemId])
-  receiver          User         @relation("receive", fields: [receiverId], references: [systemId])
-  Transaction       Transaction? @relation(fields: [usedTransactionId], references: [systemId])
+  id                           String       @id @default(uuid())
+  createdAt                    DateTime     @default(now())
+  updatedAt                    DateTime     @default(now()) @updatedAt
+  name                         String
+  expiresAt                    DateTime?
+  amount                       Int
+  usedTransactionId            Int?
+  issuerId                     Int
+  receiverId                   Int
+  User_Coupon_issuerIdToUser   User         @relation("Coupon_issuerIdToUser", fields: [issuerId], references: [id])
+  User_Coupon_receiverIdToUser User         @relation("Coupon_receiverIdToUser", fields: [receiverId], references: [id])
+  Transaction                  Transaction? @relation(fields: [usedTransactionId], references: [id])
 }
 
 model Transaction {
@@ -102,17 +102,17 @@ model Transaction {
   status            Transaction_status
   statusText        String?
   transactionMethod TransactionMethod
-  usedCardId        String
   posDeviceId       String?
-  userId            String
   systemId          String             @unique @default(uuid())
   id                Int                @id @default(autoincrement())
-  purchaseDetail    String[]
   purchaseType      PurchaseType?
+  purchaseDetail    Json?
+  usedCardId        Int
+  userId            Int
   posDevice         PosDevice?         @relation(fields: [posDeviceId], references: [id])
-  paymentMethod     PaymentMethod      @relation(fields: [usedCardId], references: [systemId])
-  user              User               @relation(fields: [userId], references: [systemId])
-  coupon            Coupon[]
+  PaymentMethod     PaymentMethod      @relation(fields: [usedCardId], references: [id])
+  User              User               @relation(fields: [userId], references: [id])
+  Coupon            Coupon[]
   products          Product[]
 }
 
@@ -123,6 +123,7 @@ model Category {
   color            String
   discountPolicyId String?
   id               Int              @id @default(autoincrement())
+  IS_DELETED       Boolean          @default(false)
   products         Product[]
   discountPolicy   DiscountPolicy[]
 }
@@ -134,9 +135,10 @@ model Product {
   barcode                 String?
   price                   Int
   sellingStopped          Boolean           @default(false)
-  systemId                String            @unique @default(uuid())
   id                      Int               @id @default(autoincrement())
   categoryId              Int
+  systemId                String            @unique @default(uuid())
+  IS_DELETED              Boolean           @default(false)
   category                Category          @relation(fields: [categoryId], references: [id])
   productInOutLog         ProductInOutLog[]
   transaction             Transaction[]
@@ -173,6 +175,7 @@ model PosDevice {
   updatedAt   DateTime      @default(now())
   name        String
   disabled    Boolean       @default(false)
+  IS_DELETED  Boolean       @default(false)
   transaction Transaction[]
 }
 
@@ -197,19 +200,25 @@ model Notice {
   title       String
   description String?
   url         String?
-  authorId    String
-  author      User      @relation(fields: [authorId], references: [systemId])
+  authorId    Int
+  User        User      @relation(fields: [authorId], references: [id])
 }
 
 model AdminAccount {
   id                   String   @id @default(uuid())
   createdAt            DateTime @default(now())
   updatedAt            DateTime @default(now())
-  relatedUserSystemUid String?  @unique
   username             String
   hashedPassword       String
   description          String?
-  relatedUser          User?    @relation(fields: [relatedUserSystemUid], references: [systemId])
+  relatedUserSystemUid Int?     @unique
+  User                 User?    @relation(fields: [relatedUserSystemUid], references: [id])
+}
+
+model UserPassword {
+  id           Int    @id @default(autoincrement())
+  accountName  String @unique
+  passwordHash String
 }
 
 enum PaymentMethodType {

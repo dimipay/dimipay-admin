@@ -211,8 +211,8 @@ model AdminAccount {
   username             String
   hashedPassword       String
   description          String?
-  relatedUserSystemUid Int?     @unique
-  User                 User?    @relation(fields: [relatedUserSystemUid], references: [id])
+  relatedUserId Int?     @unique
+  User                 User?    @relation(fields: [relatedUserId], references: [id])
 }
 
 model UserPassword {

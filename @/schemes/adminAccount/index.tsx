@@ -17,17 +17,21 @@ export const ADMIN_ACCOUNT_SCHEME: Scheme = {
             displayName: "아이디",
             required: true,
         },
-        relatedUserId: {
+        User: {
             typeOption: {
-                type: "string",
+                type: "relation-single",
+                displayNameField: "name",
+                target: SLUG.user,
+                flattenField: "relatedUserId",
             },
-            displayName: "사용자 ID",
+            displayName: "연결된 사용자",
             required: false,
         },
         hashedPassword: {
             displayName: "비밀번호",
             required: true,
             invisibleInTable: true,
+            readOnly: true,
             typeOption: {
                 type: "password",
             },

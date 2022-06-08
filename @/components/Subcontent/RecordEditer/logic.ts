@@ -14,18 +14,27 @@ import { useEffect } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "react-toastify"
 
-export const convertToStorageType = (field: Field, value: DataValue) => {
-    if (field.typeOption.type === "number") return Number(value)
+export const convertToStorageType = (
+    field: Field,
+    value: DataValue
+): [string | undefined, unknown | undefined] => {
+    if (field.typeOption.type === "number") return [undefined, Number(value)]
 
     if (field.typeOption.type === "date") {
-        return (value && new Date(value.toString()).toISOString()) || undefined
+        return [
+            undefined,
+            (value && new Date(value.toString()).toISOString()) || undefined,
+        ]
     }
 
     if (field.typeOption.type === "relation-single") {
         if (!value)
-            return {
-                set: [],
-            }
+            return [
+                undefined,
+                {
+                    set: [],
+                },
+            ]
 
         const relationTargetKey = (value as string[] | number[])[0]
         const relationTargetScheme = TABLES.find(
@@ -33,18 +42,26 @@ export const convertToStorageType = (field: Field, value: DataValue) => {
                 e.tableName === (field.typeOption as SingleRelationField).target
         )
 
-        if (!relationTargetScheme) return []
+        if (!relationTargetScheme) return [undefined, undefined]
 
-        return {
-            connect: {
-                id:
-                    relationTargetScheme.isUUIDPk ||
-                    (typeof relationTargetKey === "string" &&
-                        relationTargetKey?.match(/[A-z]/))
-                        ? relationTargetKey
-                        : +relationTargetKey,
-            },
+        const typedKey =
+            typeof relationTargetKey === "string" &&
+            relationTargetKey?.match(/[A-z]/)
+                ? relationTargetKey
+                : +relationTargetKey
+
+        if (field.typeOption.flattenField) {
+            return [field.typeOption.flattenField, typedKey]
         }
+
+        return [
+            undefined,
+            {
+                connect: {
+                    id: relationTargetScheme.isUUIDPk || typedKey,
+                },
+            },
+        ]
     }
 
     if (field.typeOption.type === "relation-multiple") {
@@ -53,27 +70,39 @@ export const convertToStorageType = (field: Field, value: DataValue) => {
                 e.tableName === (field.typeOption as SingleRelationField).target
         )
 
-        if (!relationTargetScheme) return []
+        if (!relationTargetScheme) return [undefined, undefined]
 
         const keys = value as string[]
 
         if (!value || !(value as string[]).length)
-            return {
-                set: [],
-            }
+            return [
+                undefined,
+                {
+                    set: [],
+                },
+            ]
 
         const isUUIDPk =
             relationTargetScheme.isUUIDPk ||
             keys.every((data) => data.match(/[A-z]/))
 
-        return {
-            connect: {
-                id: isUUIDPk ? keys : keys.map((key) => +key),
-            },
+        const typedIds = isUUIDPk ? keys : keys.map((data) => +data)
+
+        if (field.typeOption.flattenField) {
+            return [field.typeOption.flattenField, typedIds]
         }
+
+        return [
+            undefined,
+            {
+                connect: {
+                    id: typedIds,
+                },
+            },
+        ]
     }
 
-    return value
+    return [undefined, value]
 }
 
 // DB에 저장되어 있는 값들을 보여주고 수정할 수 있게 형식을 변환하는 함수
@@ -154,9 +183,12 @@ export const useLogic = (props: {
                 .map(([key, value]) => {
                     const field: Field = props.scheme.fields[key]
 
-                    const typedValue = convertToStorageType(field, value)
+                    const [typedKey = key, typedValue] = convertToStorageType(
+                        field,
+                        value
+                    )
 
-                    return [key, typedValue]
+                    return [typedKey, typedValue]
                 })
                 .filter((e) => e[0])
         )

@@ -11,6 +11,7 @@ export const PRODUCT_SCHEME: Scheme = {
             displayName: "관리 번호",
             autoGenerative: true,
             readOnly: true,
+            invisibleInTable: true,
             typeOption: {
                 type: "string",
             },
@@ -29,7 +30,7 @@ export const PRODUCT_SCHEME: Scheme = {
                 type: "string",
             },
         },
-        price: {
+        sellingPrice: {
             displayName: "판매단가",
             required: true,
             typeOption: {
@@ -37,6 +38,14 @@ export const PRODUCT_SCHEME: Scheme = {
                 suffix: "원",
             },
             description: "할인이 적용되지 않은 기준 판매단가",
+        },
+        purchaseCost: {
+            displayName: "매입단가",
+            required: true,
+            typeOption: {
+                type: "number",
+                suffix: "원",
+            },
         },
         category: {
             displayName: "분류",

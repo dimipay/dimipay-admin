@@ -116,7 +116,11 @@ const actions = {
                         ...record,
                         ...Object.fromEntries(
                             Object.entries(record)
-                                .filter(([key]) => relationKeys.includes(key))
+                                .filter(
+                                    ([key]) =>
+                                        relationKeys.includes(key) &&
+                                        record[key] !== null
+                                )
                                 .map(([key, value]) => {
                                     const field = table.fields[key]
                                         .typeOption as SingleRelationField
@@ -127,31 +131,25 @@ const actions = {
 
                                     const isMultipleRelation =
                                         typedValue instanceof Array
-
-                                    const relatedRecords =
-                                        typedValue instanceof Array
-                                            ? typedValue.map(
-                                                  (relatedDocument) => ({
-                                                      id: relatedDocument.id,
-                                                      displayName:
-                                                          relatedDocument[
-                                                              field
-                                                                  .displayNameField
-                                                          ],
-                                                      color: relatedDocument.color,
-                                                  })
-                                              )
-                                            : [
-                                                  {
-                                                      id: typedValue.id,
-                                                      displayName:
-                                                          typedValue[
-                                                              field
-                                                                  .displayNameField
-                                                          ],
-                                                      color: typedValue.color,
-                                                  },
-                                              ]
+                                    const relatedRecords = isMultipleRelation
+                                        ? typedValue.map((relatedDocument) => ({
+                                              id: relatedDocument.id,
+                                              displayName:
+                                                  relatedDocument[
+                                                      field.displayNameField
+                                                  ],
+                                              color: relatedDocument.color,
+                                          }))
+                                        : [
+                                              {
+                                                  id: typedValue.id,
+                                                  displayName:
+                                                      typedValue[
+                                                          field.displayNameField
+                                                      ],
+                                                  color: typedValue.color,
+                                              },
+                                          ]
                                     return [
                                         key,
                                         {

@@ -48,6 +48,7 @@ export interface SingleRelationField {
     type: "relation-single"
     target: SLUG
     default?: string
+    flattenField?: string
     displayNameField: string
 }
 
@@ -63,7 +64,7 @@ export interface Field {
     displayName: string
     invisibleInTable?: boolean
     description?: string
-    computed?(value: unknown): string
+    computed?(value: DataValue): string
     autoGenerative?: boolean
     readOnly?: boolean
     typeOption: (

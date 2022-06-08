@@ -1,5 +1,4 @@
 import { Scheme, SLUG } from "@/types"
-import { prisma } from "@prisma/client"
 import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
 
 export const DISCOUNT_POLICY: Scheme = {

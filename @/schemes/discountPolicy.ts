@@ -1,6 +1,6 @@
 import { Scheme, SLUG } from "@/types"
 import { prisma } from "@prisma/client"
-import { RECORD_BASE_FIELDS } from "./common"
+import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
 
 export const DISCOUNT_POLICY: Scheme = {
     displayName: "할인 정책",
@@ -43,4 +43,5 @@ export const DISCOUNT_POLICY: Scheme = {
             },
         },
     },
+    actions: [DELETE_SELECTED_RECORDS_ACTION],
 }

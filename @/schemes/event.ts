@@ -1,5 +1,5 @@
 import { Scheme, SLUG } from "@/types"
-import { RECORD_BASE_FIELDS } from "./common"
+import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
 
 export const EVENT: Scheme = {
     displayName: "이벤트",
@@ -43,4 +43,5 @@ export const EVENT: Scheme = {
             required: false,
         },
     },
+    actions: [DELETE_SELECTED_RECORDS_ACTION],
 }

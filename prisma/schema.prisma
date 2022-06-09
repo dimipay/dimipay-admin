@@ -38,8 +38,8 @@ model PaymentMethod {
   name        String?
   systemId    String            @unique @default(uuid())
   id          Int               @id @default(autoincrement())
-  ownerId     Int
-  User        User              @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  User        User              @relation(fields: [ownerId], references: [systemId])
   GeneralCard GeneralCard?
   PrepaidCard PrepaidCard?
   Transaction Transaction[]
@@ -50,8 +50,8 @@ model PrepaidCard {
   updatedAt                DateTime                   @default(now()) @updatedAt
   balance                  Int                        @default(0)
   id                       Int                        @id @default(autoincrement())
-  paymentMethodId          Int                        @unique
-  PaymentMethod            PaymentMethod              @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId          String                     @unique
+  PaymentMethod            PaymentMethod              @relation(fields: [paymentMethodId], references: [systemId])
   prepaidCardChargeHistory PrepaidCardChargeHistory[]
 }
 
@@ -75,8 +75,8 @@ model GeneralCard {
   validYear       Int
   billingKey      String
   id              Int           @id @default(autoincrement())
-  paymentMethodId Int           @unique
-  PaymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId String        @unique
+  PaymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [systemId])
 }
 
 model Coupon {
@@ -86,12 +86,12 @@ model Coupon {
   name                         String
   expiresAt                    DateTime?
   amount                       Int
-  usedTransactionId            Int?
-  issuerId                     Int
-  receiverId                   Int
-  User_Coupon_issuerIdToUser   User         @relation("Coupon_issuerIdToUser", fields: [issuerId], references: [id])
-  User_Coupon_receiverIdToUser User         @relation("Coupon_receiverIdToUser", fields: [receiverId], references: [id])
-  Transaction                  Transaction? @relation(fields: [usedTransactionId], references: [id])
+  usedTransactionId            String?
+  issuerId                     String
+  receiverId                   String
+  User_Coupon_issuerIdToUser   User         @relation("Coupon_issuerIdToUser", fields: [issuerId], references: [systemId])
+  User_Coupon_receiverIdToUser User         @relation("Coupon_receiverIdToUser", fields: [receiverId], references: [systemId])
+  Transaction                  Transaction? @relation(fields: [usedTransactionId], references: [systemId])
 }
 
 model Transaction {
@@ -107,11 +107,11 @@ model Transaction {
   id                Int                @id @default(autoincrement())
   purchaseType      PurchaseType?
   purchaseDetail    Json?
-  usedCardId        Int
-  userId            Int
+  usedCardId        String
+  userId            String
   posDevice         PosDevice?         @relation(fields: [posDeviceId], references: [id])
-  PaymentMethod     PaymentMethod      @relation(fields: [usedCardId], references: [id])
-  User              User               @relation(fields: [userId], references: [id])
+  PaymentMethod     PaymentMethod      @relation(fields: [usedCardId], references: [systemId])
+  User              User               @relation(fields: [userId], references: [systemId])
   Coupon            Coupon[]
   products          Product[]
 }
@@ -201,19 +201,19 @@ model Notice {
   title       String
   description String?
   url         String?
-  authorId    Int
-  User        User      @relation(fields: [authorId], references: [id])
+  authorId    String
+  User        User      @relation(fields: [authorId], references: [systemId])
 }
 
 model AdminAccount {
-  id             String   @id @default(uuid())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now())
-  username       String
-  hashedPassword String
-  description    String?
-  relatedUserId  Int?     @unique
-  User           User?    @relation(fields: [relatedUserId], references: [id])
+  id                   String   @id @default(uuid())
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now())
+  username             String
+  hashedPassword       String
+  description          String?
+  relatedUserSystemUid String?  @unique
+  User                 User?    @relation(fields: [relatedUserSystemUid], references: [systemId])
 }
 
 model UserPassword {

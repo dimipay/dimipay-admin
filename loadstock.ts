@@ -19,10 +19,10 @@ import { redisKey } from "./@/functions/redisKey"
         },
     })
 
-    await client.mSet(
-        // @ts-ignore
-        summary.flatMap((e) => [redisKey.stock(e.productId), e._sum.delta])
-    )
+    for (const product of summary) {
+        if (product._sum.delta === null) continue
+        client.set(redisKey.stock(product.productId), product._sum.delta)
+    }
 
     console.timeEnd("STOCK_CALC")
     console.log("Stock calculation has done!")

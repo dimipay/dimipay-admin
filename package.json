@@ -2,10 +2,10 @@
     "name": "dimipay-admin",
     "private": true,
     "scripts": {
-        "dev": "npx prisma db pull && npx prisma generate && npm run prepare && next dev",
+        "dev": "npx prisma db pull && npx prisma generate && npm run loadstock && next dev",
         "build": "npx prisma db pull && npx prisma generate && next build",
-        "start": "npm run prepare && next start",
-        "prepare": "ts-node ./prepare.ts",
+        "start": "npm run loadstock && next start",
+        "loadstock": "ts-node ./loadstock.ts",
         "lint": "next lint"
     },
     "dependencies": {

@@ -1,6 +1,5 @@
-import { Description, Important, PageHeader } from "@/typo"
+import { Important, PageHeader } from "@/typo"
 import { Button, Input } from "@/components"
-import { useForm } from "react-hook-form"
 import { Vexile } from "@haechi/flexile"
 import { useState } from "react"
 import { createPasscode, useTimer } from "@/functions"

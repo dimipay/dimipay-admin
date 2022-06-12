@@ -112,6 +112,13 @@ export interface Scheme {
     displayName: string
     tableName: SLUG
     fields: Record<string, Field>
+    computedFields?: Record<
+        string,
+        {
+            func?(record: TableRecord): Promise<DataValue> | DataValue
+            displayName: string
+        }
+    >
     actions?: ToolbarAction[]
     panelComponents?: PanelComponent[]
     isUUIDPk?: boolean

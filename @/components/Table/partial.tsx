@@ -126,6 +126,12 @@ export const Row = forwardRef<
                         </Cell>
                     )
             )}
+            {props.scheme.computedFields &&
+                Object.keys(props.scheme.computedFields).map((key) => (
+                    <Cell>
+                        <Regular>{row[key]}</Regular>
+                    </Cell>
+                ))}
         </tr>
     )
 })

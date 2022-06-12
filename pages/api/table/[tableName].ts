@@ -1,4 +1,5 @@
 import { TABLES } from "@/constants"
+import { serversideSchemes } from "@/schemes/serverside"
 import { prisma } from "@/storage"
 import {
     Field,
@@ -10,7 +11,7 @@ import {
     TableRecord,
 } from "@/types"
 import { Prisma } from "@prisma/client"
-import { endpoint, Handlers } from ".."
+import { endpoint } from ".."
 
 const generalizeFormData = async (
     data: Omit<TableRecord, "id">,
@@ -39,14 +40,38 @@ const generalizeFormData = async (
     )
 }
 
+const filtersToPrismaWhereOption = (filters: Filter[]) => {
+    return {
+        AND: filters.map((e) => ({
+            [e[0]]: {
+                [{
+                    "=": "equals",
+                    ">": "gt",
+                    ">=": "gte",
+                    "<": "lt",
+                    "<=": "lte",
+                }[e[1]] || e[1]]: e[2],
+            },
+        })),
+    }
+}
+
+interface Sort {
+    field: string
+    order: "123" | "321"
+}
+
+const sortsToPrismaOrderByOption = (sorts: Sort[]) => {
+    return sorts.map((e) => ({
+        [e.field]: e.order === "123" ? "asc" : "desc",
+    }))
+}
+
 const actions = {
     async GET(
         props: {
             filter?: Filter[]
-            sort?: {
-                field: string
-                order: "123" | "321"
-            }[]
+            sort?: Sort[]
             amount: number
             lastId?: string
         },
@@ -54,35 +79,29 @@ const actions = {
             tableName: string
         }
     ): Promise<TableRecord[]> {
-        const table = TABLES.find((table) => table.tableName === slug.tableName)
-        if (!table)
+        const _table = TABLES.find(
+            (table) => table.tableName === slug.tableName
+        )
+
+        if (!_table)
             throw new HandlerError(
                 `테이블 ${slug.tableName}을 찾을 수 없습니다.`,
                 404
             )
 
-        try {
-            const filter = {
-                AND:
-                    props.filter &&
-                    props.filter.map((e) => ({
-                        [e[0]]: {
-                            [{
-                                "=": "equals",
-                                ">": "gt",
-                                ">=": "gte",
-                                "<": "lt",
-                                "<=": "lte",
-                            }[e[1]] || e[1]]: e[2],
-                        },
-                    })),
-            }
+        const serversideScheme = serversideSchemes.find(
+            (e) => e.tableName === _table.tableName
+        )
 
-            const sort =
-                props.sort &&
-                props.sort.map((e) => ({
-                    [e.field]: e.order === "123" ? "asc" : "desc",
-                }))
+        const table = {
+            ..._table,
+            ...serversideScheme,
+        }
+
+        try {
+            const filter =
+                props.filter && filtersToPrismaWhereOption(props.filter)
+            const sort = props.sort && sortsToPrismaOrderByOption(props.sort)
 
             try {
                 const res: TableRecord[] = await (
@@ -103,36 +122,35 @@ const actions = {
                     ),
                 })
 
-                const relationKeys = Object.entries(table.fields)
-                    .filter(([key]) =>
-                        ["relation-single", "relation-multiple"].includes(
-                            table.fields[key].typeOption.type
-                        )
-                    )
-                    .map((e) => e[0])
-
-                const relationProcessedRecords = res.map((record) => {
-                    return {
+                const relationConnectedRecords: TableRecord[] = res.map(
+                    (record) => ({
                         ...record,
                         ...Object.fromEntries(
                             Object.entries(record)
+                                // 릴레이션 필드만 추출하기
                                 .filter(
                                     ([key]) =>
-                                        relationKeys.includes(key) &&
-                                        record[key] !== null
+                                        table.fields[
+                                            key
+                                        ].typeOption.type.startsWith(
+                                            "relation-"
+                                        ) && record[key] !== null
                                 )
-                                .map(([key, value]) => {
+
+                                // 1:N이냐, 1:1이냐에 따라 릴레이션 필드를 올바르게 변환함
+                                .map(([key, _value]) => {
                                     const field = table.fields[key]
                                         .typeOption as SingleRelationField
 
-                                    const typedValue = value as unknown as
+                                    const value = _value as unknown as
                                         | TableRecord
                                         | TableRecord[]
 
                                     const isMultipleRelation =
-                                        typedValue instanceof Array
-                                    const relatedRecords = isMultipleRelation
-                                        ? typedValue.map((relatedDocument) => ({
+                                        value instanceof Array
+
+                                    const relatedFields = isMultipleRelation
+                                        ? value.map((relatedDocument) => ({
                                               id: relatedDocument.id,
                                               displayName:
                                                   relatedDocument[
@@ -142,27 +160,44 @@ const actions = {
                                           }))
                                         : [
                                               {
-                                                  id: typedValue.id,
+                                                  id: value.id,
                                                   displayName:
-                                                      typedValue[
+                                                      value[
                                                           field.displayNameField
                                                       ],
-                                                  color: typedValue.color,
+                                                  color: value.color,
                                               },
                                           ]
                                     return [
                                         key,
                                         {
                                             slug: field.target,
-                                            target: relatedRecords,
+                                            target: relatedFields,
                                         } as Relation,
                                     ]
                                 })
                         ),
-                    }
-                })
+                    })
+                )
 
-                return relationProcessedRecords || []
+                if (!table.computedFields) return relationConnectedRecords || []
+
+                const recordsIncludingComputedFields =
+                    relationConnectedRecords.map(async (record) => ({
+                        ...record,
+                        ...Object.fromEntries(
+                            await Promise.all(
+                                Object.entries(table.computedFields!).map(
+                                    async ([key, field]) => [
+                                        key,
+                                        (await field.func?.(record)) || "",
+                                    ]
+                                )
+                            )
+                        ),
+                    }))
+
+                return (await Promise.all(recordsIncludingComputedFields)) || []
             } catch (e) {
                 console.log(e)
                 throw e

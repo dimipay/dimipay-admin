@@ -68,6 +68,20 @@ export const Table: React.FC<{
                                             </ActionableHeaderCell>
                                         )
                                 )}
+                                {props.scheme.computedFields &&
+                                    Object.entries(
+                                        props.scheme.computedFields
+                                    ).map(([key, field]) => (
+                                        <ActionableHeaderCell
+                                            key={key}
+                                            onFilter={() =>
+                                                props.addFilter(key)
+                                            }
+                                            onSort={() => setSort(key)}
+                                        >
+                                            {field.displayName}
+                                        </ActionableHeaderCell>
+                                    ))}
                             </tr>
                         </thead>
                         <tbody>

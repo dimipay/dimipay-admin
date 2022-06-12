@@ -1,3 +1,4 @@
+import { redisKey } from "@/functions"
 import { Scheme, SLUG } from "@/types"
 import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
 
@@ -61,6 +62,11 @@ export const PRODUCT_SCHEME: Scheme = {
             typeOption: {
                 type: "boolean",
             },
+        },
+    },
+    computedFields: {
+        stock: {
+            displayName: "재고",
         },
     },
     actions: [DELETE_SELECTED_RECORDS_ACTION],

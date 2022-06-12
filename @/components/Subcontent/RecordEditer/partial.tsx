@@ -122,6 +122,7 @@ export const PropertyEditer: React.FC<{
                             color: row.color as string,
                         }))
 
+                        console.log("Retrieved", relationData)
                         return relationData
                     }}
                     {...commonProps}

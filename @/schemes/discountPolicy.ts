@@ -30,6 +30,7 @@ export const DISCOUNT_POLICY: Scheme = {
             typeOption: {
                 type: "relation-single",
                 target: SLUG.event,
+
                 displayNameField: "title",
             },
         },

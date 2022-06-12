@@ -46,7 +46,7 @@ export const convertToStorageType = (
 
         const typedKey =
             typeof relationTargetKey === "string" &&
-            relationTargetKey?.match(/[A-z]/)
+            relationTargetKey?.match(/[A-z-]/)
                 ? relationTargetKey
                 : +relationTargetKey
 
@@ -58,7 +58,9 @@ export const convertToStorageType = (
             undefined,
             {
                 connect: {
-                    id: relationTargetScheme.isUUIDPk || typedKey,
+                    id: relationTargetScheme.isUUIDPk
+                        ? typedKey
+                        : relationTargetKey,
                 },
             },
         ]
@@ -198,6 +200,8 @@ export const useLogic = (props: {
                 })
                 .filter((e) => e[0])
         )
+
+        console.log(data, generalizedData)
 
         if (props.data) {
             const res = await table[props.scheme.tableName].PATCH({

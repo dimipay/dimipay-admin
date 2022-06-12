@@ -6,6 +6,7 @@ export enum SLUG {
     discountPolicy = "discountPolicy",
     event = "event",
     adminAccount = "adminAccount",
+    paymentMethod = "paymentMethod",
 }
 
 export interface Relation {

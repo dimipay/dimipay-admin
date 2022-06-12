@@ -5,6 +5,7 @@ import {
     USER_SCHEME,
     DISCOUNT_POLICY,
     EVENT,
+    PAYMENT_METHOD_SCHEME,
 } from "./schemes"
 import { ADMIN_ACCOUNT_SCHEME } from "./schemes/adminAccount"
 import { SchemeGroup } from "./types"
@@ -32,7 +33,11 @@ export const GROUPED_TABLES: SchemeGroup[] = [
     },
     {
         groupName: "관리",
-        content: [POS_DEVICE_SCHEME, ADMIN_ACCOUNT_SCHEME],
+        content: [
+            POS_DEVICE_SCHEME,
+            ADMIN_ACCOUNT_SCHEME,
+            PAYMENT_METHOD_SCHEME,
+        ],
     },
 ]
 

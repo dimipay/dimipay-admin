@@ -106,6 +106,7 @@ export interface ToolbarAction {
 export type PanelComponent = React.FC<{
     scheme: Scheme
     record: TableRecord
+    reload: () => void
 }>
 
 export interface Scheme {

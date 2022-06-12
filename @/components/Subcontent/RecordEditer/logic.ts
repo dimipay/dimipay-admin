@@ -115,6 +115,12 @@ export const storedDataToEditableValue = (
         ...Object.fromEntries(
             Object.entries(data)
                 .map(([key, value]) => {
+                    if (
+                        scheme.computedFields &&
+                        Object.keys(scheme.computedFields).includes(key)
+                    )
+                        return [key, value]
+
                     if (scheme.fields[key].typeOption.type === "date") {
                         return [
                             key,

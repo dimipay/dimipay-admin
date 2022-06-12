@@ -55,7 +55,11 @@ export const ModifyRecord = (props: {
             {props.scheme.panelComponents?.map((Component) => (
                 <Fragment key={Component.name}>
                     <DividerLine />
-                    <Component scheme={props.scheme} record={props.data} />
+                    <Component
+                        scheme={props.scheme}
+                        record={props.data}
+                        reload={props.onReloadRequested}
+                    />
                 </Fragment>
             ))}
         </>

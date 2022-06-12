@@ -1,6 +1,7 @@
-import { DARKS, MAIN_ACCENT, styled } from "@/stitches.config"
+import { MAIN_ACCENT, styled } from "@/stitches.config"
 
 export const Button = styled("button", {
+    length: 0,
     backgroundColor: "$accent",
     border: "none",
     outline: "none",

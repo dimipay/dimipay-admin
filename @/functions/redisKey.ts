@@ -1,3 +1,3 @@
 export const redisKey = {
-    stock: (product: string) => `product_stock:${product}`,
+    stock: (product: string | number) => `product_stock:${product}`,
 }

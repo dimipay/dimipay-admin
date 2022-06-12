@@ -1,6 +1,7 @@
 import { redisKey } from "@/functions"
 import { Scheme, SLUG } from "@/types"
-import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
+import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "../common"
+import { ModifyStock } from "./panels"
 
 export const PRODUCT_SCHEME: Scheme = {
     displayName: "상품",
@@ -70,4 +71,5 @@ export const PRODUCT_SCHEME: Scheme = {
         },
     },
     actions: [DELETE_SELECTED_RECORDS_ACTION],
+    panelComponents: [ModifyStock],
 }

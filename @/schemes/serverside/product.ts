@@ -10,7 +10,7 @@ export const PRODUCT_SCHEME_SERVERSIDE: Partial<Scheme> = {
             async func(record) {
                 const redis = await loadRedis()
                 const stock = await redis.get(redisKey.stock(record.id))
-                console.log(stock)
+
                 return stock || "미등록"
             },
         },

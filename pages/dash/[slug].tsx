@@ -1,8 +1,8 @@
 import { useRecoilState, useSetRecoilState } from "recoil"
 import { useCallback, useEffect, useState } from "react"
+import { GetServerSideProps, NextPage } from "next"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
-import { NextPage } from "next"
 
 import { NewRecord } from "@/components/Subcontent/NewRecord"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
@@ -12,6 +12,7 @@ import { Button, LoadSVG, Table } from "@/components"
 import { Important, PageHeader } from "@/typo"
 import { SLUG, TableRecord } from "@/types"
 import { subContentAtom } from "@/coil"
+import { loadRedis } from "@/storage"
 import { TABLES } from "@/constants"
 
 import { SubcontentWrapper } from "./style"

@@ -148,13 +148,16 @@ model Product {
 }
 
 model ProductInOutLog {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-  delta     Int
-  message   String?
-  id        Int      @id @default(autoincrement())
-  productId Int
-  product   Product  @relation(fields: [productId], references: [id])
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now()) @updatedAt
+  delta         Int
+  message       String?
+  id            Int              @id @default(autoincrement())
+  productId     Int
+  type          ProductInOutType
+  unitCost      Int
+  product       Product          @relation(fields: [productId], references: [id])
+  StoreProducts StoreProducts[]  @relation("wearing")
 }
 
 model DiscountPolicy {
@@ -206,20 +209,34 @@ model Notice {
 }
 
 model AdminAccount {
-  id             String   @id @default(uuid())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now())
+  id             String          @id @default(uuid())
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now())
   username       String
   hashedPassword String
   description    String?
-  relatedUserId  Int?     @unique
-  User           User?    @relation(fields: [relatedUserId], references: [id])
+  relatedUserId  Int?            @unique
+  User           User?           @relation(fields: [relatedUserId], references: [id])
+  StoreProducts  StoreProducts[]
 }
 
 model UserPassword {
   id           Int    @id @default(autoincrement())
   accountName  String @unique
   passwordHash String
+}
+
+model StoreProducts {
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @default(now())
+  id              Int               @id @default(autoincrement())
+  systemId        String            @unique
+  workerId        String
+  totalCost       Int
+  storeDate       DateTime          @default(now())
+  title           String            @unique
+  AdminAccount    AdminAccount      @relation(fields: [workerId], references: [id])
+  ProductInOutLog ProductInOutLog[] @relation("wearing")
 }
 
 enum PaymentMethodType {
@@ -252,4 +269,9 @@ enum PurchaseType {
   COUPON
   PRINTER
   GENERAL
+}
+
+enum ProductInOutType {
+  INCOME
+  OUTCOME
 }

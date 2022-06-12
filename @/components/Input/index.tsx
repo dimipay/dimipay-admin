@@ -69,7 +69,7 @@ export const Input: React.FC<{
                                 onInput={(e) => {
                                     e.currentTarget.value =
                                         e.currentTarget.value.replace(
-                                            /[^0-9]/g,
+                                            /[^0-9-]/g,
                                             ""
                                         )
                                 }}

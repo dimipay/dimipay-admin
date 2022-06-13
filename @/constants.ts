@@ -6,6 +6,7 @@ import {
     DISCOUNT_POLICY,
     EVENT,
     PAYMENT_METHOD_SCHEME,
+    TRANSACTION_SCHEME,
 } from "./schemes"
 import { ADMIN_ACCOUNT_SCHEME } from "./schemes/adminAccount"
 import { SchemeGroup } from "./types"
@@ -25,6 +26,7 @@ export const GROUPED_TABLES: SchemeGroup[] = [
         groupName: "판매",
         content: [
             USER_SCHEME,
+            TRANSACTION_SCHEME,
             PRODUCT_SCHEME,
             CATEGORY_SCHEME,
             DISCOUNT_POLICY,

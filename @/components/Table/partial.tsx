@@ -50,21 +50,22 @@ const getFieldValue = (field: Field, value: DataValue) => {
     }
 
     if (typeOption.type === "relation-multiple") {
-        console.log(typeOption)
+        // console.log(typeOption)
         const target = value as Relation
         return <Regular>{target.target.map((e) => e.displayName)}</Regular>
     }
 
-    if (value instanceof Array && isMultipleSelect(typeOption))
+    if (value instanceof Array && isMultipleSelect(typeOption)) {
         return value
             .map((v: string | number | boolean | Date) =>
                 field.computed
                     ? field.computed(v)
                     : typeOption.map
                     ? typeOption.map[v.toString()]
-                    : v
+                    : typeOption.options.find((e) => e.key === v)?.label || v
             )
             .join(", ")
+    }
 
     // if (typeOption.type === "date") {
     //     console.log(value)
@@ -85,7 +86,6 @@ export const Row = forwardRef<
     }
 >(({ row, ...props }, ref) => {
     const setSubContent = useSetRecoilState(subContentAtom)
-    console.log(row)
     return (
         <tr
             ref={ref}

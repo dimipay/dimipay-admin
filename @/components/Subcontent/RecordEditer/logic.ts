@@ -181,10 +181,12 @@ export const useLogic = (props: {
     }, [props.data])
 
     const onSubmit: SubmitHandler<TableRecord> = async (data) => {
+        console.log(data)
         const generalizedData = Object.fromEntries(
             Object.entries(data)
                 .filter(
                     ([key, value]) =>
+                        key in props.scheme.fields &&
                         !props.scheme.fields[key].autoGenerative &&
                         !(value === undefined || value === null)
                 )

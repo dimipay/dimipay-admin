@@ -48,7 +48,7 @@ export const ModifyStock: PanelComponent = ({ record, reload }) => {
                     hooker={register("message")}
                 />
                 <Button block type="submit">
-                    <Important white>인증번호 생성</Important>
+                    <Important white>재고 수정</Important>
                 </Button>
             </Vexile>
         </InlineForm>

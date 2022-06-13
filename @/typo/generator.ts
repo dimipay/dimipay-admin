@@ -31,6 +31,11 @@ export const createTypo = (props: {
                     textDecoration: "line-through",
                 },
             },
+            underline: {
+                true: {
+                    textDecoration: "underline",
+                },
+            },
             notight: {
                 true: {
                     letterSpacing: "0em",

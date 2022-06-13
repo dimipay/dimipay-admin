@@ -7,12 +7,12 @@ export const kone =
         method: "POST" | "GET" | "PATCH" | "DELETE"
     ) =>
     async (
-        data: Parameters<koneFunc>[0]
+        data?: Parameters<koneFunc>[0]
     ): Promise<Awaited<ReturnType<koneFunc>>> => {
         try {
             const url =
                 `/api/${endpoint}` +
-                (method === "GET"
+                (method === "GET" && data
                     ? "?" + new URLSearchParams({ query: JSON.stringify(data) })
                     : "")
             const res = await fetch(url, {

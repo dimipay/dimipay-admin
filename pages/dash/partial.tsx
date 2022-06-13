@@ -1,10 +1,10 @@
-import { Vexile } from "@haechi/flexile"
+import { Hexile, Vexile } from "@haechi/flexile"
 
 import { LoadSVG, PlainLink, Redirector } from "@/components"
-import { GROUPED_TABLES } from "@/constants"
+import { GROUPED_TABLES, STATISTICS } from "@/constants"
 import { Important, Regular } from "@/typo"
 import { SLUG } from "@/types"
-import { logo } from "@/assets"
+import { graphIcon, logo } from "@/assets"
 
 import { SidebarWrapper } from "./style"
 import React from "react"
@@ -34,6 +34,17 @@ export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = (props) => (
                 ))}
             </Vexile>
         ))}
+        <PlainLink href="/dash/statistics">
+            <Hexile>
+                <LoadSVG
+                    alt="그래프 아이콘"
+                    height={5}
+                    width={5}
+                    src={graphIcon}
+                />
+                <Regular underline>통계</Regular>
+            </Hexile>
+        </PlainLink>
     </SidebarWrapper>
 )
 

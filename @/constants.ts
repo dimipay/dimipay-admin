@@ -43,4 +43,17 @@ export const GROUPED_TABLES: SchemeGroup[] = [
     },
 ]
 
+export const STATISTICS = [
+    {
+        name: "총 판매 금액",
+        id: "todaySalesTotal",
+        type: "number",
+    },
+    {
+        name: "많이 팔린 상품",
+        id: "highSales3",
+        type: "list",
+    },
+]
+
 export const TABLES = GROUPED_TABLES.flatMap((group) => group.content)

@@ -23,3 +23,7 @@ export const Token = createTypo({
     fontSize: 3,
     fontWeight: 500,
 })
+export const Decorative = createTypo({
+    fontSize: 5,
+    fontWeight: 500,
+})

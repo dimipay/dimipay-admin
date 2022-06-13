@@ -9,8 +9,9 @@ export const endpoint =
         try {
             const handler = handlers[req.method as string]
             if (!handler) throw new HandlerError(`동작을 찾을 수 없어요`, 404)
+            console.log(req.query.query)
             const result = await handler(
-                req.method === "GET"
+                req.method === "GET" && req.query.query
                     ? JSON.parse(req.query.query as string)
                     : req.body,
                 req.query

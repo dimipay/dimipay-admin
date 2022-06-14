@@ -1,17 +1,10 @@
-import { STATISTICS } from "@/constants"
+import { PageHeader, Decorative, Important, Regular, Token } from "@/typo"
 import { getStatistics, useKone } from "@/functions"
-import { styled } from "@/stitches.config"
-import { Statistics } from "@/types"
-import {
-    Decorative,
-    Description,
-    Important,
-    PageHeader,
-    Regular,
-    Token,
-} from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
+import { STATISTICS } from "@/constants"
+import { styled } from "@/stitches.config"
 import { Sidebar } from "./partial"
+import { Statistics } from "@/types"
 
 const StatisticsCard = styled(Vexile, {
     backgroundColor: "white",
@@ -52,7 +45,7 @@ export const StatisticsRenderer: React.FC<{
         return (
             <Vexile gap={2}>
                 {data.list.map((item) => (
-                    <ListItem>
+                    <ListItem key={item.label}>
                         <Important>{item.label}</Important>
                         {item.secondaryLabel && (
                             <Regular>{item.secondaryLabel}</Regular>
@@ -77,7 +70,7 @@ export const StatisticsDashboard = () => {
                     {STATISTICS.map(
                         (card) =>
                             statistics?.[card.id] === null || (
-                                <StatisticsCard>
+                                <StatisticsCard key={card.id}>
                                     <Regular>{card.name}</Regular>
                                     {statistics?.[card.id] && (
                                         <StatisticsRenderer

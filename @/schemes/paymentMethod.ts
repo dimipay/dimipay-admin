@@ -5,6 +5,15 @@ export const PAYMENT_METHOD_SCHEME: Scheme = {
     displayName: "결제수단",
     fields: {
         ...RECORD_BASE_FIELDS,
+        systemId: {
+            displayName: "관리 번호",
+            autoGenerative: true,
+            readOnly: true,
+            invisibleInTable: true,
+            typeOption: {
+                type: "string",
+            },
+        },
         type: {
             displayName: "유형",
             required: true,

@@ -17,7 +17,6 @@ import { TooltipWrapper, Cell, HeaderCell } from "./style"
 import { DividerLine, ModifyRecord } from ".."
 import { ColorBubble } from "../atoms"
 import { Hexile, Vexile } from "@haechi/flexile"
-import { formatDate } from "@/functions"
 
 const getFieldValue = (field: Field, value: DataValue) => {
     if (field.computed) return field.computed(value)
@@ -71,6 +70,9 @@ const getFieldValue = (field: Field, value: DataValue) => {
     //     console.log(value)
     //     return formatDate(value)
     // }
+
+    if ("options" in typeOption)
+        return typeOption.options?.find((e) => e.key === value)?.label || value
 
     return value
 }

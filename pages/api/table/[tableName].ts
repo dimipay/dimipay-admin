@@ -254,7 +254,7 @@ const actions = {
         }
 
         const data = await generalizeFormData(props.data, table)
-        console.log(data)
+
         const res: TableRecord = await (prisma[table.tableName].update as any)({
             where: {
                 id: props.id,

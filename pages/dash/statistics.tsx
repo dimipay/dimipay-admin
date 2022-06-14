@@ -59,7 +59,7 @@ export const StatisticsRenderer: React.FC<{
 }
 
 export const StatisticsDashboard = () => {
-    const [statistics, reload] = useKone(getStatistics)
+    const [statistics] = useKone(getStatistics)
 
     return (
         <Hexile fillx filly>

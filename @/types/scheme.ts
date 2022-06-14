@@ -80,6 +80,7 @@ export interface Field {
         | {
               type: "string" | "date" | "password" | "color"
               default?: string
+              options?: Option[]
           }
         | {
               type: "number"

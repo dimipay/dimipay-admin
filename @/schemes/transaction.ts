@@ -47,24 +47,24 @@ export const TRANSACTION_SCHEME: Scheme = {
             displayName: "상태",
             typeOption: {
                 type: "string",
-                // options: [
-                //     {
-                //         label: "대기중",
-                //         key: "PENDING",
-                //     },
-                //     {
-                //         label: "완료",
-                //         key: "CONFIRMED",
-                //     },
-                //     {
-                //         label: "취소",
-                //         key: "CANCELED",
-                //     },
-                //     {
-                //         label: "오류",
-                //         key: "ERROR",
-                //     },
-                // ],
+                options: [
+                    {
+                        label: "대기중",
+                        key: "PENDING",
+                    },
+                    {
+                        label: "완료",
+                        key: "CONFIRMED",
+                    },
+                    {
+                        label: "취소",
+                        key: "CANCELED",
+                    },
+                    {
+                        label: "오류",
+                        key: "ERROR",
+                    },
+                ],
             },
             required: true,
         },
@@ -78,24 +78,24 @@ export const TRANSACTION_SCHEME: Scheme = {
             displayName: "인증",
             typeOption: {
                 type: "string",
-                // options: [
-                //     {
-                //         label: "문자",
-                //         key: "SMS",
-                //     },
-                //     {
-                //         label: "앱QR",
-                //         key: "APP_QR",
-                //     },
-                //     {
-                //         label: "얼굴",
-                //         key: "FACESIGN",
-                //     },
-                //     {
-                //         label: "앱내부",
-                //         key: "INAPP",
-                //     },
-                // ],
+                options: [
+                    {
+                        label: "문자",
+                        key: "SMS",
+                    },
+                    {
+                        label: "앱QR",
+                        key: "APP_QR",
+                    },
+                    {
+                        label: "얼굴",
+                        key: "FACESIGN",
+                    },
+                    {
+                        label: "앱내부",
+                        key: "INAPP",
+                    },
+                ],
             },
             readOnly: true,
         },

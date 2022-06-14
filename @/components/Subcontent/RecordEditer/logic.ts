@@ -1,7 +1,11 @@
 // Input으로 들어온 값을 Prisma로 저장할 수 있게 형식을 변환하는 함수
 
+import { TEXT_INPUT_COMPATIBLE_TYPES } from "@/components"
 import { TABLES } from "@/constants"
 import { table } from "@/functions"
+import { FilterItem } from "@/functions/useFilter/partial"
+import { prisma } from "@/storage"
+
 import {
     DataValue,
     SingleRelationField,
@@ -16,7 +20,8 @@ import { toast } from "react-toastify"
 
 export const convertToStorageType = (
     field: Field,
-    value: DataValue
+    value: DataValue,
+    isUpdate: boolean = false
 ): [string | undefined, unknown | undefined] => {
     if (field.typeOption.type === "number") return [undefined, Number(value)]
 
@@ -32,7 +37,7 @@ export const convertToStorageType = (
             return [
                 undefined,
                 {
-                    set: [],
+                    connect: [],
                 },
             ]
 
@@ -58,9 +63,7 @@ export const convertToStorageType = (
             undefined,
             {
                 connect: {
-                    id: relationTargetScheme.isUUIDPk
-                        ? typedKey
-                        : relationTargetKey,
+                    id: typedKey,
                 },
             },
         ]
@@ -76,11 +79,13 @@ export const convertToStorageType = (
 
         const keys = value as string[]
 
+        const relationConnectKey = isUpdate ? "set" : "connect"
+
         if (!value || !(value as string[]).length)
             return [
                 undefined,
                 {
-                    set: [],
+                    [relationConnectKey]: [],
                 },
             ]
 
@@ -97,9 +102,9 @@ export const convertToStorageType = (
         return [
             undefined,
             {
-                connect: {
-                    id: typedIds,
-                },
+                [relationConnectKey]: typedIds.map((e) => ({
+                    id: e,
+                })),
             },
         ]
     }
@@ -181,7 +186,6 @@ export const useLogic = (props: {
     }, [props.data])
 
     const onSubmit: SubmitHandler<TableRecord> = async (data) => {
-        console.log(data)
         const generalizedData = Object.fromEntries(
             Object.entries(data)
                 .filter(
@@ -192,25 +196,22 @@ export const useLogic = (props: {
                 )
                 .map(([key, value]) => {
                     const field: Field = props.scheme.fields[key]
-
+                    if (props.data && field.readOnly)
+                        return [undefined, undefined]
                     const [typedKey = key, typedValue] = convertToStorageType(
                         field,
-                        value
+                        value,
+                        !!props.data
                     )
-
                     return [typedKey, typedValue]
                 })
                 .filter((e) => e[0])
         )
-
-        console.log(data, generalizedData)
-
         if (props.data) {
             const res = await table[props.scheme.tableName].PATCH({
                 id: props.data.id,
                 data: generalizedData,
             })
-
             if (res.id) {
                 toast("바꾼 내용을 저장했어요", {
                     type: "success",
@@ -221,7 +222,6 @@ export const useLogic = (props: {
             const res = await table[props.scheme.tableName].POST({
                 data: generalizedData,
             })
-
             if (res.id) {
                 toast("새 항목을 만들었어요", {
                     type: "success",
@@ -229,7 +229,6 @@ export const useLogic = (props: {
                 props.onReloadRequested?.()
             }
         }
-
         return true
     }
 

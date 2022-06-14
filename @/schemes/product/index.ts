@@ -6,7 +6,7 @@ import { ModifyStock } from "./panels"
 export const PRODUCT_SCHEME: Scheme = {
     displayName: "상품",
     tableName: SLUG.product,
-    isUUIDPk: true,
+    // isUUIDPk: true,
     fields: {
         ...RECORD_BASE_FIELDS,
         systemId: {

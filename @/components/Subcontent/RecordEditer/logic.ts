@@ -91,7 +91,7 @@ export const convertToStorageType = (
 
         const isUUIDPk =
             relationTargetScheme.isUUIDPk ||
-            keys.every((data) => data.match(/[A-z]/))
+            keys.some((data) => data.match(/[A-z]/))
 
         const typedIds = isUUIDPk ? keys : keys.map((data) => +data)
 

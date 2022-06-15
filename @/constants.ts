@@ -45,14 +45,45 @@ export const GROUPED_TABLES: SchemeGroup[] = [
 
 export const STATISTICS = [
     {
-        name: "총 판매 금액",
-        id: "todaySalesTotal",
-        type: "number",
+        label: "판매",
+        items: [
+            {
+                name: "오늘 판 금액",
+                id: "todaySalesTotal",
+                type: "number",
+            },
+            {
+                name: "어제 판 금액",
+                id: "yesterdaySalesTotal",
+                type: "number",
+            },
+            {
+                name: "오늘의 순이익",
+                id: "profit",
+                type: "number",
+            },
+            {
+                name: "오늘의 결제 횟수",
+                id: "paymentCount",
+                type: "number",
+            },
+        ],
     },
     {
-        name: "많이 팔린 상품",
-        id: "highSales3",
-        type: "list",
+        label: "상품",
+        items: [
+            {
+                name: "많이 팔린 상품",
+                id: "highSales3",
+                type: "list",
+            },
+
+            {
+                name: "재고가 적은 상품",
+                id: "lowStock",
+                type: "list",
+            },
+        ],
     },
 ]
 

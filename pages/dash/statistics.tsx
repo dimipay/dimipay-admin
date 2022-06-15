@@ -34,7 +34,7 @@ export const StatisticsRenderer: React.FC<{
 }> = ({ data }) => {
     if (data.number !== undefined)
         return (
-            <Hexile y="bottom" gap={2}>
+            <Hexile y="center" gap={2}>
                 {data.number.prefix && <Token>{data.number.prefix}</Token>}
                 <Decorative>{data.number.value.toLocaleString()}</Decorative>
                 {data.number.suffix && <Token>{data.number.suffix}</Token>}
@@ -66,8 +66,8 @@ export const StatisticsDashboard = () => {
             <Sidebar />
             <Vexile fillx filly padding={10} gap={4} x="left">
                 <PageHeader>통계</PageHeader>
-                <Hexile gap={4} linebreak y="top">
-                    {STATISTICS.map(
+                <Vexile gap={4} y="top">
+                    {/* {STATISTICS.map(
                         (card) =>
                             statistics?.[card.id] === null || (
                                 <StatisticsCard key={card.id}>
@@ -79,8 +79,30 @@ export const StatisticsDashboard = () => {
                                     )}
                                 </StatisticsCard>
                             )
-                    )}
-                </Hexile>
+                    )} */}
+                    {STATISTICS.map((group) => (
+                        <>
+                            <Important>{group.label}</Important>
+                            <Hexile gap={2} y="top">
+                                {group.items.map(
+                                    (card) =>
+                                        statistics?.[card.id] === null || (
+                                            <StatisticsCard key={card.id}>
+                                                <Regular>{card.name}</Regular>
+                                                {statistics?.[card.id] && (
+                                                    <StatisticsRenderer
+                                                        data={
+                                                            statistics[card.id]!
+                                                        }
+                                                    />
+                                                )}
+                                            </StatisticsCard>
+                                        )
+                                )}
+                            </Hexile>
+                        </>
+                    ))}
+                </Vexile>
             </Vexile>
         </Hexile>
     )

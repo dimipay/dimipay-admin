@@ -48,7 +48,7 @@ export const statisticsGetters: {
             take: 3,
             orderBy: {
                 _sum: {
-                    delta: "desc",
+                    delta: "asc",
                 },
             },
         })

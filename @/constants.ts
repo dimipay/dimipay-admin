@@ -9,7 +9,7 @@ import {
     TRANSACTION_SCHEME,
 } from "./schemes"
 import { ADMIN_ACCOUNT_SCHEME } from "./schemes/adminAccount"
-import { SchemeGroup } from "./types"
+import { SchemeGroup, Statistics, StatisticsCard } from "./types"
 
 export const assert = (name: string, isServersideOnly: boolean = true) => {
     const content = process.env[name]
@@ -43,7 +43,10 @@ export const GROUPED_TABLES: SchemeGroup[] = [
     },
 ]
 
-export const STATISTICS = [
+export const STATISTICS: {
+    label: string
+    items: StatisticsCard[]
+}[] = [
     {
         label: "판매",
         items: [
@@ -58,9 +61,23 @@ export const STATISTICS = [
                 type: "number",
             },
             {
-                name: "오늘의 순이익",
+                name: "오늘의 예상 순이익",
                 id: "profit",
                 type: "number",
+                computedField(statistics) {
+                    return {
+                        number: {
+                            value:
+                                Math.floor(
+                                    ((statistics.todaySalesTotal?.number
+                                        ?.value || 0) *
+                                        0.3) /
+                                        10
+                                ) * 10,
+                            suffix: "원 (예상)",
+                        },
+                    }
+                },
             },
             {
                 name: "오늘의 결제 횟수",

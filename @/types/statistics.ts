@@ -13,3 +13,12 @@ export interface Statistics {
         secondaryLabel?: string
     }[]
 }
+
+export interface StatisticsCard {
+    name: string
+    id: string
+    type: "number" | "text" | "pie" | "list"
+    computedField?: (
+        statistics: Record<string, Statistics | null>
+    ) => Promise<Statistics | null> | Statistics | null
+}

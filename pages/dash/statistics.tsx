@@ -4,7 +4,8 @@ import { Hexile, Vexile } from "@haechi/flexile"
 import { STATISTICS } from "@/constants"
 import { styled } from "@/stitches.config"
 import { Sidebar } from "./partial"
-import { Statistics } from "@/types"
+import { Statistics, StatisticsCard } from "@/types"
+import { useState, useEffect } from "react"
 
 const StatisticsCard = styled(Vexile, {
     backgroundColor: "white",
@@ -14,7 +15,7 @@ const StatisticsCard = styled(Vexile, {
 
 StatisticsCard.defaultProps = {
     padding: 4,
-    gap: 4,
+    gap: 3,
 }
 
 const ListItem = styled(Hexile, {
@@ -30,11 +31,30 @@ ListItem.defaultProps = {
 }
 
 export const StatisticsRenderer: React.FC<{
-    data: Statistics
-}> = ({ data }) => {
+    id: string
+    statistics: Record<string, Statistics | null>
+    cardInfo: StatisticsCard
+}> = (props) => {
+    const [data, setData] = useState<Statistics | null>(
+        props.statistics[props.id]
+    )
+
+    useEffect(() => {
+        ;(async () => {
+            if (!props.cardInfo.computedField) return
+            const computeResult = await props.cardInfo.computedField(
+                props.statistics
+            )
+            console.log("왔는데요..", computeResult)
+            setData(() => computeResult)
+        })()
+    }, [props.statistics])
+
+    if (!data) return <></>
+
     if (data.number !== undefined)
         return (
-            <Hexile y="center" gap={2}>
+            <Hexile y="center" gap={1}>
                 {data.number.prefix && <Token>{data.number.prefix}</Token>}
                 <Decorative>{data.number.value.toLocaleString()}</Decorative>
                 {data.number.suffix && <Token>{data.number.suffix}</Token>}
@@ -59,7 +79,7 @@ export const StatisticsRenderer: React.FC<{
 }
 
 export const StatisticsDashboard = () => {
-    const [statistics] = useKone(getStatistics)
+    const [statisticsValues] = useKone(getStatistics)
 
     return (
         <Hexile fillx filly>
@@ -86,16 +106,18 @@ export const StatisticsDashboard = () => {
                             <Hexile gap={2} y="top">
                                 {group.items.map(
                                     (card) =>
-                                        statistics?.[card.id] === null || (
+                                        statisticsValues && (
                                             <StatisticsCard key={card.id}>
                                                 <Regular>{card.name}</Regular>
-                                                {statistics?.[card.id] && (
+                                                {
                                                     <StatisticsRenderer
-                                                        data={
-                                                            statistics[card.id]!
+                                                        id={card.id}
+                                                        cardInfo={card}
+                                                        statistics={
+                                                            statisticsValues
                                                         }
                                                     />
-                                                )}
+                                                }
                                             </StatisticsCard>
                                         )
                                 )}

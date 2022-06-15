@@ -10,7 +10,7 @@ const actions = {
         const statistics = await Promise.all(
             STATISTICS.flatMap((e) => e.items).map(async (e) => [
                 e.id,
-                await statisticsGetters[e.id](),
+                await statisticsGetters[e.id]?.(),
             ])
         )
 

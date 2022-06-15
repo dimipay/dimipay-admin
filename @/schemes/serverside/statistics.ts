@@ -3,24 +3,38 @@ import { loadRedis, prisma } from "@/storage"
 import { Statistics } from "@/types"
 import { ProductInOutType } from "@prisma/client"
 
+async function saveTopNProductStocksToRedis(n: number) {
+    const redis = await loadRedis()
+    const summary = await prisma.productInOutLog.groupBy({
+        by: ["productId"],
+        _sum: {
+            delta: true,
+        },
+        orderBy: {
+            _sum: {
+                delta: "asc",
+            },
+        },
+        take: n || undefined,
+    })
+
+    for (const product of summary) {
+        if (product._sum.delta === null) continue
+        redis.set(redisKey.stock(product.productId), product._sum.delta)
+    }
+
+    return summary
+}
+
 export const statisticsGetters: {
     [key: string]: () => Promise<Statistics | null>
 } = {
     async todaySalesTotal() {
         const result = await prisma.transaction.aggregate({
             where: {
-                AND: [
-                    {
-                        createdAt: {
-                            gte: new Date(new Date().setHours(0, 0, 0, 0)),
-                        },
-                    },
-                    {
-                        createdAt: {
-                            lte: new Date(new Date().setHours(23, 59, 59, 999)),
-                        },
-                    },
-                ],
+                createdAt: {
+                    gte: new Date(new Date().setHours(0, 0, 0, 0)),
+                },
             },
             _sum: {
                 totalPrice: true,
@@ -40,17 +54,20 @@ export const statisticsGetters: {
         const sales = await prisma.productInOutLog.groupBy({
             where: {
                 type: ProductInOutType.OUTCOME,
+                createdAt: {
+                    gte: new Date(new Date().setHours(0, 0, 0, 0)),
+                },
             },
             by: ["productId"],
             _sum: {
                 delta: true,
             },
-            take: 3,
             orderBy: {
                 _sum: {
                     delta: "asc",
                 },
             },
+            take: 5,
         })
 
         const products = Object.fromEntries(
@@ -75,7 +92,7 @@ export const statisticsGetters: {
                     label: products[product.productId.toString()],
                     secondaryLabel: (-product._sum.delta!).toString() + "개",
                 })),
-            ].reverse(),
+            ],
         }
     },
     async yesterdaySalesTotal() {
@@ -115,14 +132,6 @@ export const statisticsGetters: {
 
         return null
     },
-    async profit() {
-        return {
-            number: {
-                value: 0,
-                suffix: "원",
-            },
-        }
-    },
     async paymentCount() {
         const res = await prisma.transaction.count({
             where: {
@@ -140,18 +149,7 @@ export const statisticsGetters: {
         }
     },
     async lowStock() {
-        const summary = await prisma.productInOutLog.groupBy({
-            by: ["productId"],
-            _sum: {
-                delta: true,
-            },
-            orderBy: {
-                _sum: {
-                    delta: "desc",
-                },
-            },
-            take: 3,
-        })
+        const summary = [...(await saveTopNProductStocksToRedis(5))].reverse()
 
         const products = Object.fromEntries(
             (
@@ -169,12 +167,7 @@ export const statisticsGetters: {
             ).map((product) => [product.id, product.name])
         )
 
-        const redis = await loadRedis()
-
-        for (const product of summary) {
-            if (product._sum.delta === null) continue
-            redis.set(redisKey.stock(product.productId), product._sum.delta)
-        }
+        saveTopNProductStocksToRedis(0)
 
         return {
             list: summary.map((product) => ({

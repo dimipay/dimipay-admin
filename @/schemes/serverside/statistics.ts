@@ -53,16 +53,12 @@ export const statisticsGetters: {
             },
         })
 
-        const sortedSales = sales
-            .sort((a, b) => b._sum.delta! - a._sum.delta!)
-            .slice(0, 3)
-
         const products = Object.fromEntries(
             (
                 await prisma.product.findMany({
                     where: {
                         id: {
-                            in: sortedSales.map((s) => s.productId),
+                            in: sales.map((s) => s.productId),
                         },
                     },
                     select: {
@@ -74,10 +70,12 @@ export const statisticsGetters: {
         )
 
         return {
-            list: sortedSales.map((product) => ({
-                label: products[product.productId.toString()],
-                secondaryLabel: (-product._sum.delta!).toString() + "개",
-            })),
+            list: [
+                ...sales.map((product) => ({
+                    label: products[product.productId.toString()],
+                    secondaryLabel: (-product._sum.delta!).toString() + "개",
+                })),
+            ].reverse(),
         }
     },
     async yesterdaySalesTotal() {
@@ -142,35 +140,46 @@ export const statisticsGetters: {
         }
     },
     async lowStock() {
-        const redis = await loadRedis()
-        const keys = await redis.keys(redisKey.stock("*"))
-
-        const stocks = (await redis.mGet(keys))
-            .map((e, index) => ({
-                id: +keys[index].split(":")[1],
-                stock: e ? +e : 0,
-            }))
-            .sort((a, b) => a.stock - b.stock)
-            .slice(0, 3)
-
-        const producs = await prisma.product.findMany({
-            where: {
-                id: {
-                    in: stocks.map((s) => s.id),
+        const summary = await prisma.productInOutLog.groupBy({
+            by: ["productId"],
+            _sum: {
+                delta: true,
+            },
+            orderBy: {
+                _sum: {
+                    delta: "desc",
                 },
             },
-            select: {
-                name: true,
-                id: true,
-            },
+            take: 3,
         })
 
+        const products = Object.fromEntries(
+            (
+                await prisma.product.findMany({
+                    where: {
+                        id: {
+                            in: summary.map((s) => s.productId),
+                        },
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                })
+            ).map((product) => [product.id, product.name])
+        )
+
+        const redis = await loadRedis()
+
+        for (const product of summary) {
+            if (product._sum.delta === null) continue
+            redis.set(redisKey.stock(product.productId), product._sum.delta)
+        }
+
         return {
-            list: stocks.map((e) => ({
-                label:
-                    producs.find((p) => p.id === e.id)?.name ||
-                    "알 수 없는 상품" + e.id,
-                secondaryLabel: e.stock.toString() + "개",
+            list: summary.map((product) => ({
+                label: products[product.productId.toString()],
+                secondaryLabel: (-product._sum.delta!).toString() + "개",
             })),
         }
     },

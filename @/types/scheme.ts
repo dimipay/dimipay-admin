@@ -1,3 +1,8 @@
+export interface Sort {
+    field: string
+    order: "123" | "321"
+}
+
 export enum SLUG {
     user = "user",
     product = "product",
@@ -74,18 +79,18 @@ export interface Field {
         | SingleRelationField
         | MultipleRelationField
         | {
-              type: "boolean"
-              default?: boolean
-          }
+            type: "boolean"
+            default?: boolean
+        }
         | {
-              type: "string" | "date" | "password" | "color"
-              default?: string
-              options?: Option[]
-          }
+            type: "string" | "date" | "password" | "color"
+            default?: string
+            options?: Option[]
+        }
         | {
-              type: "number"
-              default?: number
-          }
+            type: "number"
+            default?: number
+        }
     ) & {
         suffix?: string
         prefix?: string
@@ -116,6 +121,7 @@ export interface Scheme {
     displayName: string
     tableName: SLUG
     fields: Record<string, Field>
+    defaultSort?: Sort
     computedFields?: Record<
         string,
         {

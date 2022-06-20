@@ -1,4 +1,5 @@
 import { styled } from "@/stitches.config"
+import { Description } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
 
 export const TableWrapper = styled(Vexile, {
@@ -48,4 +49,9 @@ export const TooltipWrapper = styled(Hexile, {
     position: "fixed",
     card: "$accent",
     zIndex: 1,
+})
+
+export const SortArrow = styled(Description, {
+    position: "absolute",
+    left: "0rem",
 })

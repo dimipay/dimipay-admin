@@ -1,5 +1,5 @@
 import { useRecoilState, useSetRecoilState } from "recoil"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { GetServerSideProps, NextPage } from "next"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
@@ -9,23 +9,30 @@ import { addIcon, closeIcon, downloadIcon } from "@/assets"
 import { FilterItem } from "@/functions/useFilter/partial"
 import { table, useConsole, useFilter } from "@/functions"
 import { Button, LoadSVG, Table } from "@/components"
+import HashLoader from "react-spinners/HashLoader"
 import { Important, PageHeader } from "@/typo"
 import { SLUG, TableRecord } from "@/types"
 import { subContentAtom } from "@/coil"
-import { loadRedis } from "@/storage"
 import { TABLES } from "@/constants"
 
 import { SubcontentWrapper } from "./style"
 import { Sidebar } from "./partial"
+import { MAIN_ACCENT } from "@/stitches.config"
 
 const TableViewer: NextPage = () => {
-    const router = useRouter()
+    const slug = useRouter().query.slug as SLUG
     const [subcontent, setSubcontent] = useRecoilState(subContentAtom)
     const setSubContent = useSetRecoilState(subContentAtom)
-    const slug = router.query.slug as SLUG
 
-    const [scheme, setScheme] = useState(
-        TABLES.find((table) => table.tableName === SLUG[slug])
+    const scheme = useMemo(
+        () => TABLES.find((table) => table.tableName === SLUG[slug]),
+        [slug]
+    )
+    const [sortField, setSortField] = useState<string | null>(
+        scheme?.defaultSort?.field || null
+    )
+    const [sortDirection, setSortDirection] = useState<"123" | "321" | null>(
+        scheme?.defaultSort?.order || null
     )
 
     const {
@@ -34,38 +41,37 @@ const TableViewer: NextPage = () => {
         clearFilter,
         element: filterElement,
         opened: filterOpened,
+        ...filterOptions
     } = useFilter(scheme)
 
-    const [records, setRecords] = useState<TableRecord[]>([])
-
-    const clearScheme = useCallback(() => {
-        setSubContent(null)
-        clearFilter()
-        setRecords([])
-        setScheme(undefined)
-    }, [setSubContent, setRecords, setScheme])
+    const [records, setRecords] = useState<TableRecord[]>()
 
     const load = useCallback(() => {
-        const nextScheme = TABLES.find(
-            (table) => table.tableName === SLUG[slug]
-        )
+        if (!scheme) return
 
-        if (!nextScheme) return
+        if (filterOptions.filterTargetTable !== scheme?.tableName) return
 
-        table[nextScheme.tableName]
+        table[scheme.tableName]
             .GET({
                 filter,
                 amount: 20,
+                sort:
+                    sortField && sortDirection
+                        ? [
+                              {
+                                  field: sortField,
+                                  order: sortDirection,
+                              },
+                          ]
+                        : undefined,
             })
             .then((e) => {
                 setRecords(e)
-                setScheme(nextScheme)
             })
-    }, [filter, scheme])
-
-    useConsole("RECORDS", { records, scheme })
+    }, [filter, scheme, sortField, sortDirection, filterOptions])
 
     const loadMore = useCallback(async () => {
+        if (!records) return
         if (records.length === 0) return
         if (!scheme) return
 
@@ -73,6 +79,14 @@ const TableViewer: NextPage = () => {
             filter,
             amount: 40,
             lastId: records[records.length - 1].id,
+            sort: sortField
+                ? [
+                      {
+                          field: sortField,
+                          order: "321",
+                      },
+                  ]
+                : undefined,
         })
 
         const merged = [
@@ -88,17 +102,21 @@ const TableViewer: NextPage = () => {
     }, [setRecords, records, filter, scheme])
 
     useEffect(() => {
+        setRecords(undefined)
+        clearFilter()
         load()
-    }, [filter.length, slug])
+        console.log("문제 없음")
+    }, [scheme])
 
     useEffect(() => {
-        clearScheme()
-    }, [slug])
+        load()
+        console.log("이건어때", filter, sortField, sortDirection)
+    }, [filter, sortField, sortDirection])
 
     return (
         <Hexile fillx filly>
             <Sidebar />
-            {scheme && (
+            {scheme ? (
                 <Vexile fillx filly padding={10} gap={4} scrollx relative>
                     <Hexile x="space">
                         <PageHeader>{scheme.displayName}</PageHeader>
@@ -135,13 +153,37 @@ const TableViewer: NextPage = () => {
                             </Button>
                         </Hexile>
                     </Hexile>
-                    <Table
-                        records={records}
-                        scheme={scheme}
-                        onReloadRequested={load}
-                        addFilter={addFilter}
-                        onReachEnd={loadMore}
-                    />
+                    {records ? (
+                        <Table
+                            records={records}
+                            scheme={scheme}
+                            onReloadRequested={load}
+                            addFilter={addFilter}
+                            onReachEnd={loadMore}
+                            setSort={(fieldName: string) => {
+                                if (sortField === fieldName) {
+                                    if (sortDirection === "123") {
+                                        setSortDirection("321")
+                                        return
+                                    }
+                                    if (sortDirection === "321") {
+                                        setSortDirection(null)
+                                        setSortField(null)
+                                        return
+                                    }
+                                }
+
+                                setSortField(fieldName)
+                                setSortDirection("123")
+                            }}
+                            sortField={sortField}
+                            sortDirection={sortDirection}
+                        />
+                    ) : (
+                        <Vexile fillx filly x="center" y="center">
+                            <HashLoader color={MAIN_ACCENT} />
+                        </Vexile>
+                    )}
                     {/* dummy for space */}
                     {filterOpened && (
                         <div style={{ visibility: "hidden" }}>
@@ -154,6 +196,10 @@ const TableViewer: NextPage = () => {
                         </div>
                     )}
                     {filterElement}
+                </Vexile>
+            ) : (
+                <Vexile fillx filly x="center" y="center">
+                    <HashLoader color={MAIN_ACCENT} />
                 </Vexile>
             )}
             {subcontent && (

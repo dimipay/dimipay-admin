@@ -26,6 +26,10 @@ import { RECORD_BASE_FIELDS } from "./common"
 export const TRANSACTION_SCHEME: Scheme = {
     displayName: "판매 기록",
     tableName: SLUG.transaction,
+    defaultSort: {
+        field: "createdAt",
+        order: "321"
+    },
     fields: {
         ...RECORD_BASE_FIELDS,
         billingId: {

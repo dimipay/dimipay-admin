@@ -8,6 +8,7 @@ import {
     Relation,
     Scheme,
     SingleRelationField,
+    Sort,
     TableRecord,
 } from "@/types"
 import { Prisma } from "@prisma/client"
@@ -54,11 +55,6 @@ const filtersToPrismaWhereOption = (filters: Filter[]) => {
             },
         })),
     }
-}
-
-interface Sort {
-    field: string
-    order: "123" | "321"
 }
 
 const sortsToPrismaOrderByOption = (sorts: Sort[]) => {
@@ -151,23 +147,23 @@ const actions = {
 
                                     const relatedFields = isMultipleRelation
                                         ? value.map((relatedDocument) => ({
-                                              id: relatedDocument.id,
-                                              displayName:
-                                                  relatedDocument[
-                                                      field.displayNameField
-                                                  ],
-                                              color: relatedDocument.color,
-                                          }))
+                                            id: relatedDocument.id,
+                                            displayName:
+                                                relatedDocument[
+                                                field.displayNameField
+                                                ],
+                                            color: relatedDocument.color,
+                                        }))
                                         : [
-                                              {
-                                                  id: value.id,
-                                                  displayName:
-                                                      value[
-                                                          field.displayNameField
-                                                      ],
-                                                  color: value.color,
-                                              },
-                                          ]
+                                            {
+                                                id: value.id,
+                                                displayName:
+                                                    value[
+                                                    field.displayNameField
+                                                    ],
+                                                color: value.color,
+                                            },
+                                        ]
                                     return [
                                         key,
                                         {
@@ -242,7 +238,7 @@ const actions = {
             if (typeof validateResult === "string")
                 throw new HandlerError(
                     `${table.fields[key].displayName.이가} 올바르지 않아요. ` +
-                        validateResult,
+                    validateResult,
                     400
                 )
 

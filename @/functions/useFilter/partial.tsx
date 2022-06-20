@@ -47,7 +47,7 @@ export const FilterItem: React.FC<{
                     alt="필터 삭제 버튼"
                 />
             </HitSlop>
-            <Regular>{props.field.displayName.이가}</Regular>
+            <Regular>{props.field?.displayName.이가}</Regular>
             <MiniInput
                 onChange={(enteredValue) => {
                     props.updateFilter({

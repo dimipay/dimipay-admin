@@ -15,12 +15,13 @@ export const Table: React.FC<{
     onReloadRequested(): void
     addFilter(key: string): void
     onReachEnd(): void
+    setSort?(key: string): void
+    sortField?: string | null
+    sortDirection?: "123" | "321" | null
 }> = ({ records: data, ...props }) => {
     const [selectedRecordIds, setSelectedRecordIds] = React.useState<string[]>(
         []
     )
-
-    const [sort, setSort] = useState<string | null>(null)
     const [ref, inView] = useInView()
 
     useEffect(() => {
@@ -62,7 +63,14 @@ export const Table: React.FC<{
                                                 onFilter={() =>
                                                     props.addFilter(key)
                                                 }
-                                                onSort={() => setSort(key)}
+                                                sortDirection={
+                                                    (props.sortField === key &&
+                                                        props.sortDirection) ||
+                                                    undefined
+                                                }
+                                                onSort={() =>
+                                                    props.setSort?.(key)
+                                                }
                                             >
                                                 {field?.displayName || key}
                                             </ActionableHeaderCell>
@@ -72,13 +80,7 @@ export const Table: React.FC<{
                                     Object.entries(
                                         props.scheme.computedFields
                                     ).map(([key, field]) => (
-                                        <ActionableHeaderCell
-                                            key={key}
-                                            onFilter={() =>
-                                                props.addFilter(key)
-                                            }
-                                            onSort={() => setSort(key)}
-                                        >
+                                        <ActionableHeaderCell key={key}>
                                             {field.displayName}
                                         </ActionableHeaderCell>
                                     ))}

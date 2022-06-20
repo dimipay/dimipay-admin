@@ -1,30 +1,27 @@
+import { TooltipWrapper, Cell, HeaderCell, SortArrow } from "./style"
 import React, { forwardRef, useState } from "react"
+import { DividerLine, ModifyRecord } from ".."
+import { Important, Regular } from "@/typo"
 import { useSetRecoilState } from "recoil"
-
+import { Hexile } from "@haechi/flexile"
 import { subContentAtom } from "@/coil"
+import { ColorBubble } from "../atoms"
 import {
     DataValue,
     Field,
     isMultipleSelect,
     Relation,
     Scheme,
-    SingleRelationField,
     TableRecord,
 } from "@/types"
-import { Important, Regular } from "@/typo"
-
-import { TooltipWrapper, Cell, HeaderCell } from "./style"
-import { DividerLine, ModifyRecord } from ".."
-import { ColorBubble } from "../atoms"
-import { Hexile, Vexile } from "@haechi/flexile"
 
 const getFieldValue = (field: Field, value: DataValue) => {
-    if (field.computed) return field.computed(value)
+    if (field.computed) return <Regular>{field.computed(value)}</Regular>
 
     const typeOption = field.typeOption
 
     if (typeOption.type === "boolean")
-        return <input type="checkbox" checked={value as boolean} />
+        return <input type="checkbox" checked={value as boolean} readOnly />
 
     if (typeOption.type === "relation-single") {
         if (!value) return ""
@@ -55,15 +52,20 @@ const getFieldValue = (field: Field, value: DataValue) => {
     }
 
     if (value instanceof Array && isMultipleSelect(typeOption)) {
-        return value
-            .map((v: string | number | boolean | Date) =>
-                field.computed
-                    ? field.computed(v)
-                    : typeOption.map
-                    ? typeOption.map[v.toString()]
-                    : typeOption.options.find((e) => e.key === v)?.label || v
-            )
-            .join(", ")
+        return (
+            <Regular>
+                {value
+                    .map((v: string | number | boolean | Date) =>
+                        field.computed
+                            ? field.computed(v)
+                            : typeOption.map
+                            ? typeOption.map[v.toString()]
+                            : typeOption.options.find((e) => e.key === v)
+                                  ?.label || v
+                    )
+                    .join(", ")}
+            </Regular>
+        )
     }
 
     // if (typeOption.type === "date") {
@@ -72,9 +74,14 @@ const getFieldValue = (field: Field, value: DataValue) => {
     // }
 
     if ("options" in typeOption)
-        return typeOption.options?.find((e) => e.key === value)?.label || value
+        return (
+            <Regular>
+                {typeOption.options?.find((e) => e.key === value)?.label ||
+                    value}
+            </Regular>
+        )
 
-    return value
+    return <Regular>{value}</Regular>
 }
 
 export const Row = forwardRef<
@@ -108,6 +115,7 @@ export const Row = forwardRef<
                 <input
                     type="checkbox"
                     checked={props.selected}
+                    readOnly
                     onClick={(e) => {
                         props.onCheckboxClicked(props.selected)
                         e.stopPropagation()
@@ -119,18 +127,13 @@ export const Row = forwardRef<
                     key in props.scheme?.fields &&
                     !props.scheme.fields[key].invisibleInTable && (
                         <Cell key={key}>
-                            <Regular>
-                                {getFieldValue(
-                                    props.scheme.fields[key],
-                                    row[key]
-                                )}
-                            </Regular>
+                            {getFieldValue(props.scheme.fields[key], row[key])}
                         </Cell>
                     )
             )}
             {props.scheme.computedFields &&
                 Object.keys(props.scheme.computedFields).map((key) => (
-                    <Cell>
+                    <Cell key={key}>
                         <Regular>{row[key]}</Regular>
                     </Cell>
                 ))}
@@ -139,13 +142,20 @@ export const Row = forwardRef<
 })
 
 export const ActionableHeaderCell: React.FC<{
-    onSort(): void
-    onFilter(): void
+    onSort?(): void
+    onFilter?(): void
+    isSorted?: boolean
+    sortDirection?: "123" | "321"
 }> = (props) => {
     const [isActionsVisible, showActions] = useState(false)
 
     return (
         <HeaderCell onClick={() => showActions((prev) => !prev)}>
+            {props.sortDirection && (
+                <SortArrow>
+                    {props.sortDirection === "123" ? "↑" : "↓"}
+                </SortArrow>
+            )}
             <Regular dark={4}>{props.children}</Regular>
             {isActionsVisible && (
                 <TooltipWrapper gap={3} paddingx={4} paddingy={3}>

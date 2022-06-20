@@ -122,6 +122,7 @@ export interface Scheme {
     tableName: SLUG
     fields: Record<string, Field>
     defaultSort?: Sort
+    softDelete?: boolean
     computedFields?: Record<
         string,
         {

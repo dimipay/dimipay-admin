@@ -4,6 +4,7 @@ import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
 export const CATEGORY_SCHEME: Scheme = {
     displayName: "분류",
     tableName: SLUG.category,
+    softDelete: true,
     fields: {
         ...RECORD_BASE_FIELDS,
         name: {

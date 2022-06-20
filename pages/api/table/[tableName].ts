@@ -1,4 +1,4 @@
-import { TABLES } from "@/constants"
+import { SOFT_DELETE_FIELD_NAME, TABLES } from "@/constants"
 import { serversideSchemes } from "@/schemes/serverside"
 import { prisma } from "@/storage"
 import {
@@ -104,7 +104,14 @@ const actions = {
                     prisma[table.tableName].findMany as any
                 )({
                     orderBy: sort,
-                    where: filter,
+                    where: {
+                        ...filter,
+                        ...(
+                            table.softDelete && {
+                                [SOFT_DELETE_FIELD_NAME]: false
+                            }
+                        )
+                    },
                     take: props.amount || 20,
                     cursor: props.lastId && {
                         id: props.lastId,
@@ -278,7 +285,24 @@ const actions = {
             )
         }
 
-        const result: Prisma.BatchPayload = await (
+        if (table.softDelete) {
+            await (prisma[table.tableName] as any).updateMany({
+                where: {
+                    id: {
+                        in: props.ids,
+                    },
+                },
+                data: {
+                    [SOFT_DELETE_FIELD_NAME]: true,
+                },
+            })
+
+            return {
+                ok: true
+            }
+        }
+
+        await (
             prisma[table.tableName] as any
         ).deleteMany({
             where: {

@@ -3,6 +3,7 @@ import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
 
 export const PAYMENT_METHOD_SCHEME: Scheme = {
     displayName: "결제수단",
+    softDelete: true,
     fields: {
         ...RECORD_BASE_FIELDS,
         systemId: {

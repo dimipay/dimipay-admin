@@ -6,6 +6,7 @@ export const TableWrapper = styled(Vexile, {
     backgroundColor: "white",
     borderRadius: "2rem",
     border: "0.5rem solid $dark5",
+    position: "relative",
 })
 
 export const TableContent = styled("table", {
@@ -43,6 +44,10 @@ export const HeaderCell = styled("th", {
 
 export const ActionToolbars = styled(Hexile, {
     borderTop: "0.5rem solid $dark5",
+    position: "absolute",
+    width: "100%",
+    backgroundColor: "white",
+    bottom: "0rem"
 })
 
 export const TooltipWrapper = styled(Hexile, {

@@ -1,5 +1,7 @@
 import { table } from "@/functions"
 import { Field, Scheme, TableRecord, ToolbarAction } from "@/types"
+import { Product } from "@prisma/client"
+import { toast } from "react-toastify"
 
 export const DELETE_SELECTED_RECORDS_ACTION: ToolbarAction = {
     button: {
@@ -9,6 +11,10 @@ export const DELETE_SELECTED_RECORDS_ACTION: ToolbarAction = {
     func: async (selectedRecords: TableRecord[], scheme: Scheme) => {
         const ids = selectedRecords.map((e) => e.id)
         const res = await table[scheme.tableName].DELETE({ ids })
+        toast.success(
+            `${(selectedRecords as unknown as Product[]).map(e => e.name).join(", ").이가
+            } 삭제되었습니다`,
+        )
     },
 }
 

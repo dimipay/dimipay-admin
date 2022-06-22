@@ -46,7 +46,7 @@ const getFieldValue = (field: Field, value: DataValue) => {
     }
 
     if (typeOption.type === "relation-multiple") {
-        // console.log(typeOption)
+        if (!value) return <></>
         const target = value as Relation
         return <Regular>{target.target.map((e) => e.displayName)}</Regular>
     }

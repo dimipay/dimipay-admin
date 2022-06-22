@@ -19,7 +19,7 @@ export const Table: React.FC<{
     sortField?: string | null
     sortDirection?: "123" | "321" | null
 }> = ({ records: data, ...props }) => {
-    const [selectedRecordIds, setSelectedRecordIds] = React.useState<string[]>(
+    const [selectedRecordIds, setSelectedRecordIds] = React.useState<number[]>(
         []
     )
     const [ref, inView] = useInView()

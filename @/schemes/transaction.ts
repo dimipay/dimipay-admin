@@ -139,7 +139,7 @@ export const TRANSACTION_SCHEME: Scheme = {
             },
             invisibleInTable: true,
         },
-        posDevice: {
+        PosDevice: {
             displayName: "결제 단말기",
             typeOption: {
                 type: "relation-single",

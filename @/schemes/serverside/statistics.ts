@@ -6,7 +6,7 @@ import { ProductInOutType } from "@prisma/client"
 async function saveTopNProductStocksToRedis(n: number) {
     const redis = await loadRedis()
     const summary = await prisma.productInOutLog.groupBy({
-        by: ["productId"],
+        by: ["productSid"],
         _sum: {
             delta: true,
         },
@@ -20,7 +20,7 @@ async function saveTopNProductStocksToRedis(n: number) {
 
     for (const product of summary) {
         if (product._sum.delta === null) continue
-        redis.set(redisKey.stock(product.productId), product._sum.delta)
+        redis.set(redisKey.stock(product.productSid), product._sum.delta)
     }
 
     return summary
@@ -58,7 +58,7 @@ export const statisticsGetters: {
                     gte: new Date(new Date().setHours(0, 0, 0, 0)),
                 },
             },
-            by: ["productId"],
+            by: ["productSid"],
             _sum: {
                 delta: true,
             },
@@ -74,8 +74,8 @@ export const statisticsGetters: {
             (
                 await prisma.product.findMany({
                     where: {
-                        id: {
-                            in: sales.map((s) => s.productId),
+                        systemId: {
+                            in: sales.map((s) => s.productSid),
                         },
                     },
                     select: {
@@ -89,7 +89,7 @@ export const statisticsGetters: {
         return {
             list: [
                 ...sales.map((product) => ({
-                    label: products[product.productId.toString()],
+                    label: products[product.productSid.toString()],
                     secondaryLabel: (-product._sum.delta!).toString() + "개",
                 })),
             ],
@@ -103,7 +103,7 @@ export const statisticsGetters: {
                         createdAt: {
                             gte: new Date(
                                 new Date().setHours(0, 0, 0, 0) -
-                                    24 * 60 * 60 * 1000
+                                24 * 60 * 60 * 1000
                             ),
                         },
                     },
@@ -111,7 +111,7 @@ export const statisticsGetters: {
                         createdAt: {
                             lte: new Date(
                                 new Date().setHours(23, 59, 59, 999) -
-                                    24 * 60 * 60 * 1000
+                                24 * 60 * 60 * 1000
                             ),
                         },
                     },
@@ -155,9 +155,9 @@ export const statisticsGetters: {
             (
                 await prisma.product.findMany({
                     where: {
-                        id: {
-                            in: summary.map((s) => s.productId),
-                        },
+                        systemId: {
+                            in: summary.map((s) => s.productSid),
+                        }
                     },
                     select: {
                         id: true,
@@ -171,7 +171,7 @@ export const statisticsGetters: {
 
         return {
             list: summary.map((product) => ({
-                label: products[product.productId.toString()],
+                label: products[product.productSid.toString()],
                 secondaryLabel: (-product._sum.delta!).toString() + "개",
             })),
         }

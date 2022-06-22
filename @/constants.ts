@@ -21,7 +21,7 @@ export const assert = (name: string, isServersideOnly: boolean = true) => {
 export const JWT_SECRET = assert("JWT_SECRET")
 export const REDIS_URI = assert("REDIS_URI")
 
-export const SOFT_DELETE_FIELD_NAME = "IS_DELETED"
+export const SOFT_DELETE_FIELD_NAME = "is_deleted"
 
 export const GROUPED_TABLES: SchemeGroup[] = [
     {

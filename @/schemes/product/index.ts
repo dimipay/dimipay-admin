@@ -49,7 +49,7 @@ export const PRODUCT_SCHEME: Scheme = {
                 suffix: "원",
             },
         },
-        category: {
+        Category: {
             displayName: "분류",
             required: true,
             typeOption: {

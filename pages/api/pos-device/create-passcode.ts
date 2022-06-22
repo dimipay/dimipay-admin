@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs"
 import { endpoint } from ".."
 
 const actions = {
-    POST: async (content: { posId: string }) => {
+    POST: async (content: { posId: number }) => {
         const pos = await prisma.posDevice.findFirst({
             where: {
                 id: content.posId,

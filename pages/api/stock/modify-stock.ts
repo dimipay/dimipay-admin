@@ -11,10 +11,11 @@ const actions = {
     }) => {
         const product = await prisma.product.findFirst({
             where: {
-                id: content.productId,
+                id: content.productId
             },
             select: {
                 purchaseCost: true,
+                systemId: true
             },
         })
 
@@ -27,11 +28,7 @@ const actions = {
                 delta: content.delta,
                 type: content.delta > 0 ? "INCOME" : "OUTCOME",
                 message: content.message,
-                product: {
-                    connect: {
-                        id: content.productId,
-                    },
-                },
+                productSid: product.systemId,
                 unitCost: product.purchaseCost,
             },
         })

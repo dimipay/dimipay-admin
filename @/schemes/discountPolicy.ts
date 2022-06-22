@@ -25,12 +25,11 @@ export const DISCOUNT_POLICY: Scheme = {
             },
             required: false,
         },
-        relatedEvent: {
+        Event: {
             displayName: "연계 이벤트",
             typeOption: {
                 type: "relation-single",
                 target: SLUG.event,
-
                 displayNameField: "title",
             },
         },

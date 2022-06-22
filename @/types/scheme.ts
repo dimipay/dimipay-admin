@@ -18,7 +18,7 @@ export enum SLUG {
 export interface Relation {
     slug: string
     target: {
-        id: string
+        id: number
         displayName: string
         color?: string
     }[]
@@ -141,7 +141,7 @@ export interface SchemeGroup {
 }
 
 export type TableRecord = Record<string, DataValue> & {
-    id: string
+    id: number
     createdAt: Date
     updatedAt: Date
 }

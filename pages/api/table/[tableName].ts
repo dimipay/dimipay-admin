@@ -69,7 +69,7 @@ const actions = {
             filter?: Filter[]
             sort?: Sort[]
             amount: number
-            lastId?: string
+            lastId?: number
         },
         slug: {
             tableName: string
@@ -212,7 +212,7 @@ const actions = {
     },
     async PATCH(
         props: {
-            id: string
+            id: number
             data: Omit<TableRecord, "id">
         },
         slug: {
@@ -270,7 +270,7 @@ const actions = {
         return res
     },
     async DELETE(
-        props: { ids: string[] },
+        props: { ids: number[] },
         {
             tableName,
         }: {

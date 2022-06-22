@@ -1,10 +1,6 @@
 // Input으로 들어온 값을 Prisma로 저장할 수 있게 형식을 변환하는 함수
-
-import { TEXT_INPUT_COMPATIBLE_TYPES } from "@/components"
 import { TABLES } from "@/constants"
 import { table } from "@/functions"
-import { FilterItem } from "@/functions/useFilter/partial"
-import { prisma } from "@/storage"
 
 import {
     DataValue,
@@ -51,13 +47,13 @@ export const convertToStorageType = (
 
         const typedKey =
             typeof relationTargetKey === "string" &&
-            relationTargetKey?.match(/[A-z-]/)
+                relationTargetKey?.match(/[A-z-]/)
                 ? relationTargetKey
                 : +relationTargetKey
 
-        if (field.typeOption.flattenField) {
-            return [field.typeOption.flattenField, typedKey]
-        }
+        // if (field.typeOption.flattenField) {
+        //     return [field.typeOption.flattenField, typedKey]
+        // }
 
         return [
             undefined,
@@ -95,9 +91,9 @@ export const convertToStorageType = (
 
         const typedIds = isUUIDPk ? keys : keys.map((data) => +data)
 
-        if (field.typeOption.flattenField) {
-            return [field.typeOption.flattenField, typedIds]
-        }
+        // if (field.typeOption.flattenField) {
+        //     return [field.typeOption.flattenField, typedIds]
+        // }
 
         return [
             undefined,
@@ -133,10 +129,10 @@ export const storedDataToEditableValue = (
                             key,
                             value
                                 ? new Date(
-                                      3240 * 10000 + +new Date(value.toString())
-                                  )
-                                      .toISOString()
-                                      .slice(0, -1)
+                                    3240 * 10000 + +new Date(value.toString())
+                                )
+                                    .toISOString()
+                                    .slice(0, -1)
                                 : undefined,
                         ]
                     }

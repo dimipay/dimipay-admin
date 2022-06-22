@@ -1,8 +1,18 @@
+// import { prisma } from "@/storage"
 import { Scheme, SLUG } from "@/types"
 import bcrypt from "bcryptjs"
 
 import { RECORD_BASE_FIELDS } from "../common"
 import { ResetPassword } from "./ResetPassword"
+
+// prisma.adminAccount.update({
+//     where: {
+//         id: 0,
+//     },
+//     data: {
+//         relatedUserSid: "",
+//     },
+// })
 
 export const ADMIN_ACCOUNT_SCHEME: Scheme = {
     displayName: "관리자 계정",
@@ -22,7 +32,7 @@ export const ADMIN_ACCOUNT_SCHEME: Scheme = {
                 type: "relation-single",
                 displayNameField: "name",
                 target: SLUG.user,
-                flattenField: "relatedUserId",
+                flattenField: "relatedUserSid",
             },
             displayName: "연결된 사용자",
             required: false,

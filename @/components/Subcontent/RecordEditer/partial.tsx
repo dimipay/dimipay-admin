@@ -118,11 +118,10 @@ export const PropertyEditer: React.FC<{
                             })
                         ).map((row) => ({
                             label: row[option.displayNameField] as string,
-                            key: row.id as string,
+                            key: row.id,
                             color: row.color as string,
                         }))
 
-                        console.log("Retrieved", relationData)
                         return relationData
                     }}
                     {...commonProps}

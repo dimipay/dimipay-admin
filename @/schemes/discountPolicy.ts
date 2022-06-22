@@ -15,12 +15,17 @@ export const DISCOUNT_POLICY: Scheme = {
             },
             required: false,
             description: "최소 1%부터 99%까지 설정할 수 있습니다",
+            validateFunc(_data) {
+                if (_data === '' || _data === undefined) return true
+                const data = +(_data as string)
+                if (data >= 1 && data <= 99) return true
+                return "할인율은 1%부터 99%까지 설정할 수 있습니다"
+            }
         },
         fixedPrice: {
             displayName: "정가 할인",
             typeOption: {
                 type: "number",
-                default: 0,
                 suffix: "원",
             },
             required: false,

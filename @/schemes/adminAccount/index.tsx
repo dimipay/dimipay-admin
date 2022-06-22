@@ -41,13 +41,22 @@ export const ADMIN_ACCOUNT_SCHEME: Scheme = {
             displayName: "비밀번호",
             required: true,
             invisibleInTable: true,
-            readOnly: true,
+            autoGenerative: true,
             typeOption: {
                 type: "password",
             },
-            saveWithComputed(password) {
-                return bcrypt.hashSync(password as string, 10)
+            async saveWithComputed(password) {
+                const hash = bcrypt.hashSync(password as string, 10)
+                console.log("SHIT", hash)
+                return hash
             },
+            async autoGenerate(record) {
+                const hash = bcrypt.hashSync(record.username as string, 10)
+                console.log("SHIT, ", hash)
+                return hash
+            },
+            description:
+                "초기 비밀번호는 아이디와 동일합니다. 계정 생성 후에 꼭 수정해주세요.",
         },
     },
     panelComponents: [ResetPassword],

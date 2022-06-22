@@ -45,7 +45,6 @@ export const StatisticsRenderer: React.FC<{
             const computeResult = await props.cardInfo.computedField(
                 props.statistics
             )
-            console.log("왔는데요..", computeResult)
             setData(() => computeResult)
         })()
     }, [props.statistics])

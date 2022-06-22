@@ -7,6 +7,8 @@ import {
     EVENT,
     PAYMENT_METHOD_SCHEME,
     TRANSACTION_SCHEME,
+    PRODUCT_IN_OUT_LOG_SCHEME,
+    STORE_PRODUCTS
 } from "./schemes"
 import { ADMIN_ACCOUNT_SCHEME } from "./schemes/adminAccount"
 import { SchemeGroup, Statistics, StatisticsCard } from "./types"
@@ -33,6 +35,9 @@ export const GROUPED_TABLES: SchemeGroup[] = [
             CATEGORY_SCHEME,
             DISCOUNT_POLICY,
             EVENT,
+            PRODUCT_IN_OUT_LOG_SCHEME,
+            STORE_PRODUCTS
+
         ],
     },
     {
@@ -92,8 +97,8 @@ export const STATISTICS: {
             label: "상품",
             items: [
                 {
-                    name: "많이 팔린 상품",
-                    id: "highSales3",
+                    name: "7일간 많이 팔린 상품",
+                    id: "highSales3RecentWeek",
                     type: "list",
                 },
 

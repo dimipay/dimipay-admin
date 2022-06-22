@@ -1,10 +1,11 @@
 import { Important, PageHeader } from "@/typo"
 import { Button, Input } from "@/components"
 import { Vexile } from "@haechi/flexile"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { createPasscode, useTimer } from "@/functions"
 import { PanelComponent } from "@/types"
 import { toast } from "react-toastify"
+import { PosDevice } from "@prisma/client"
 
 export const CreatePasscode: PanelComponent = ({ record }) => {
     const [passcode, setPasscode] = useState<string>()
@@ -12,13 +13,17 @@ export const CreatePasscode: PanelComponent = ({ record }) => {
 
     const loadPasscode = async () => {
         const loadedPasscode = await createPasscode({
-            posId: record.id,
+            posId: (record as PosDevice).systemId,
         })
 
         toast.success(`생성된 OTP를 결제 단말기에 입력해주세요`)
 
         setPasscode(loadedPasscode.passcode)
     }
+
+    useEffect(() => {
+        setPasscode(undefined)
+    }, [timer.isEnded])
 
     return (
         <Vexile gap={4}>
@@ -27,7 +32,7 @@ export const CreatePasscode: PanelComponent = ({ record }) => {
                 <Vexile gap={2}>
                     <Input
                         disabled
-                        name="인증번호"
+                        label="인증번호"
                         placeholder=""
                         value={passcode}
                     />

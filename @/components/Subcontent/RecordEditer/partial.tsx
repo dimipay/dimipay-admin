@@ -1,20 +1,62 @@
-import { DateInput, Input, Dropdown } from "@/components"
+import { Input, Dropdown } from "@/components"
 import { TEXT_INPUT_COMPATIBLE_TYPES } from "@/components/Input"
-import { table, useConsole } from "@/functions"
-import { DataValue, Field, Relation, SingleRelationField } from "@/types"
-import { Description, Regular, Token } from "@/typo"
+import { table } from "@/functions"
+import {
+    DataValue,
+    Field,
+    Option,
+    Relation,
+    SingleRelationField,
+} from "@/types"
+import { Description, Regular } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
-import React from "react"
-import { FieldError, UseFormRegisterReturn } from "react-hook-form"
+import React, { ChangeEventHandler, FocusEventHandler, useMemo } from "react"
+
+export interface FormikHandlers {
+    onChange: ChangeEventHandler<HTMLInputElement>
+    onBlur: FocusEventHandler<any>
+}
+
+export type SetFieldValueFunction = (field: string, value: any) => any
+
+const createRelationOptionRetriever =
+    (field: Field) => async (keyword?: string) => {
+        const option = field.typeOption as SingleRelationField
+
+        const relationData = (
+            await table[option.target].GET({
+                amount: 5,
+                filter: keyword
+                    ? [[option.displayNameField, "contains", keyword]]
+                    : undefined,
+            })
+        ).map((row) => ({
+            label: row[option.displayNameField] as string,
+            key: row.id,
+            color: row.color as string,
+        }))
+
+        return relationData
+    }
 
 export const PropertyEditer: React.FC<{
     field: Field
     data?: DataValue
-    hooker: UseFormRegisterReturn
-    error?: FieldError
+    error?: string
     newRegister?: boolean
+    handlers: FormikHandlers
+    name: string
+    setFieldValue?: SetFieldValueFunction
+    value?: DataValue
 }> = (props) => {
     const dataType = props.field.typeOption.type
+
+    const cachedRelationOptionRetriever = useMemo(() => {
+        if (dataType.startsWith("relation")) {
+            return createRelationOptionRetriever(props.field)
+        }
+        return undefined
+    }, [dataType])
 
     const placeholder = props.field.autoGenerative
         ? "자동으로 설정됩니다"
@@ -25,14 +67,15 @@ export const PropertyEditer: React.FC<{
         (props.newRegister && props.field.autoGenerative) ||
         (!props.newRegister && props.field.readOnly)
 
-    useConsole("FIELD_ERROR", props.error?.message)
-
     const commonProps = {
-        hooker: props.hooker,
-        name: props.field.displayName,
-        error: props.error?.message,
+        name: props.name,
+        label: props.field.displayName,
+        error: props.error,
         disabled,
         placeholder,
+        setFieldValue: props.setFieldValue,
+        value: props.value,
+        ...props.handlers,
     }
 
     if (
@@ -42,6 +85,7 @@ export const PropertyEditer: React.FC<{
             <Vexile gap={1}>
                 <Input
                     {...commonProps}
+                    value={props.value?.toString()}
                     defaultValue={props.data as string}
                     type={
                         dataType as typeof TEXT_INPUT_COMPATIBLE_TYPES[number]
@@ -59,8 +103,8 @@ export const PropertyEditer: React.FC<{
             <Vexile gap={1}>
                 <Dropdown
                     options={props.field.typeOption.options}
-                    selected={[]}
                     {...commonProps}
+                    value={[]}
                     placeholder={
                         props.field.placeholder ||
                         props.field.displayName.을를 + " 선택해주세요"
@@ -78,7 +122,7 @@ export const PropertyEditer: React.FC<{
         return (
             <Hexile gap={2} x="space">
                 <Regular>{props.field.displayName}</Regular>
-                <input type="checkbox" {...props.hooker} />
+                <input type="checkbox" />
                 {props.field.description && (
                     <Description>{props.field.description}</Description>
                 )}
@@ -90,41 +134,12 @@ export const PropertyEditer: React.FC<{
         return (
             <Vexile gap={1}>
                 <Dropdown
-                    selected={(props.data as Relation | undefined)?.target.map(
-                        (e) => ({
-                            key: e.id,
-                            label: e.displayName,
-                        })
-                    )}
                     maxSelectAmount={
                         dataType === "relation-multiple" ? undefined : 1
                     }
-                    optionsRetriever={async (keyword) => {
-                        const option = props.field
-                            .typeOption as SingleRelationField
-
-                        const relationData = (
-                            await table[option.target].GET({
-                                amount: 5,
-                                filter: keyword
-                                    ? [
-                                          [
-                                              option.displayNameField,
-                                              "contains",
-                                              keyword,
-                                          ],
-                                      ]
-                                    : undefined,
-                            })
-                        ).map((row) => ({
-                            label: row[option.displayNameField] as string,
-                            key: row.id,
-                            color: row.color as string,
-                        }))
-
-                        return relationData
-                    }}
                     {...commonProps}
+                    value={(props.value as unknown as Option[]) || []}
+                    optionsRetriever={cachedRelationOptionRetriever}
                     placeholder={props.field.displayName.을를 + " 선택해주세요"}
                 />
                 {props.field.description && (

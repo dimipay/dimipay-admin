@@ -12,7 +12,7 @@ export const DELETE_SELECTED_RECORDS_ACTION: ToolbarAction = {
         const ids = selectedRecords.map((e) => e.id)
         const res = await table[scheme.tableName].DELETE({ ids })
         toast.success(
-            `${(selectedRecords as unknown as Product[]).map(e => e.name).join(", ").이가
+            `${(selectedRecords as unknown as Product[]).map(e => e?.name || (e?.id + "번")).join(", ").이가
             } 삭제되었습니다`,
         )
     },

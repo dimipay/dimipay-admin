@@ -1,4 +1,4 @@
-import { redisKey } from "@/functions"
+import { REDIS_HASHMAPS } from "@/functions"
 import { loadRedis, prisma } from "@/storage"
 import { HandlerError } from "@/types"
 import { endpoint } from ".."
@@ -34,7 +34,13 @@ const actions = {
         })
 
         const redis = await loadRedis()
-        await redis.incrBy(redisKey.stock(content.productId), content.delta)
+
+        redis.hIncrBy(
+            REDIS_HASHMAPS.product_stock,
+            product.systemId,
+            content.delta
+        )
+
 
         return result
     },

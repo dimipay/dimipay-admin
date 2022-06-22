@@ -1,8 +1,7 @@
 import { Button, DividerLine, InlineForm } from "@/components"
 import { Scheme, TableRecord } from "@/types"
-import { FieldError } from "react-hook-form"
 import { Vexile } from "@haechi/flexile"
-import { Fragment } from "react"
+import { Fragment, useEffect } from "react"
 
 import { PropertyEditer } from "./partial"
 import { Important } from "@/typo"
@@ -13,25 +12,23 @@ export const RecordEditer: React.FC<{
     data?: TableRecord
     onReloadRequested?(): void
 }> = (props) => {
-    const logics = useLogic(props)
+    const formik = useLogic(props)
 
     return (
-        <InlineForm onSubmit={logics.onSubmit}>
+        <InlineForm onSubmit={formik.handleSubmit}>
             <Vexile gap={4}>
-                {Object.entries(props.scheme.fields).map(([key, value]) => (
+                {Object.entries(props.scheme.fields).map(([key]) => (
                     <PropertyEditer
-                        hooker={logics.register(key, {
-                            validate: value.validateFunc,
-                            required: !value.autoGenerative && value.required,
-                        })}
-                        data={
-                            value.typeOption.type.startsWith("relation")
-                                ? props.data?.[key]
-                                : undefined
-                        }
-                        newRegister={!props.data}
-                        error={logics.errors[key] as FieldError}
+                        key={key}
+                        name={key}
+                        handlers={{
+                            onBlur: formik.handleBlur,
+                            onChange: formik.handleChange,
+                        }}
                         field={props.scheme.fields[key]}
+                        error={formik.errors[key]}
+                        setFieldValue={formik.setFieldValue}
+                        value={formik.values[key]}
                     />
                 ))}
                 <Button type="submit" block>

@@ -2,8 +2,8 @@ import { numberInputIcon } from "@/assets"
 import { Description, Regular, Token } from "@/typo"
 import { Hexile } from "@haechi/flexile"
 import { useState } from "react"
-import { UseFormRegisterReturn } from "react-hook-form"
 import { LoadSVG } from ".."
+import { FormikHandlers } from "../Subcontent/RecordEditer/partial"
 import { InputWraper, LogicalInput } from "./style"
 
 const TYPE_ICON_MAP: Record<string, string> = {
@@ -18,23 +18,27 @@ export const TEXT_INPUT_COMPATIBLE_TYPES = [
     "color",
 ] as const
 
-export const Input: React.FC<{
-    placeholder: string
-    name: string
-    error?: string
-    value?: string
-    disabled?: boolean
-    hideContent?: boolean
-    defaultValue?: string
-    hooker?: UseFormRegisterReturn
-    type?: typeof TEXT_INPUT_COMPATIBLE_TYPES[number]
-}> = (props) => {
+export const Input: React.FC<
+    {
+        placeholder: string
+        label: string
+        error?: string
+        value?: string
+        disabled?: boolean
+        hideContent?: boolean
+        defaultValue?: string
+        type?: typeof TEXT_INPUT_COMPATIBLE_TYPES[number]
+        name?: string
+    } & Partial<FormikHandlers>
+> = (props) => {
     const commonProps = {
         disabled: props.disabled,
         defaultValue: props.defaultValue,
         placeholder: props.placeholder,
         value: props.value,
-        ...props.hooker,
+        onChange: props.onChange,
+        onBlur: props.onBlur,
+        name: props.name,
         ...(props.hideContent && {
             type: "password",
         }),
@@ -58,7 +62,7 @@ export const Input: React.FC<{
                             alt="입력창 아이콘"
                         />
                     )}
-                    <Token>{props.name}</Token>
+                    <Token>{props.label}</Token>
                 </Hexile>
                 {
                     {
@@ -91,7 +95,6 @@ export const Input: React.FC<{
                                     type="color"
                                     colorchip
                                     onChange={(e) => {
-                                        props.hooker?.onChange(e)
                                         setColor(e.currentTarget.value)
                                     }}
                                 />

@@ -13,6 +13,8 @@ export enum SLUG {
     adminAccount = "adminAccount",
     paymentMethod = "paymentMethod",
     transaction = "transaction",
+    productInOutLog = "productInOutLog",
+    storeProducts = "storeProducts",
 }
 
 export interface Relation {
@@ -73,6 +75,7 @@ export interface Field {
     description?: string
     computed?(value: DataValue): string
     autoGenerative?: boolean
+    autoGenerate?: (record: Omit<TableRecord, "id">) => DataValue | Promise<DataValue>
     readOnly?: boolean
     typeOption: (
         | MultipleSelectField

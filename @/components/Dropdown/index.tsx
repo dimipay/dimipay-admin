@@ -1,4 +1,3 @@
-import { UseFormRegisterReturn } from "react-hook-form"
 import React, { useEffect, useState } from "react"
 
 import { clickWithSpace } from "@/functions"
@@ -10,44 +9,30 @@ import { SelectableList } from "./partial"
 import { searchIcon } from "@/assets"
 import { LoadSVG } from "../LoadSVG"
 import { toast } from "react-toastify"
+import { SetFieldValueFunction } from "../Subcontent/RecordEditer/partial"
 
 export const Dropdown: React.FC<{
     options?: Option[]
     optionsRetriever?: (query?: string) => Promise<Option[]>
-    selected?: Option[]
+    value: Option[]
     name: string
+    label: string
     placeholder: string
-    hooker: UseFormRegisterReturn
     displayMap?: Record<string | number, string>
     error?: string
     disabled?: boolean
     maxSelectAmount?: number
+    setFieldValue?: SetFieldValueFunction
 }> = (props) => {
-    const [logicalValue, setLogicalValue] = useState<Option[]>(
-        props.selected || []
-    )
     const [loadedOptions, setLoadedOptions] = useState<Option[]>(
         props.options || []
     )
-
     const [searchQuery, setSearchQuery] = useState<string>()
     const [opened, setOpened] = useState(false)
 
-    const logicalSelect = React.useRef<HTMLSelectElement | null>(null)
-
     useEffect(() => {
-        if (logicalSelect.current) {
-            props.hooker.onChange({
-                target: logicalSelect.current,
-                type: "change",
-            })
-        }
-    }, [props.hooker, logicalValue])
-
-    useEffect(() => {
-        if (props.error && logicalSelect.current?.parentElement)
-            logicalSelect.current.parentElement.focus()
-    }, [props.error, logicalSelect])
+        console.log("이게 옴", props.name, props.value)
+    }, [props.value])
 
     useEffect(() => {
         if (props.optionsRetriever) {
@@ -55,7 +40,7 @@ export const Dropdown: React.FC<{
                 setLoadedOptions(options)
             })
         }
-    }, [props.optionsRetriever, searchQuery])
+    }, [searchQuery])
 
     return (
         <label>
@@ -75,32 +60,16 @@ export const Dropdown: React.FC<{
                 tabIndex={props.disabled ? -1 : 0}
                 disabled={!!props.disabled}
             >
-                <select
-                    style={{ display: "none" }}
-                    name={props.hooker.name}
-                    ref={(ref) => {
-                        if (!ref) return
-                        logicalSelect.current = ref
-                        props.hooker.ref(ref)
-                    }}
-                    multiple
-                >
-                    {logicalValue.map((e) => (
-                        <option selected key={e.key} value={e.key || e.label}>
-                            {e.label || e.key}
-                        </option>
-                    ))}
-                </select>
                 <DataView
                     gap={1.5}
                     padding={3}
                     hasError={!!props.error}
                     disabled={!!props.disabled}
                 >
-                    <Token>{props.name}</Token>
-                    <Regular dark={logicalValue.length ? 1 : 3}>
-                        {logicalValue.length
-                            ? logicalValue
+                    <Token>{props.label}</Token>
+                    <Regular dark={props.value && props.value.length ? 1 : 3}>
+                        {props.value?.length
+                            ? props.value
                                   .map((e) => e.label || e.key)
                                   .join(", ")
                             : props.placeholder}
@@ -127,17 +96,18 @@ export const Dropdown: React.FC<{
                         <SelectableList
                             options={loadedOptions}
                             itemLabelMap={props.displayMap}
-                            selectedOptions={logicalValue}
+                            selectedOptions={props.value}
                             onItemSelected={(option) => {
                                 if (
-                                    logicalValue.some(
+                                    props.value?.some(
                                         (e) =>
                                             e.key === option.key ||
                                             e.label === option.label
                                     )
                                 ) {
-                                    setLogicalValue((prev) =>
-                                        prev.filter(
+                                    props.setFieldValue?.(
+                                        props.name,
+                                        props.value.filter(
                                             (v) =>
                                                 !(
                                                     v.key === option.key ||
@@ -148,15 +118,15 @@ export const Dropdown: React.FC<{
                                 } else {
                                     if (
                                         props.maxSelectAmount ===
-                                        logicalValue.length
+                                        props.value?.length
                                     ) {
                                         toast(
-                                            `${props.name.은는} 최대 ${props.maxSelectAmount}개 까지 선택할 수 있어요`
+                                            `${props.label.은는} 최대 ${props.maxSelectAmount}개 까지 선택할 수 있어요`
                                         )
                                         return
                                     }
-                                    setLogicalValue((prev) => [
-                                        ...prev,
+                                    props.setFieldValue?.(props.name, [
+                                        ...props.value,
                                         {
                                             key: option.key,
                                             label: option.label,

@@ -16,29 +16,44 @@ import { endpoint } from ".."
 
 const generalizeFormData = async (
     data: Omit<TableRecord, "id">,
-    scheme: Scheme
+    scheme: Scheme,
+    isNew: boolean = false,
 ) => {
-    return Object.fromEntries(
-        await Promise.all(
-            Object.entries(data).map(async ([key, value]) => {
-                const field: Field = scheme.fields[key]
-                if (!field || !value) return [key, value]
-                const typedValue =
-                    field.typeOption.type === "date"
-                        ? new Date(value.toString())
-                        : value
+    return {
+        ...Object.fromEntries(
+            await Promise.all(
+                Object.entries(data).map(async ([key, value]) => {
+                    const field: Field = scheme.fields[key]
+                    if ((!value && !field) || !field) {
+                        return [key, value]
+                    }
 
-                if (value === "") return [key, undefined]
+                    if (!value) return [key, value]
 
-                return [
-                    key,
-                    field.saveWithComputed
-                        ? await field.saveWithComputed(typedValue)
-                        : typedValue,
-                ]
-            })
-        )
-    )
+                    const typedValue =
+                        field.typeOption.type === "date"
+                            ? new Date(value.toString())
+                            : value
+
+                    if (value === "") return [key, undefined]
+
+                    console.log(typedValue)
+
+                    return [
+                        key,
+                        field.saveWithComputed
+                            ? await field.saveWithComputed(typedValue)
+                            : typedValue,
+                    ]
+                })
+            ),
+        ),
+        ...(isNew && Object.fromEntries(await Promise.all(Object.entries(
+            scheme.fields
+        ).filter(([key, value]) => value.autoGenerate && value.autoGenerate).map(async ([key, value]) => {
+            return [key, await value.autoGenerate!(data)]
+        })))),
+    }
 }
 
 const filtersToPrismaWhereOption = (filters: Filter[]) => {
@@ -256,6 +271,7 @@ const actions = {
                 )
         }
 
+        console.log("아니근데이게", props.data)
         const data = await generalizeFormData(props.data, table)
 
         const res: TableRecord = await (prisma[table.tableName].update as any)({
@@ -334,7 +350,8 @@ const actions = {
                 404
             )
 
-        const data = await generalizeFormData(props.data, table)
+        const data = await generalizeFormData(props.data, table, true)
+        console.log(data)
 
         const res: TableRecord = await (prisma[table.tableName] as any).create({
             data,

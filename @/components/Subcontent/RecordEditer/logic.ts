@@ -9,14 +9,15 @@ import {
     Scheme,
     Relation,
     Field,
+    Option,
 } from "@/types"
+import { useFormik } from "formik"
 import { useEffect } from "react"
-import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "react-toastify"
 
 export const convertToStorageType = (
     field: Field,
-    value: DataValue,
+    value: DataValue | Option[],
     isUpdate: boolean = false
 ): [string | undefined, unknown | undefined] => {
     if (field.typeOption.type === "number") return [undefined, Number(value)]
@@ -37,29 +38,15 @@ export const convertToStorageType = (
                 },
             ]
 
-        const relationTargetKey = (value as string[] | number[])[0]
-        const relationTargetScheme = TABLES.find(
-            (e) =>
-                e.tableName === (field.typeOption as SingleRelationField).target
-        )
+        console.log("값은...", value)
 
-        if (!relationTargetScheme) return [undefined, undefined]
-
-        const typedKey =
-            typeof relationTargetKey === "string" &&
-                relationTargetKey?.match(/[A-z-]/)
-                ? relationTargetKey
-                : +relationTargetKey
-
-        // if (field.typeOption.flattenField) {
-        //     return [field.typeOption.flattenField, typedKey]
-        // }
+        const relationTargetKey = (value as unknown as Option[])[0]
 
         return [
             undefined,
             {
                 connect: {
-                    id: typedKey,
+                    id: relationTargetKey.key || relationTargetKey.label,
                 },
             },
         ]
@@ -73,7 +60,7 @@ export const convertToStorageType = (
 
         if (!relationTargetScheme) return [undefined, undefined]
 
-        const keys = value as string[]
+        const keys = value as unknown as Option[]
 
         const relationConnectKey = isUpdate ? "set" : "connect"
 
@@ -85,11 +72,11 @@ export const convertToStorageType = (
                 },
             ]
 
-        const isUUIDPk =
-            relationTargetScheme.isUUIDPk ||
-            keys.some((data) => data.match(/[A-z]/))
+        // const isUUIDPk =
+        //     relationTargetScheme.isUUIDPk ||
+        //     keys.some((data) => data.match(/[A-z]/))
 
-        const typedIds = isUUIDPk ? keys : keys.map((data) => +data)
+        const typedIds = keys.map((data) => +(data.key || data.label))
 
         // if (field.typeOption.flattenField) {
         //     return [field.typeOption.flattenField, typedIds]
@@ -113,7 +100,7 @@ export const storedDataToEditableValue = (
     data: TableRecord,
     scheme: Scheme
 ) => {
-    return {
+    const sanitized = {
         ...data,
         ...Object.fromEntries(
             Object.entries(data)
@@ -142,9 +129,13 @@ export const storedDataToEditableValue = (
                             "relation"
                         )
                     ) {
+
                         return [
                             key,
-                            (value as Relation)?.target.map((e) => e.id),
+                            (value as Relation)?.target.map(e => ({
+                                key: e.id,
+                                label: e.displayName
+                            })),
                         ]
                     }
 
@@ -154,6 +145,10 @@ export const storedDataToEditableValue = (
                 .filter(Boolean)
         ),
     }
+
+    console.log("Sanitized", sanitized)
+
+    return sanitized
 }
 
 export const useLogic = (props: {
@@ -161,76 +156,83 @@ export const useLogic = (props: {
     data?: TableRecord
     onReloadRequested?(): void
 }) => {
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        formState: { errors },
-    } = useForm<TableRecord>({
-        defaultValues:
-            props.data && storedDataToEditableValue(props.data, props.scheme),
-        reValidateMode: "onChange",
+    const formik = useFormik<Partial<TableRecord>>({
+        initialValues: props.data ? storedDataToEditableValue(props.data, props.scheme) : {},
+        validateOnChange: true,
+        enableReinitialize: true,
+        async validate(data) {
+            const errors: Record<string, string> = {}
+
+            for (const key in data) {
+
+                if (!(key in props.scheme.fields)) continue
+                const validator = props.scheme.fields[key].validateFunc
+
+                if (validator) {
+                    const error = await validator(data[key])
+                    if (typeof error === "string") errors[key] = error
+                }
+            }
+
+            return errors
+        },
+        onSubmit: async (data) => {
+            const generalizedData = Object.fromEntries(
+                Object.entries(data)
+                    .filter(
+                        ([key, value]) =>
+                            key in props.scheme.fields &&
+                            !props.scheme.fields[key].autoGenerative &&
+                            !(value === undefined || value === null)
+                    )
+                    .map(([key, value]) => {
+                        const field: Field = props.scheme.fields[key]
+                        if (props.data && field.readOnly)
+                            return [undefined, undefined]
+                        const [typedKey = key, typedValue] = convertToStorageType(
+                            field,
+                            value,
+                            !!props.data
+                        )
+                        return [typedKey, typedValue]
+                    })
+                    .filter((e) => e[0])
+            )
+
+            if (props.data) {
+                const res = await table[props.scheme.tableName].PATCH({
+                    id: props.data.id,
+                    data: generalizedData,
+                })
+                if (res.id) {
+                    toast("바꾼 내용을 저장했어요", {
+                        type: "success",
+                    })
+                    props.onReloadRequested?.()
+                }
+            } else {
+                const res = await table[props.scheme.tableName].POST({
+                    data: generalizedData,
+                })
+                if (res.id) {
+                    toast("새 항목을 만들었어요", {
+                        type: "success",
+                    })
+                    props.onReloadRequested?.()
+                }
+            }
+            return true
+        }
     })
 
     useEffect(() => {
-        if (!props.data) return
-
-        const sanitized = storedDataToEditableValue(props.data, props.scheme)
-        for (const key in sanitized) {
-            setValue(key, sanitized[key])
-        }
-    }, [props.data])
-
-    const onSubmit: SubmitHandler<TableRecord> = async (data) => {
-        const generalizedData = Object.fromEntries(
-            Object.entries(data)
-                .filter(
-                    ([key, value]) =>
-                        key in props.scheme.fields &&
-                        !props.scheme.fields[key].autoGenerative &&
-                        !(value === undefined || value === null)
-                )
-                .map(([key, value]) => {
-                    const field: Field = props.scheme.fields[key]
-                    if (props.data && field.readOnly)
-                        return [undefined, undefined]
-                    const [typedKey = key, typedValue] = convertToStorageType(
-                        field,
-                        value,
-                        !!props.data
-                    )
-                    return [typedKey, typedValue]
-                })
-                .filter((e) => e[0])
+        console.log(
+            "Form value updated!",
+            formik.values
         )
-        if (props.data) {
-            const res = await table[props.scheme.tableName].PATCH({
-                id: props.data.id,
-                data: generalizedData,
-            })
-            if (res.id) {
-                toast("바꾼 내용을 저장했어요", {
-                    type: "success",
-                })
-                props.onReloadRequested?.()
-            }
-        } else {
-            const res = await table[props.scheme.tableName].POST({
-                data: generalizedData,
-            })
-            if (res.id) {
-                toast("새 항목을 만들었어요", {
-                    type: "success",
-                })
-                props.onReloadRequested?.()
-            }
-        }
-        return true
-    }
+    }, [
+        formik.values
+    ])
 
-    return {
-        register,
-        onSubmit: handleSubmit(onSubmit),
-        errors,
-    }
+    return formik
 }

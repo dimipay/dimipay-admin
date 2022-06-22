@@ -1,4 +1,3 @@
-import { SubmitHandler, useForm } from "react-hook-form"
 import { LoginWrapper } from "./style"
 
 import { Button, InlineForm, Input, LoadSVG } from "@/components"
@@ -10,26 +9,33 @@ import { login } from "@/functions"
 import { useRecoilState } from "recoil"
 import { userAtom } from "@/coil"
 import { useRouter } from "next/router"
+import { useFormik } from "formik"
 
 export const Login = () => {
-    const { register, handleSubmit } = useForm<AuthIdentification>()
     const setUser = useRecoilState(userAtom)[1]
     const router = useRouter()
 
-    const onSubmit: SubmitHandler<AuthIdentification> = async (data) => {
-        try {
-            const res = await login(data)
-            setUser(res)
-            router.replace("/dash")
-        } catch (e) {
-            if (e instanceof HandlerError) {
-                alert(e.message)
-            }
-        }
-    }
+    const { handleSubmit, handleBlur, handleChange, errors } =
+        useFormik<AuthIdentification>({
+            initialValues: {
+                username: "",
+                password: "",
+            },
+            async onSubmit(data) {
+                try {
+                    const res = await login(data)
+                    setUser(res)
+                    router.replace("/dash")
+                } catch (e) {
+                    if (e instanceof HandlerError) {
+                        alert(e.message)
+                    }
+                }
+            },
+        })
 
     return (
-        <InlineForm onSubmit={handleSubmit(onSubmit)}>
+        <InlineForm onSubmit={handleSubmit}>
             <Vexile fillx filly x="center" y="center">
                 <LoginWrapper padding={10} gap={6} x="center">
                     <LoadSVG
@@ -40,19 +46,26 @@ export const Login = () => {
                     />
                     <Vexile gap={4}>
                         <Input
-                            hooker={register("username")}
                             placeholder="아이디를 입력해주세요"
-                            name="아이디"
+                            label="아이디"
+                            name="username"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={errors.username}
                         />
                         <Input
-                            hooker={register("password")}
                             placeholder="비밀번호를 입력해주세요"
-                            name="비밀번호"
+                            label="비밀번호"
+                            type="password"
+                            name="password"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={errors.password}
                             hideContent
                         />
                     </Vexile>
                     <Description>계정 문의 : reactdev@kakao.com</Description>
-                    <Button big block>
+                    <Button big block type="submit">
                         <Important white>로그인</Important>
                     </Button>
                 </LoginWrapper>

@@ -4,10 +4,10 @@ import bcrypt from "bcryptjs"
 import { endpoint } from ".."
 
 const actions = {
-    POST: async (content: { posId: number }) => {
+    POST: async (content: { posId: string }) => {
         const pos = await prisma.posDevice.findFirst({
             where: {
-                id: content.posId,
+                systemId: content.posId,
             },
         })
         if (!pos)

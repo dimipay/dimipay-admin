@@ -205,9 +205,7 @@ export const useLogic = (props: {
                     data: generalizedData,
                 })
                 if (res.id) {
-                    toast("바꾼 내용을 저장했어요", {
-                        type: "success",
-                    })
+                    toast.success("바꾼 내용을 저장했어요")
                     props.onReloadRequested?.()
                 }
             } else {

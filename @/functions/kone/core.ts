@@ -50,9 +50,7 @@ export const kone =
                 return fetched
             } catch (e) {
                 if (HandlerError.isHandlerError(e)) {
-                    toast(e.message, {
-                        type: "error",
-                    })
+                    toast.info(e.message)
 
                     throw new Error(e.message)
                 } else {

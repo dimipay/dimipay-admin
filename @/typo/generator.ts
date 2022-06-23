@@ -46,6 +46,11 @@ export const createTypo = (props: {
                     textAlign: "center",
                 },
             },
+            monospace: {
+                true: {
+                    fontVariantNumeric: "tabular-nums",
+                }
+            },
             dark: Object.fromEntries(
                 [...Array(6)].map((_, i) => [
                     i,

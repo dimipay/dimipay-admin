@@ -3,7 +3,7 @@ import React, { forwardRef, useState } from "react"
 import { DividerLine, ModifyRecord } from ".."
 import { Important, Regular } from "@/typo"
 import { useSetRecoilState } from "recoil"
-import { Hexile } from "@haechi/flexile"
+import { Hexile, Vexile } from "@haechi/flexile"
 import { subContentAtom } from "@/coil"
 import { ColorBubble } from "../atoms"
 import {
@@ -65,6 +65,15 @@ const getFieldValue = (field: Field, value: DataValue) => {
                     )
                     .join(", ")}
             </Regular>
+        )
+    }
+
+    // console.log(value instanceof Number)
+    if (typeof value === "number") {
+        return (
+            <Vexile x="right">
+                <Regular monospace>{value.toLocaleString()}</Regular>
+            </Vexile>
         )
     }
 

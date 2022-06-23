@@ -120,7 +120,7 @@ export const Dropdown: React.FC<{
                                         props.maxSelectAmount ===
                                         props.value?.length
                                     ) {
-                                        toast(
+                                        toast.info(
                                             `${props.label.은는} 최대 ${props.maxSelectAmount}개 까지 선택할 수 있어요`
                                         )
                                         return

@@ -31,6 +31,16 @@ export const POS_DEVICE_SCHEME: Scheme = {
                 default: false,
             },
         },
+        systemId: {
+            displayName: "내부관리번호",
+            required: true,
+            typeOption: {
+                type: "string",
+            },
+            autoGenerative: true,
+            readOnly: true,
+            invisibleInTable: true,
+        }
     },
     panelComponents: [CreatePasscode],
     actions: [DELETE_SELECTED_RECORDS_ACTION],

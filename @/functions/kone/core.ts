@@ -37,6 +37,12 @@ export const kone =
                     body: method === "GET" ? undefined : JSON.stringify(data),
                 })
 
+                if (
+                    res.status === 401
+                ) {
+                    window.location.href = "/login"
+                }
+
                 const fetched = await res.json()
 
                 if (["4", "5"].includes(res.status.toString()[0])) throw fetched

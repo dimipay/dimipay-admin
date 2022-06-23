@@ -20,6 +20,10 @@ export const createJWT = (content: JsonObject) => {
 }
 
 export const verifyJWT = (token: string) => {
-    const content = jwt.verify(token, JWT_SECRET)
-    return content
+    try {
+        jwt.verify(token, JWT_SECRET)
+        return true
+    } catch (e) {
+        return false
+    }
 }

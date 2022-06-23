@@ -21,12 +21,17 @@ const actions = {
             const redis = await loadRedis()
             const regPasscodeHash = await redis.get(key.posRegistrationPasscode)
 
-            if (regPasscodeHash) {
-                throw new HandlerError(
-                    "등록중인 포스가 있어요, 잠깐만 기다려주세요",
-                    400
-                )
-            }
+            // if (regPasscodeHash) {
+            //     throw new HandlerError(
+            //         "등록중인 포스가 있어요, 잠깐만 기다려주세요",
+            //         400
+            //     )
+            // }
+
+            console.log(
+                content,
+                `${content.posId}:${await bcrypt.hash(randomKey, 10)}`
+            )
 
             await redis.set(
                 key.posRegistrationPasscode,

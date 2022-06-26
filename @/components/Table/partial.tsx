@@ -1,9 +1,15 @@
-import { TooltipWrapper, Cell, HeaderCell, SortArrow } from "./style"
+import {
+    TooltipWrapper,
+    Cell,
+    HeaderCell,
+    SortArrow,
+    HighlightableTableRow,
+} from "./style"
 import React, { forwardRef, useState } from "react"
 import { DividerLine, ModifyRecord } from ".."
 import { Important, Regular } from "@/typo"
-import { useSetRecoilState } from "recoil"
-import { subContentAtom } from "@/coil"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { selectedRowAtom, subContentAtom } from "@/coil"
 import { TableRecord } from "@/types"
 import { NeoScheme } from "@/schemes"
 
@@ -18,22 +24,24 @@ export const Row = forwardRef<
     }
 >(({ row, ...props }, ref) => {
     const setSubContent = useSetRecoilState(subContentAtom)
+    const [selectedRow, setSelectedRow] = useRecoilState(selectedRowAtom)
 
     return (
-        <tr
+        <HighlightableTableRow
             ref={ref}
-            onClick={() =>
+            elevated={selectedRow?.id === row.id}
+            onClick={() => {
+                setSelectedRow(row)
                 setSubContent({
                     element: (
                         <ModifyRecord
                             onReloadRequested={props.onReloadRequested}
-                            data={row}
                             scheme={props.scheme}
                         />
                     ),
                     name: props.scheme.name,
                 })
-            }
+            }}
         >
             <Cell>
                 <input
@@ -64,7 +72,7 @@ export const Row = forwardRef<
                         <Regular>{row[key]}</Regular>
                     </Cell>
                 ))}
-        </tr>
+        </HighlightableTableRow>
     )
 })
 

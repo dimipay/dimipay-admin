@@ -10,7 +10,6 @@ import {
     Filter,
     HandlerError,
     MultipleRelation,
-    RelationItem,
     SingleRelation,
     Sort,
     TableRecord,
@@ -66,12 +65,15 @@ const actions = {
             filter?: Filter[]
             sort?: Sort[]
             amount: number
-            lastId?: number
+            skip?: number
         },
         slug: {
             slug: string
         }
-    ): Promise<TableRecord[]> {
+    ): Promise<{
+        records: TableRecord[]
+        amount: number
+    }> {
         const _table = TABLES.find(
             (table) => table.slug === slug.slug
         )
@@ -109,10 +111,8 @@ const actions = {
                             }
                         )
                     },
-                    take: props.amount || 20,
-                    cursor: props.lastId && {
-                        id: props.lastId,
-                    },
+                    take: props.amount || 15,
+                    skip: props.skip || 0,
                     select: Object.keys(table.fields).reduce(
                         (acc, current) => ({
                             ...acc,
@@ -120,6 +120,20 @@ const actions = {
                         }),
                         {}
                     ),
+                })
+
+                const fullAmount: number = await (
+                    prisma[table.slug].count as any
+                )({
+                    orderBy: sort,
+                    where: {
+                        ...filter,
+                        ...(
+                            table.softDelete && {
+                                [SOFT_DELETE_FIELD_NAME]: false
+                            }
+                        )
+                    },
                 })
 
                 const relationConnectedRecords: TableRecord[] = res.map(
@@ -179,9 +193,10 @@ const actions = {
                     })
                 )
 
-                if (!table.computedFields) return relationConnectedRecords || []
-
-                console.log(table.computedFields)
+                if (!table.computedFields) return {
+                    records: relationConnectedRecords || [],
+                    amount: fullAmount,
+                }
 
                 const recordsIncludingComputedFields =
                     relationConnectedRecords.map(async (record) => ({
@@ -198,7 +213,10 @@ const actions = {
                         ),
                     }))
 
-                return (await Promise.all(recordsIncludingComputedFields)) || []
+                return {
+                    records: (await Promise.all(recordsIncludingComputedFields)) || [],
+                    amount: fullAmount,
+                }
             } catch (e) {
                 console.log(e)
                 throw e

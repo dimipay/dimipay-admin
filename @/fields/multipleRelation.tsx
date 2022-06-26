@@ -23,7 +23,7 @@ export const createRelationOptionRetriever =
                     ? [[nameField, "contains", keyword]]
                     : undefined,
             })
-        ).map((row) => ({
+        ).records.map((row) => ({
             label: row[nameField!] as string,
             key: row.id,
             color: row.color as string,

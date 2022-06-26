@@ -1,6 +1,7 @@
 import { AdminAccount } from "@prisma/client"
 import { atom, RecoilState } from "recoil"
 import { recoilPersist } from "recoil-persist"
+import { TableRecord } from "./types"
 
 export const LOCALSTORAGE_KEY = "PERSISTENCY"
 
@@ -23,6 +24,11 @@ export const subContentAtom = atom<{
 } | null>({
     default: null,
     key: "SUB_CONTENT",
+})
+
+export const selectedRowAtom = atom<TableRecord | null>({
+    default: null,
+    key: "SELECTED_ROW",
 })
 
 export const getAtom = <AtomType>(atom: RecoilState<AtomType>): AtomType => {

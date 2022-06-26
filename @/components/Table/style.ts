@@ -2,11 +2,30 @@ import { styled } from "@/stitches.config"
 import { Description } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
 
+export const HighlightableTableRow = styled('tr', {
+    animated: true,
+    variants: {
+        elevated: {
+            true: {
+                boxShadow: "rgba(0, 0, 0, 0.12) 0rem 0rem 0rem 1rem"
+            }
+        }
+    }
+})
+
 export const TableWrapper = styled(Vexile, {
     backgroundColor: "white",
     borderRadius: "2rem",
     border: "0.5rem solid $dark5",
     position: "relative",
+    animated: true,
+    variants: {
+        isLoading: {
+            true: {
+                opacity: 0.5,
+            }
+        }
+    }
 })
 
 export const TableContent = styled("table", {

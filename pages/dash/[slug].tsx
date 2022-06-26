@@ -10,9 +10,9 @@ import { addIcon, closeIcon, downloadIcon } from "@/assets"
 import { FilterItem } from "@/functions/useFilter/partial"
 import { Important, PageHeader } from "@/typo"
 import { table, useFilter } from "@/functions"
-import { Button, LoadSVG, Table } from "@/components"
+import { Button, LoadSVG, MiniInput, Table } from "@/components"
 import { SLUG, TableRecord } from "@/types"
-import { subContentAtom } from "@/coil"
+import { selectedRowAtom, subContentAtom } from "@/coil"
 import { TABLES } from "@/constants"
 
 import { MAIN_ACCENT } from "@/stitches.config"
@@ -22,18 +22,24 @@ import { Sidebar } from "./partial"
 const TableViewer: NextPage = () => {
     const slug = useRouter().query.slug as SLUG
     const [subcontent, setSubcontent] = useRecoilState(subContentAtom)
+    const setSelectedRow = useSetRecoilState(selectedRowAtom)
     const setSubContent = useSetRecoilState(subContentAtom)
 
     const scheme = useMemo(
         () => TABLES.find((table) => table.slug === SLUG[slug]),
         [slug]
     )
+
     const [sortField, setSortField] = useState<string | null>(
         scheme?.defaultSort?.field || null
     )
     const [sortDirection, setSortDirection] = useState<"123" | "321" | null>(
         scheme?.defaultSort?.order || null
     )
+    const [fullRecordAmount, setFullRecordAmount] = useState<number>()
+    const [currentCursor, setCurrentCursor] = useState<number>(0)
+    const [loading, setLoading] = useState(false)
+    const [pageSize] = useState(15)
 
     const {
         filter,
@@ -48,14 +54,15 @@ const TableViewer: NextPage = () => {
 
     const load = useCallback(() => {
         if (!scheme) return
+        setLoading(true)
 
         if (filterOptions.filterTargetTable !== scheme?.name) return
 
-        console.log(scheme)
         table[scheme.slug]
             .GET({
                 filter,
-                amount: 20,
+                amount: pageSize,
+                skip: currentCursor ? currentCursor : 0,
                 sort:
                     sortField && sortDirection
                         ? [
@@ -67,40 +74,11 @@ const TableViewer: NextPage = () => {
                         : undefined,
             })
             .then((e) => {
-                setRecords(e)
+                setRecords(e.records)
+                setFullRecordAmount(e.amount)
+                setLoading(false)
             })
-    }, [filter, scheme, sortField, sortDirection, filterOptions])
-
-    const loadMore = useCallback(async () => {
-        if (!records) return
-        if (records.length === 0) return
-        if (!scheme) return
-
-        const additionalRecords = await table[scheme.slug].GET({
-            filter,
-            amount: 40,
-            lastId: records[records.length - 1].id,
-            sort: sortField
-                ? [
-                      {
-                          field: sortField,
-                          order: "321",
-                      },
-                  ]
-                : undefined,
-        })
-
-        const merged = [
-            ...records,
-            ...additionalRecords.slice(
-                additionalRecords.findIndex(
-                    (e) => e.id === records[records.length - 1].id
-                ) + 1
-            ),
-        ]
-
-        setRecords(merged)
-    }, [setRecords, records, filter, scheme])
+    }, [filter, scheme, sortField, sortDirection, filterOptions, pageSize])
 
     useEffect(() => {
         setRecords(undefined)
@@ -110,7 +88,8 @@ const TableViewer: NextPage = () => {
 
     useEffect(() => {
         load()
-    }, [filter, sortField, sortDirection])
+        console.log(currentCursor)
+    }, [filter, sortField, sortDirection, currentCursor, pageSize])
 
     return (
         <Hexile fillx filly>
@@ -130,7 +109,7 @@ const TableViewer: NextPage = () => {
                                 <Important white>다운로드</Important>
                             </Button>
                             <Button
-                                onClick={() =>
+                                onClick={() => {
                                     setSubContent({
                                         element: (
                                             <NewRecord
@@ -140,7 +119,7 @@ const TableViewer: NextPage = () => {
                                         ),
                                         name: scheme.name + " 만들기",
                                     })
-                                }
+                                }}
                             >
                                 <LoadSVG
                                     src={addIcon}
@@ -154,11 +133,20 @@ const TableViewer: NextPage = () => {
                     </Hexile>
                     {records ? (
                         <Table
+                            isLoading={loading}
                             records={records}
                             scheme={scheme}
                             onReloadRequested={load}
                             addFilter={addFilter}
-                            onReachEnd={loadMore}
+                            enablePagination={
+                                !!(
+                                    fullRecordAmount &&
+                                    fullRecordAmount > pageSize
+                                )
+                            }
+                            nextPage={() => {
+                                setCurrentCursor((e) => e + pageSize)
+                            }}
                             setSort={(fieldName: string) => {
                                 if (sortField === fieldName) {
                                     if (sortDirection === "123") {
@@ -182,6 +170,37 @@ const TableViewer: NextPage = () => {
                         <Vexile fillx filly x="center" y="center">
                             <HashLoader color={MAIN_ACCENT} />
                         </Vexile>
+                    )}
+
+                    {fullRecordAmount !== undefined && (
+                        <Hexile fillx y="center" gap={2}>
+                            <Important
+                                color="dark3"
+                                onClick={() =>
+                                    setCurrentCursor((e) => e - pageSize)
+                                }
+                            >
+                                ←
+                            </Important>
+                            <MiniInput
+                                type="number"
+                                onChange={(e) => setCurrentCursor(+e)}
+                                value={currentCursor.toString()}
+                            />
+                            <Important color="dark3">/</Important>
+                            <Important color="dark3">
+                                {fullRecordAmount}
+                            </Important>
+
+                            <Important
+                                onClick={() =>
+                                    setCurrentCursor((e) => e + pageSize)
+                                }
+                                color="dark3"
+                            >
+                                →
+                            </Important>
+                        </Hexile>
                     )}
                     {/* dummy for space */}
                     {filterOpened && (
@@ -210,7 +229,10 @@ const TableViewer: NextPage = () => {
                             height={3}
                             width={3}
                             src={closeIcon}
-                            onClick={() => setSubcontent(null)}
+                            onClick={() => {
+                                setSelectedRow(null)
+                                setSubcontent(null)
+                            }}
                         />
                     </Hexile>
                     {subcontent.element}

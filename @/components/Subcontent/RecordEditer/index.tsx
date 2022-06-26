@@ -8,6 +8,8 @@ import { NeoScheme } from "@/schemes"
 import { table } from "@/functions"
 import { Important } from "@/typo"
 import { useLogic } from "./logic"
+import { useRecoilValue } from "recoil"
+import { selectedRowAtom } from "@/coil"
 
 export const RecordEditer: React.FC<{
     scheme: NeoScheme
@@ -50,10 +52,12 @@ export const RecordEditer: React.FC<{
 }
 
 export const ModifyRecord = (props: {
-    data: TableRecord
     scheme: NeoScheme
     onReloadRequested(): void
 }) => {
+    const selectedData = useRecoilValue(selectedRowAtom)
+    if (!selectedData) return <></>
+
     return (
         <>
             <RecordEditer
@@ -73,7 +77,7 @@ export const ModifyRecord = (props: {
                         )
 
                     const res = await table[props.scheme.slug].PATCH({
-                        id: props.data.id,
+                        id: selectedData.id,
                         data: generalizedData,
                     })
 
@@ -91,7 +95,7 @@ export const ModifyRecord = (props: {
                     <DividerLine />
                     <Component
                         scheme={props.scheme}
-                        record={props.data}
+                        record={selectedData}
                         reload={props.onReloadRequested}
                     />
                 </Fragment>

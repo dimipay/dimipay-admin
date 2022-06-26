@@ -1,32 +1,77 @@
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 
 import { TableRecord, ToolbarAction } from "@/types"
 import { Description, Important } from "@/typo"
 
 import { ActionToolbars, HeaderCell, TableContent, TableWrapper } from "./style"
 import { ActionableHeaderCell, Row } from "./partial"
-import { Button } from ".."
-import { Vexile } from "@haechi/flexile"
-import { useInView } from "react-intersection-observer"
+import { Button, DividerLine } from ".."
+import { Hexile, Vexile } from "@haechi/flexile"
 import { NeoScheme } from "@/schemes"
+import { useInView } from "react-intersection-observer"
 
 export const Table: React.FC<{
     scheme: NeoScheme
     records: TableRecord[]
     onReloadRequested(): void
     addFilter(key: string): void
-    onReachEnd(): void
     setSort?(key: string): void
     sortField?: string | null
     sortDirection?: "123" | "321" | null
+    nextPage?: () => void
+    isLoading?: boolean
+    enablePagination?: boolean
 }> = ({ records: data, ...props }) => {
     const [selectedRecordIds, setSelectedRecordIds] = React.useState<number[]>(
         []
     )
-    const [ref, inView] = useInView()
+
+    const [isReached, setIsReached] = useState<boolean>(false)
+
+    const { ref, inView } = useInView({
+        threshold: 0.03,
+    })
+
+    const scrollRef = React.useRef<HTMLDivElement | null>(null)
+    const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+
+    const onScroll = useCallback(
+        (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+            if (!props.enablePagination) return
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current)
+                console.log("풀었다")
+            }
+            const target = e.currentTarget as HTMLDivElement
+
+            scrollRef.current = target
+
+            const bottom =
+                target.scrollHeight - target.scrollTop - target.clientHeight
+
+            if (bottom === 0 && !isReached) {
+                console.log("걸었다")
+                timeoutRef.current = setTimeout(() => {
+                    setIsReached(true)
+                }, 100)
+            } else {
+                timeoutRef.current = setTimeout(() => {
+                    setIsReached(false)
+                }, 300)
+            }
+        },
+        [isReached, scrollRef, props]
+    )
 
     useEffect(() => {
-        if (inView) props.onReachEnd()
+        if (inView) {
+            console.log("inView Yeah!")
+            scrollRef.current?.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            })
+            props.nextPage?.()
+        }
     }, [inView])
 
     return (
@@ -37,10 +82,16 @@ export const Table: React.FC<{
                 flexDirection: "column",
                 overflow: "hidden",
             }}
-            ref={ref}
         >
             <Vexile gap={4} filly>
-                <TableWrapper fillx filly scrollx y="space">
+                <TableWrapper
+                    fillx
+                    filly
+                    scrollx
+                    y="space"
+                    onScroll={onScroll}
+                    isLoading={props.isLoading}
+                >
                     <TableContent>
                         <thead>
                             <tr>
@@ -88,10 +139,9 @@ export const Table: React.FC<{
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((row, index) => (
+                            {data.map((row) => (
                                 <Row
                                     key={row.id}
-                                    ref={index === data.length - 5 ? ref : null}
                                     selected={selectedRecordIds.includes(
                                         row.id
                                     )}
@@ -115,6 +165,24 @@ export const Table: React.FC<{
                             ))}
                         </tbody>
                     </TableContent>
+                    {props.enablePagination && (
+                        <>
+                            <DividerLine />
+                            <Hexile fillx x="center" padding={4}>
+                                <Important color="accent">
+                                    한 번 더 쓸어 내려서 다음 페이지
+                                </Important>
+                            </Hexile>
+                        </>
+                    )}
+                    {isReached && (
+                        <div
+                            ref={ref}
+                            style={{
+                                padding: "6rem",
+                            }}
+                        ></div>
+                    )}
                     {selectedRecordIds.length !== 0 && (
                         <ActionToolbars gap={2} padding={4}>
                             {props.scheme.selectActions?.length ? (

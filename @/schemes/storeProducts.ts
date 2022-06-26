@@ -1,75 +1,45 @@
-import { Scheme, SLUG } from "@/types";
-import { RECORD_BASE_FIELDS } from "./common";
+import { date } from "@/fields/date";
+import { multipleRelation } from "@/fields/multipleRelation";
+import { singleRelation } from "@/fields/singleRelation";
+import { text } from "@/fields/text";
+import { SLUG } from "@/types";
+import { NEO_RECORD_BASE_FIELDS } from "./common";
+import { NeoScheme } from "./user";
 
-// model StoreProducts {
-//     createdAt       DateTime          @default(now())
-//     updatedAt       DateTime          @default(now())
-//     id              Int               @id @default(autoincrement())
-//     systemId        String            @unique @default(dbgenerated("gen_random_uuid()"))
-//     totalCost       Int
-//     storeDate       DateTime          @default(now())
-//     title           String            @unique
-//     workerSid       String
-//     AdminAccount    AdminAccount      @relation(fields: [workerSid], references: [systemId])
-//     ProductInOutLog ProductInOutLog[]
-//   }
-
-export const STORE_PRODUCTS: Scheme = {
-    displayName: "상품 입고",
-    tableName: SLUG.storeProducts,
+export const NEO_STORE_PRODUCT: NeoScheme = {
+    name: "상품 입고",
+    slug: SLUG.storeProducts,
     fields: {
-        ...RECORD_BASE_FIELDS,
-        systemId: {
+        ...NEO_RECORD_BASE_FIELDS,
+        systemId: text({
             displayName: "내부관리번호",
-            typeOption: {
-                type: "string",
-            },
             required: true,
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
-        },
-        totalCost: {
+        }),
+        totalCost: text({
             displayName: "총 금액",
-            typeOption: {
-                type: "number",
-            },
             required: true,
 
-        },
-        storeDate: {
+        }),
+        storeDate: date({
             displayName: "입고 일자",
-            typeOption: {
-                type: "date",
-            },
-            required: false,
-            autoGenerative: true,
-        },
-        title: {
+        }),
+        title: text({
             displayName: "메모",
-            typeOption: {
-                type: "string",
-            },
             required: true,
-        },
-        AdminAccount: {
+        }),
+        AdminAccount: singleRelation({
             displayName: "입고자",
-            typeOption: {
-                type: "relation-single",
-                target: SLUG.adminAccount,
-                displayNameField: "name",
-            },
-            required: true,
-
-        },
-        ProductInOutLog: {
-            displayName: "입고 이력",
-            typeOption: {
-                type: "relation-single",
-                target: SLUG.productInOutLog,
-                displayNameField: "id",
-            },
-            required: true,
-        }
+            targetTable: SLUG.adminAccount,
+            nameField: "username",
+        }),
+        ProductInOutLog: multipleRelation({
+            displayName: "연관 이력",
+            targetTable: SLUG.productInOutLog,
+            nameField: "id",
+            invisibleInTable: true
+        })
     }
 }

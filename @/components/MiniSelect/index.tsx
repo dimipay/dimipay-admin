@@ -1,11 +1,11 @@
+import { SelectableList } from "../Dropdown/partial"
+import { ListWrapper, Wrapper } from "./style"
+import { ColorBubble, LoadSVG } from ".."
 import { downArrowIcon } from "@/assets"
-import { Option } from "@/types"
-import { Regular } from "@/typo"
 import { Hexile } from "@haechi/flexile"
 import React, { useState } from "react"
-import { ColorBubble, LoadSVG } from ".."
-import { SelectableList } from "../Dropdown/partial"
-import { ListWrapper, LogicalInput, Wrapper } from "./style"
+import { Option } from "@/types"
+import { Regular } from "@/typo"
 
 export const MiniSelect: React.FC<{
     options: Option[]

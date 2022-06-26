@@ -1,47 +1,35 @@
-import { Scheme, SLUG } from "@/types"
-import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
+import { date } from "@/fields/date"
+import { text } from "@/fields/text"
+import { SLUG } from "@/types"
+import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common"
+import { NeoScheme } from "./user"
 
-export const EVENT: Scheme = {
-    displayName: "이벤트",
-    tableName: SLUG.event,
-    isUUIDPk: true,
+export const NEO_EVENT_SCHEME: NeoScheme = {
+    name: "이벤트",
+    slug: SLUG.event,
     fields: {
-        ...RECORD_BASE_FIELDS,
-        title: {
+        ...NEO_RECORD_BASE_FIELDS,
+        title: text({
             displayName: "제목",
-            typeOption: {
-                type: "string",
-            },
             required: true,
-        },
-        description: {
+        }),
+        description: text({
             displayName: "설명",
-            typeOption: {
-                type: "string",
-            },
             required: true,
-        },
-        url: {
-            displayName: "이벤트 설명 페이지 URL",
-            typeOption: {
-                type: "string",
-            },
+        }),
+        url: text({
+            displayName: "이벤트 설명 페이지 주소",
             required: true,
-            placeholder: "페이지 주소를 입력해주세요",
-        },
-        endsAt: {
+            placeholder: "https://...",
+        }),
+        endsAt: date({
             displayName: "종료일",
-            typeOption: {
-                type: "date",
-            },
-        },
-        startsAt: {
-            displayName: "시작일",
-            typeOption: {
-                type: "date",
-            },
             required: false,
-        },
+        }),
+        startsAt: date({
+            displayName: "시작일",
+            required: false,
+        })
     },
-    actions: [DELETE_SELECTED_RECORDS_ACTION],
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

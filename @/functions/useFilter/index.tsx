@@ -1,9 +1,10 @@
-import { Filter, Scheme } from "@/types"
+import { NeoScheme } from "@/schemes"
+import { Filter } from "@/types"
 import { Hexile } from "@haechi/flexile"
 import { useEffect, useMemo, useState } from "react"
 import { FilterItem, FilterWithDisablity } from "./partial"
 
-export const useFilter = (scheme?: Scheme) => {
+export const useFilter = (scheme?: NeoScheme) => {
     const [filters, setFilters] = useState<FilterWithDisablity[]>([])
 
     useEffect(() => {
@@ -29,7 +30,7 @@ export const useFilter = (scheme?: Scheme) => {
     return {
         opened: !!filters.length,
         filter: validFilter,
-        filterTargetTable: scheme?.tableName,
+        filterTargetTable: scheme?.name,
         clearFilter: () => setFilters([]),
         addFilter(key: string) {
             setFilters((prev) => [

@@ -1,60 +1,42 @@
 import { SOFT_DELETE_FIELD_NAME, TABLES } from "@/constants"
+import { NeoField, FieldType } from "@/fields"
+import { MultipleRelationFieldFactoryProps } from "@/fields/multipleRelation"
+import { SingleRelationFieldFactoryProps } from "@/fields/singleRelation"
+import { NeoScheme } from "@/schemes"
 import { serversideSchemes } from "@/schemes/serverside"
 import { prisma } from "@/storage"
 import {
-    Field,
+    DataValue,
     Filter,
     HandlerError,
-    Relation,
-    Scheme,
-    SingleRelationField,
+    MultipleRelation,
+    RelationItem,
+    SingleRelation,
     Sort,
     TableRecord,
 } from "@/types"
-import { Prisma } from "@prisma/client"
 import { endpoint } from ".."
 
-const generalizeFormData = async (
-    data: Omit<TableRecord, "id">,
-    scheme: Scheme,
-    isNew: boolean = false,
-) => {
-    return {
-        ...Object.fromEntries(
-            await Promise.all(
-                Object.entries(data).map(async ([key, value]) => {
-                    const field: Field = scheme.fields[key]
-                    if ((!value && !field) || !field) {
-                        return [key, value]
-                    }
+const applyFieldFormats = (data: Partial<TableRecord>, fields: NeoScheme['fields'], isUpdate = false) => Object.entries(data).reduce(
+    (acc, [key, _value]) => {
+        let value: DataValue = _value
+        const field: NeoField<any> = fields[key]
 
-                    if (!value) return [key, value]
+        if (!field) return acc
 
-                    const typedValue =
-                        field.typeOption.type === "date"
-                            ? new Date(value.toString())
-                            : value
+        if (field.format?.beforeSave)
+            value = field.format.beforeSave(value, data, isUpdate)
 
-                    if (value === "") return [key, undefined]
+        if (field.field.format?.beforeSave)
+            value = field.field.format.beforeSave(value, data, isUpdate)
 
-                    console.log(typedValue)
-
-                    return [
-                        key,
-                        field.saveWithComputed
-                            ? await field.saveWithComputed(typedValue)
-                            : typedValue,
-                    ]
-                })
-            ),
-        ),
-        ...(isNew && Object.fromEntries(await Promise.all(Object.entries(
-            scheme.fields
-        ).filter(([key, value]) => value.autoGenerate && value.autoGenerate).map(async ([key, value]) => {
-            return [key, await value.autoGenerate!(data)]
-        })))),
-    }
-}
+        return {
+            ...acc,
+            [key]: value,
+        }
+    },
+    {}
+)
 
 const filtersToPrismaWhereOption = (filters: Filter[]) => {
     return {
@@ -87,24 +69,24 @@ const actions = {
             lastId?: number
         },
         slug: {
-            tableName: string
+            slug: string
         }
     ): Promise<TableRecord[]> {
         const _table = TABLES.find(
-            (table) => table.tableName === slug.tableName
+            (table) => table.slug === slug.slug
         )
 
         if (!_table)
             throw new HandlerError(
-                `테이블 ${slug.tableName}을 찾을 수 없습니다.`,
+                `테이블 ${slug.slug}을 찾을 수 없습니다.`,
                 404
             )
 
         const serversideScheme = serversideSchemes.find(
-            (e) => e.tableName === _table.tableName
+            (e) => e.slug === _table.slug
         )
 
-        const table = {
+        const table: NeoScheme = {
             ..._table,
             ...serversideScheme,
         }
@@ -116,7 +98,7 @@ const actions = {
 
             try {
                 const res: TableRecord[] = await (
-                    prisma[table.tableName].findMany as any
+                    prisma[table.slug].findMany as any
                 )({
                     orderBy: sort,
                     where: {
@@ -147,18 +129,17 @@ const actions = {
                             Object.entries(record)
                                 // 릴레이션 필드만 추출하기
                                 .filter(
-                                    ([key]) =>
-                                        table.fields[
+                                    ([key, value]) =>
+                                        (["SINGLE_RELATION", "MULTIPLE_RELATION"] as FieldType[]).includes(table.fields[
                                             key
-                                        ].typeOption.type.startsWith(
-                                            "relation-"
-                                        ) && record[key] !== null
+                                        ].type) && value !== null
                                 )
 
                                 // 1:N이냐, 1:1이냐에 따라 릴레이션 필드를 올바르게 변환함
                                 .map(([key, _value]) => {
-                                    const field = table.fields[key]
-                                        .typeOption as SingleRelationField
+                                    const field = table.fields[key] as
+                                        NeoField<SingleRelation, SingleRelationFieldFactoryProps> |
+                                        NeoField<MultipleRelation, MultipleRelationFieldFactoryProps>
 
                                     const value = _value as unknown as
                                         | TableRecord
@@ -171,27 +152,27 @@ const actions = {
                                         ? value.map((relatedDocument) => ({
                                             id: relatedDocument.id,
                                             displayName:
-                                                relatedDocument[
-                                                field.displayNameField
+                                                field.field.nameField && relatedDocument[
+                                                field.field.nameField
                                                 ],
                                             color: relatedDocument.color,
                                         }))
-                                        : [
-                                            {
-                                                id: value.id,
-                                                displayName:
-                                                    value[
-                                                    field.displayNameField
-                                                    ],
-                                                color: value.color,
-                                            },
-                                        ]
+                                        :
+                                        {
+                                            id: value.id,
+                                            displayName:
+                                                field.field.nameField && value[
+                                                field.field.nameField
+                                                ],
+                                            color: value.color,
+                                        }
+
                                     return [
                                         key,
                                         {
-                                            slug: field.target,
+                                            slug: field.field.targetTable!,
                                             target: relatedFields,
-                                        } as Relation,
+                                        } as (MultipleRelation | SingleRelation),
                                     ]
                                 })
                         ),
@@ -199,6 +180,8 @@ const actions = {
                 )
 
                 if (!table.computedFields) return relationConnectedRecords || []
+
+                console.log(table.computedFields)
 
                 const recordsIncludingComputedFields =
                     relationConnectedRecords.map(async (record) => ({
@@ -231,50 +214,73 @@ const actions = {
             data: Omit<TableRecord, "id">
         },
         slug: {
-            tableName: string
+            slug: string
         }
     ) {
-        const table = TABLES.find((table) => table.tableName === slug.tableName)
+        console.log(
+            TABLES.map(e => e.slug)
+        )
+        const table = TABLES.find((table) => table.slug === slug.slug)
 
-        if (!table)
+        if (!table) {
             throw new HandlerError(
-                `요청한 테이블(${slug.tableName})을 찾을 수 없어요`,
+                `요청한 테이블(${slug.slug})을 찾을 수 없어요`,
                 400
             )
+        }
 
         for (const key in props.data) {
             const field = table.fields[key]
 
             if (!field) continue
 
-            if (field.readOnly)
+            if (field.field.readOnly)
                 throw new HandlerError(
-                    `${field.displayName.은는} 수정이 불가능해요`,
+                    `${field.field.displayName.은는} 수정이 불가능해요`,
                     400
                 )
 
-            const validateResult = await table.fields[key]?.validateFunc?.(
+            const validateResult = await table.fields[key]?.field.validate?.func?.(
                 props.data[key]
             )
 
             if (typeof validateResult === "string")
                 throw new HandlerError(
-                    `${table.fields[key].displayName.이가} 올바르지 않아요. ` +
+                    `${table.fields[key].field.displayName.이가} 올바르지 않아요. ` +
                     validateResult,
                     400
                 )
 
             if (validateResult === false)
                 throw new HandlerError(
-                    `${table.fields[key].displayName.이가} 올바르지 않아요`,
+                    `${table.fields[key].field.displayName.이가} 올바르지 않아요`,
                     400
                 )
+
+            if (field.field.validate?.yup) {
+                try {
+                    await field.field.validate.yup.validate(props.data[key])
+                } catch (e) {
+                    throw new HandlerError(
+                        `${table.fields[key].field.displayName.이가} 올바르지 않아요. ` +
+                        (e as Error).message,
+                        400
+                    )
+                }
+            }
         }
 
-        console.log("아니근데이게", props.data)
-        const data = await generalizeFormData(props.data, table)
+        const data = applyFieldFormats(
+            props.data,
+            table.fields,
+            true
+        )
 
-        const res: TableRecord = await (prisma[table.tableName].update as any)({
+        console.log(
+            data
+        )
+
+        const res: TableRecord = await (prisma[table.slug].update as any)({
             where: {
                 id: props.id,
             },
@@ -288,21 +294,21 @@ const actions = {
     async DELETE(
         props: { ids: number[] },
         {
-            tableName,
+            slug,
         }: {
-            tableName: string
+            slug: string
         }
     ) {
-        const table = TABLES.find((table) => table.tableName === tableName)
+        const table = TABLES.find((table) => table.slug === slug)
         if (!table) {
             throw new HandlerError(
-                `요청한 테이블 (${tableName})을 찾을 수 없어요`,
+                `요청한 테이블 (${slug})을 찾을 수 없어요`,
                 400
             )
         }
 
         if (table.softDelete) {
-            await (prisma[table.tableName] as any).updateMany({
+            await (prisma[table.slug] as any).updateMany({
                 where: {
                     id: {
                         in: props.ids,
@@ -319,7 +325,7 @@ const actions = {
         }
 
         await (
-            prisma[table.tableName] as any
+            prisma[table.slug] as any
         ).deleteMany({
             where: {
                 id: {
@@ -337,23 +343,28 @@ const actions = {
             data: Omit<TableRecord, "id">
         },
         {
-            tableName,
+            slug,
         }: {
-            tableName: string
+            slug: string
         }
     ) {
-        const table = TABLES.find((table) => table.tableName === tableName)
+        const table = TABLES.find((table) => table.slug === slug)
 
         if (!table)
             throw new HandlerError(
-                `요청한 테이블(${tableName})을 찾을 수 없어요`,
+                `요청한 테이블(${slug})을 찾을 수 없어요`,
                 404
             )
 
-        const data = await generalizeFormData(props.data, table, true)
-        console.log(data)
 
-        const res: TableRecord = await (prisma[table.tableName] as any).create({
+
+        const data = applyFieldFormats(
+            props.data,
+            table.fields,
+            false
+        )
+
+        const res: TableRecord = await (prisma[table.slug] as any).create({
             data,
         } as any)
 

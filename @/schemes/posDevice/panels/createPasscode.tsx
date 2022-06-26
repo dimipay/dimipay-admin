@@ -16,6 +16,8 @@ export const CreatePasscode: PanelComponent = ({ record }) => {
             posId: (record as PosDevice).systemId,
         })
 
+        timer.reset()
+
         toast.success(`생성된 OTP를 결제 단말기에 입력해주세요`)
 
         setPasscode(loadedPasscode.passcode)

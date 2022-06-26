@@ -1,5 +1,5 @@
 import { SLUG } from "@/types"
-import { tableKone } from "pages/api/table/[tableName]"
+import { tableKone } from "pages/api/table/[slug]"
 import { kone } from "./core"
 
 const METHOD = ["GET", "PATCH", "DELETE", "POST"] as const

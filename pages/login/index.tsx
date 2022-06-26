@@ -1,15 +1,16 @@
-import { LoginWrapper } from "./style"
-
-import { Button, InlineForm, Input, LoadSVG } from "@/components"
-import { Description, Important } from "@/typo"
-import { AuthIdentification, HandlerError } from "@/types"
 import { Vexile } from "@haechi/flexile"
-import { logo } from "@/assets"
-import { login } from "@/functions"
 import { useRecoilState } from "recoil"
-import { userAtom } from "@/coil"
 import { useRouter } from "next/router"
 import { useFormik } from "formik"
+
+import { Button, InlineForm, Input, LoadSVG } from "@/components"
+import { AuthIdentification, HandlerError } from "@/types"
+import { Description, Important } from "@/typo"
+import { login } from "@/functions"
+import { userAtom } from "@/coil"
+import { logo } from "@/assets"
+
+import { LoginWrapper } from "./style"
 
 export const Login = () => {
     const setUser = useRecoilState(userAtom)[1]

@@ -1,3 +1,6 @@
+import { NeoScheme } from "@/schemes"
+import { ChangeEventHandler, FocusEventHandler } from "react"
+
 export interface Sort {
     field: string
     order: "123" | "321"
@@ -17,13 +20,20 @@ export enum SLUG {
     storeProducts = "storeProducts",
 }
 
-export interface Relation {
-    slug: string
-    target: {
-        id: number
-        displayName: string
-        color?: string
-    }[]
+export interface RelationItem {
+    id: number
+    displayName: string
+    color?: string
+}
+
+export interface MultipleRelation {
+    slug: SLUG
+    target: RelationItem[]
+}
+
+export interface SingleRelation {
+    slug: SLUG
+    target: RelationItem
 }
 
 export type DataValue =
@@ -37,7 +47,8 @@ export type DataValue =
     | number[]
     | boolean[]
     | Date[]
-    | Relation
+    | MultipleRelation
+    | SingleRelation
 
 export interface Option {
     label: string
@@ -46,101 +57,24 @@ export interface Option {
     amount?: number
 }
 
-interface MultipleSelectField {
-    type: "multiple"
-    options: Option[]
-    map?: Record<string | number, string>
-    default?: string
-}
-
-export interface SingleRelationField {
-    type: "relation-single"
-    target: SLUG
-    default?: string
-    flattenField?: string
-    displayNameField: string
-}
-
-export interface MultipleRelationField
-    extends Omit<SingleRelationField, "type"> {
-    type: "relation-multiple"
-}
-
-export const isMultipleSelect = (d: any): d is MultipleSelectField =>
-    d.type === "multiple"
-
-export interface Field {
-    displayName: string
-    invisibleInTable?: boolean
-    description?: string
-    computed?(value: DataValue): string
-    autoGenerative?: boolean
-    autoGenerate?: (record: Omit<TableRecord, "id">) => DataValue | Promise<DataValue>
-    readOnly?: boolean
-    typeOption: (
-        | MultipleSelectField
-        | SingleRelationField
-        | MultipleRelationField
-        | {
-            type: "boolean"
-            default?: boolean
-        }
-        | {
-            type: "string" | "date" | "password" | "color"
-            default?: string
-            options?: Option[]
-        }
-        | {
-            type: "number"
-            default?: number
-        }
-    ) & {
-        suffix?: string
-        prefix?: string
-    }
-    placeholder?: string
-    required?: boolean
-    validateFunc?: (
-        data: DataValue
-    ) => boolean | undefined | string | Promise<boolean | undefined | string>
-    saveWithComputed?: (data: DataValue) => DataValue | Promise<DataValue>
-}
 
 export interface ToolbarAction {
     button: {
         label: string
         color: "danger" | "normal" | "accent"
     }
-    func(selectedRecords: TableRecord[], scheme: Scheme): void | Promise<void>
+    func(selectedRecords: TableRecord[], scheme: NeoScheme): void | Promise<void>
 }
 
 export type PanelComponent = React.FC<{
-    scheme: Scheme
+    scheme: NeoScheme
     record: TableRecord
     reload: () => void
 }>
 
-export interface Scheme {
-    displayName: string
-    tableName: SLUG
-    fields: Record<string, Field>
-    defaultSort?: Sort
-    softDelete?: boolean
-    computedFields?: Record<
-        string,
-        {
-            func?(record: TableRecord): Promise<DataValue> | DataValue
-            displayName: string
-        }
-    >
-    actions?: ToolbarAction[]
-    panelComponents?: PanelComponent[]
-    isUUIDPk?: boolean
-}
-
 export interface SchemeGroup {
     groupName: string
-    content: Scheme[]
+    content: NeoScheme[]
 }
 
 export type TableRecord = Record<string, DataValue> & {
@@ -148,3 +82,10 @@ export type TableRecord = Record<string, DataValue> & {
     createdAt: Date
     updatedAt: Date
 }
+
+export interface FormikHandlers {
+    onChange: ChangeEventHandler<HTMLInputElement>
+    onBlur: FocusEventHandler<any>
+}
+
+export type SetFieldValueFunction = (field: string, value: any) => any

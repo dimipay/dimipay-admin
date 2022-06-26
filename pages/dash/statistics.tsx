@@ -1,11 +1,12 @@
-import { PageHeader, Decorative, Important, Regular, Token } from "@/typo"
-import { getStatistics, useKone } from "@/functions"
 import { Hexile, Vexile } from "@haechi/flexile"
-import { STATISTICS } from "@/constants"
-import { styled } from "@/stitches.config"
-import { Sidebar } from "./partial"
-import { Statistics, StatisticsCard } from "@/types"
 import { useState, useEffect } from "react"
+import { styled } from "@/stitches.config"
+
+import { PageHeader, Decorative, Important, Regular, Token } from "@/typo"
+import { Statistics, StatisticsCard } from "@/types"
+import { getStatistics, useKone } from "@/functions"
+import { STATISTICS } from "@/constants"
+import { Sidebar } from "./partial"
 
 const StatisticsCard = styled(Vexile, {
     backgroundColor: "white",

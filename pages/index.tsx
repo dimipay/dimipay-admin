@@ -1,10 +1,11 @@
-import { logo } from "@/assets"
-import { userAtom } from "@/coil"
-import { LoadSVG } from "@/components"
 import { Vexile } from "@haechi/flexile"
+import { useRecoilValue } from "recoil"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { useRecoilValue } from "recoil"
+
+import { LoadSVG } from "@/components"
+import { userAtom } from "@/coil"
+import { logo } from "@/assets"
 
 export default function AuthBranching() {
     const user = useRecoilValue(userAtom)

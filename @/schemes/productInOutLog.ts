@@ -1,75 +1,53 @@
-import { Scheme, SLUG } from "@/types";
-import { RECORD_BASE_FIELDS } from "./common";
+import { multipleRelation } from "@/fields/multipleRelation";
+import { number } from "@/fields/number";
+import { singleRelation } from "@/fields/singleRelation";
+import { text } from "@/fields/text";
+import { SLUG } from "@/types";
+import { NEO_RECORD_BASE_FIELDS } from "./common";
+import { NeoScheme } from "./user";
 
-export const PRODUCT_IN_OUT_LOG_SCHEME: Scheme = {
-    displayName: "입출고 기록",
-    tableName: SLUG.productInOutLog,
+export const NEO_PRODUCT_IN_OUT_LOG_SCHEME: NeoScheme = {
+    name: "입출고 기록",
+    slug: SLUG.productInOutLog,
     fields: {
-        ...RECORD_BASE_FIELDS,
-        Product: {
+        ...NEO_RECORD_BASE_FIELDS,
+        Product: singleRelation({
             displayName: "상품",
-            typeOption: {
-                type: "relation-single",
-                target: SLUG.product,
-                displayNameField: "name",
-            },
-            required: true,
-        },
-        delta: {
+            targetTable: SLUG.product,
+            nameField: "name",
+        }),
+        delta: number({
             displayName: "변화량",
-            typeOption: {
-                type: "number",
-            },
             required: true,
-        },
-        message: {
+
+        }),
+        message: text({
             displayName: "메모",
-            typeOption: {
-                type: "string",
-            },
-            required: false,
-        },
-        type: {
+        }),
+        type: text({
             displayName: "종류",
-            typeOption: {
-                type: "string",
-            },
             required: true,
-        },
-        unitCost: {
+        }),
+        unitCost: number({
             displayName: "입출고 단가",
-            typeOption: {
-                type: "number",
-            },
             required: true,
-        },
-        systemId: {
+        }),
+        systemId: text({
             displayName: "내부관리번호",
-            typeOption: {
-                type: "string",
-            },
             required: true,
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
-        },
-        StoreProducts: {
-            displayName: "입고 이력",
-            typeOption: {
-                type: "relation-single",
-                target: SLUG.storeProducts,
-                displayNameField: "title",
-            },
-            required: false,
-        },
-        Transaction: {
+        }),
+        StoreProducts: singleRelation({
+            displayName: "연결된 입고 이력",
+            targetTable: SLUG.storeProducts,
+            nameField: "title",
+        }),
+        Transaction: singleRelation({
             displayName: "구매 내역",
-            typeOption: {
-                type: "relation-single",
-                target: SLUG.transaction,
-                displayNameField: "id",
-            },
-            required: false,
-        },
+            targetTable: SLUG.transaction,
+            nameField: "id",
+        })
     }
 }

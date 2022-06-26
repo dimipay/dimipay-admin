@@ -1,8 +1,10 @@
-import { eyeIcon, trashIcon } from "@/assets"
 import { HitSlop, LoadSVG, MiniInput } from "@/components"
+import { korOperatorMap, PartialFilter } from "@/types"
 import { MiniSelect } from "@/components/MiniSelect"
-import { Field, korOperatorMap, PartialFilter } from "@/types"
+import { eyeIcon, trashIcon } from "@/assets"
+import { NeoField } from "@/fields"
 import { Regular } from "@/typo"
+
 import { ItemWrapper } from "./style"
 
 export interface FilterWithDisablity {
@@ -13,7 +15,7 @@ export interface FilterWithDisablity {
 export const FilterItem: React.FC<{
     filter: PartialFilter
     disabled: boolean
-    field: Field
+    field: NeoField<any>
     updateFilter: (content: FilterWithDisablity | null) => void
 }> = ({ filter: [key, operator, value], ...props }) => {
     return (
@@ -47,16 +49,15 @@ export const FilterItem: React.FC<{
                     alt="필터 삭제 버튼"
                 />
             </HitSlop>
-            <Regular>{props.field?.displayName.이가}</Regular>
+            <Regular>{props.field.field.displayName.이가}</Regular>
             <MiniInput
                 onChange={(enteredValue) => {
                     props.updateFilter({
                         content: [
                             key,
                             operator,
-                            props.field.typeOption.type === "number"
-                                ? +enteredValue
-                                : enteredValue,
+                            props.field.format?.beforeSave?.(enteredValue) ??
+                                enteredValue,
                         ],
                         disabled: props.disabled,
                     })

@@ -1,17 +1,17 @@
 import {
-    CATEGORY_SCHEME,
-    POS_DEVICE_SCHEME,
-    PRODUCT_SCHEME,
-    USER_SCHEME,
-    DISCOUNT_POLICY,
-    EVENT,
-    PAYMENT_METHOD_SCHEME,
-    TRANSACTION_SCHEME,
-    PRODUCT_IN_OUT_LOG_SCHEME,
-    STORE_PRODUCTS
+    NEO_CATEGORY_SCHEME,
+    NEO_DISCOUNT_POLICY,
+    NEO_EVENT_SCHEME,
+    NEO_PAYMENT_METHOD_SCHEME,
+    NEO_POS_DEVICE_SCHEME,
+    NEO_PRODUCT,
+    NEO_PRODUCT_IN_OUT_LOG_SCHEME,
+    NEO_STORE_PRODUCT,
+    NEO_TRANSACTION_SCHEME,
+    NEO_USER
 } from "./schemes"
-import { ADMIN_ACCOUNT_SCHEME } from "./schemes/adminAccount"
-import { SchemeGroup, Statistics, StatisticsCard } from "./types"
+import { NEO_ADMIN_ACCOUNT } from "./schemes/adminAccount"
+import { SchemeGroup, StatisticsCard } from "./types"
 
 export const assert = (name: string, isServersideOnly: boolean = true) => {
     const content = process.env[name]
@@ -29,23 +29,23 @@ export const GROUPED_TABLES: SchemeGroup[] = [
     {
         groupName: "판매",
         content: [
-            USER_SCHEME,
-            TRANSACTION_SCHEME,
-            PRODUCT_SCHEME,
-            CATEGORY_SCHEME,
-            DISCOUNT_POLICY,
-            EVENT,
-            PRODUCT_IN_OUT_LOG_SCHEME,
-            STORE_PRODUCTS
+            NEO_PRODUCT,
+            NEO_TRANSACTION_SCHEME,
+            NEO_CATEGORY_SCHEME,
+            NEO_DISCOUNT_POLICY,
+            NEO_EVENT_SCHEME,
+            NEO_PRODUCT_IN_OUT_LOG_SCHEME,
+            NEO_STORE_PRODUCT
 
         ],
     },
     {
         groupName: "관리",
         content: [
-            POS_DEVICE_SCHEME,
-            ADMIN_ACCOUNT_SCHEME,
-            PAYMENT_METHOD_SCHEME,
+            NEO_POS_DEVICE_SCHEME,
+            NEO_USER,
+            NEO_ADMIN_ACCOUNT,
+            NEO_PAYMENT_METHOD_SCHEME
         ],
     },
 ]

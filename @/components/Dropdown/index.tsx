@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react"
+import { toast } from "react-toastify"
 
 import { clickWithSpace } from "@/functions"
 import { Regular, Token } from "@/typo"
+import { searchIcon } from "@/assets"
 import { Option } from "@/types"
 
 import { DataView, SearchInput, Searhbox, Wrapper } from "./style"
 import { SelectableList } from "./partial"
-import { searchIcon } from "@/assets"
 import { LoadSVG } from "../LoadSVG"
-import { toast } from "react-toastify"
-import { SetFieldValueFunction } from "../Subcontent/RecordEditer/partial"
 
 export const Dropdown: React.FC<{
     options?: Option[]
@@ -17,22 +16,18 @@ export const Dropdown: React.FC<{
     value: Option[]
     name: string
     label: string
-    placeholder: string
+    placeholder?: string
     displayMap?: Record<string | number, string>
     error?: string
     disabled?: boolean
     maxSelectAmount?: number
-    setFieldValue?: SetFieldValueFunction
+    onChange(item: Option[]): void
 }> = (props) => {
     const [loadedOptions, setLoadedOptions] = useState<Option[]>(
         props.options || []
     )
     const [searchQuery, setSearchQuery] = useState<string>()
     const [opened, setOpened] = useState(false)
-
-    useEffect(() => {
-        console.log("이게 옴", props.name, props.value)
-    }, [props.value])
 
     useEffect(() => {
         if (props.optionsRetriever) {
@@ -105,8 +100,7 @@ export const Dropdown: React.FC<{
                                             e.label === option.label
                                     )
                                 ) {
-                                    props.setFieldValue?.(
-                                        props.name,
+                                    props.onChange?.(
                                         props.value.filter(
                                             (v) =>
                                                 !(
@@ -125,7 +119,7 @@ export const Dropdown: React.FC<{
                                         )
                                         return
                                     }
-                                    props.setFieldValue?.(props.name, [
+                                    props.onChange?.([
                                         ...props.value,
                                         {
                                             key: option.key,

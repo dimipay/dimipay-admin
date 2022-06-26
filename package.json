@@ -29,7 +29,8 @@
         "recoil": "^0.6.1",
         "recoil-persist": "^4.0.0",
         "redis": "^4.0.4",
-        "swr": "^1.2.1"
+        "swr": "^1.2.1",
+        "yup": "^0.32.11"
     },
     "devDependencies": {
         "@types/node": "^17.0.14",

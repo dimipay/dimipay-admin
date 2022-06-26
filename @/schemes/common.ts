@@ -1,16 +1,20 @@
+import { NeoField } from "@/fields"
+import { date } from "@/fields/date"
+import { text } from "@/fields/text"
 import { table } from "@/functions"
-import { Field, Scheme, TableRecord, ToolbarAction } from "@/types"
+import { TableRecord, ToolbarAction } from "@/types"
 import { Product } from "@prisma/client"
 import { toast } from "react-toastify"
+import { NeoScheme } from "./user"
 
 export const DELETE_SELECTED_RECORDS_ACTION: ToolbarAction = {
     button: {
         color: "accent",
         label: "삭제",
     },
-    func: async (selectedRecords: TableRecord[], scheme: Scheme) => {
+    func: async (selectedRecords: TableRecord[], scheme: NeoScheme) => {
         const ids = selectedRecords.map((e) => e.id)
-        const res = await table[scheme.tableName].DELETE({ ids })
+        const res = await table[scheme.slug].DELETE({ ids })
         toast.success(
             `${(selectedRecords as unknown as Product[]).map(e => e?.name || (e?.id + "번")).join(", ").이가
             } 삭제되었습니다`,
@@ -18,31 +22,21 @@ export const DELETE_SELECTED_RECORDS_ACTION: ToolbarAction = {
     },
 }
 
-export const RECORD_BASE_FIELDS: Record<string, Field> = {
-    id: {
+export const NEO_RECORD_BASE_FIELDS = {
+    id: text({
         displayName: "ID",
         readOnly: true,
         autoGenerative: true,
-        typeOption: {
-            type: "string",
-        },
-    },
-    createdAt: {
+    }),
+    createdAt: date({
         displayName: "생성일",
         readOnly: true,
         autoGenerative: true,
-        typeOption: {
-            type: "date",
-        },
-        invisibleInTable: true,
-    },
-    updatedAt: {
-        displayName: "마지막 정보 수정",
+    }),
+    updatedAt: date({
+        displayName: "수정일",
         readOnly: true,
         autoGenerative: true,
-        typeOption: {
-            type: "date",
-        },
-        invisibleInTable: true,
-    },
+        invisibleInTable: true
+    })
 }

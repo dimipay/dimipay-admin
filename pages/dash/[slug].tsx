@@ -1,23 +1,23 @@
-import { useRecoilState, useSetRecoilState } from "recoil"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { GetServerSideProps, NextPage } from "next"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import HashLoader from "react-spinners/HashLoader"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
+import { NextPage } from "next"
 
 import { NewRecord } from "@/components/Subcontent/NewRecord"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
 import { FilterItem } from "@/functions/useFilter/partial"
-import { table, useConsole, useFilter } from "@/functions"
-import { Button, LoadSVG, Table } from "@/components"
-import HashLoader from "react-spinners/HashLoader"
 import { Important, PageHeader } from "@/typo"
+import { table, useFilter } from "@/functions"
+import { Button, LoadSVG, Table } from "@/components"
 import { SLUG, TableRecord } from "@/types"
 import { subContentAtom } from "@/coil"
 import { TABLES } from "@/constants"
 
+import { MAIN_ACCENT } from "@/stitches.config"
 import { SubcontentWrapper } from "./style"
 import { Sidebar } from "./partial"
-import { MAIN_ACCENT } from "@/stitches.config"
 
 const TableViewer: NextPage = () => {
     const slug = useRouter().query.slug as SLUG
@@ -25,7 +25,7 @@ const TableViewer: NextPage = () => {
     const setSubContent = useSetRecoilState(subContentAtom)
 
     const scheme = useMemo(
-        () => TABLES.find((table) => table.tableName === SLUG[slug]),
+        () => TABLES.find((table) => table.slug === SLUG[slug]),
         [slug]
     )
     const [sortField, setSortField] = useState<string | null>(
@@ -49,9 +49,10 @@ const TableViewer: NextPage = () => {
     const load = useCallback(() => {
         if (!scheme) return
 
-        if (filterOptions.filterTargetTable !== scheme?.tableName) return
+        if (filterOptions.filterTargetTable !== scheme?.name) return
 
-        table[scheme.tableName]
+        console.log(scheme)
+        table[scheme.slug]
             .GET({
                 filter,
                 amount: 20,
@@ -75,7 +76,7 @@ const TableViewer: NextPage = () => {
         if (records.length === 0) return
         if (!scheme) return
 
-        const additionalRecords = await table[scheme.tableName].GET({
+        const additionalRecords = await table[scheme.slug].GET({
             filter,
             amount: 40,
             lastId: records[records.length - 1].id,
@@ -105,12 +106,10 @@ const TableViewer: NextPage = () => {
         setRecords(undefined)
         clearFilter()
         load()
-        console.log("문제 없음")
     }, [scheme])
 
     useEffect(() => {
         load()
-        console.log("이건어때", filter, sortField, sortDirection)
     }, [filter, sortField, sortDirection])
 
     return (
@@ -119,7 +118,7 @@ const TableViewer: NextPage = () => {
             {scheme ? (
                 <Vexile fillx filly padding={10} gap={4} scrollx relative>
                     <Hexile x="space">
-                        <PageHeader>{scheme.displayName}</PageHeader>
+                        <PageHeader>{scheme.name}</PageHeader>
                         <Hexile gap={2}>
                             <Button color="black">
                                 <LoadSVG
@@ -139,7 +138,7 @@ const TableViewer: NextPage = () => {
                                                 scheme={scheme}
                                             />
                                         ),
-                                        name: scheme.displayName + " 생성",
+                                        name: scheme.name + " 만들기",
                                     })
                                 }
                             >

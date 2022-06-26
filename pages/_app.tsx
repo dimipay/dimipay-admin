@@ -1,14 +1,13 @@
 import { RecoilRoot, useRecoilState } from "recoil"
 import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import { globalCss } from "@/stitches.config"
-import "@/assets/font/SUIT-Variable.css"
 import { useRouter } from "next/router"
-import { userAtom } from "@/coil"
-import "josa-complete"
-import { useEffect } from "react"
 
-let counter = 0
+import { globalCss } from "@/stitches.config"
+import { userAtom } from "@/coil"
+
+import "react-toastify/dist/ReactToastify.css"
+import "@/assets/font/SUIT-Variable.css"
+import "josa-complete"
 
 globalCss({
     ":root": {

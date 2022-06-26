@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 
-import { Scheme, TableRecord, ToolbarAction } from "@/types"
-import { Description, Important, Regular } from "@/typo"
+import { TableRecord, ToolbarAction } from "@/types"
+import { Description, Important } from "@/typo"
 
 import { ActionToolbars, HeaderCell, TableContent, TableWrapper } from "./style"
 import { ActionableHeaderCell, Row } from "./partial"
 import { Button } from ".."
 import { Vexile } from "@haechi/flexile"
 import { useInView } from "react-intersection-observer"
+import { NeoScheme } from "@/schemes"
 
 export const Table: React.FC<{
-    scheme: Scheme
+    scheme: NeoScheme
     records: TableRecord[]
     onReloadRequested(): void
     addFilter(key: string): void
@@ -57,7 +58,7 @@ export const Table: React.FC<{
                                 </HeaderCell>
                                 {Object.entries(props.scheme.fields).map(
                                     ([key, field]) =>
-                                        !field.invisibleInTable && (
+                                        !field.field.invisibleInTable && (
                                             <ActionableHeaderCell
                                                 key={key}
                                                 onFilter={() =>
@@ -72,7 +73,7 @@ export const Table: React.FC<{
                                                     props.setSort?.(key)
                                                 }
                                             >
-                                                {field?.displayName || key}
+                                                {field.field.displayName || key}
                                             </ActionableHeaderCell>
                                         )
                                 )}
@@ -81,7 +82,7 @@ export const Table: React.FC<{
                                         props.scheme.computedFields
                                     ).map(([key, field]) => (
                                         <ActionableHeaderCell key={key}>
-                                            {field.displayName}
+                                            {field.name}
                                         </ActionableHeaderCell>
                                     ))}
                             </tr>
@@ -116,8 +117,8 @@ export const Table: React.FC<{
                     </TableContent>
                     {selectedRecordIds.length !== 0 && (
                         <ActionToolbars gap={2} padding={4}>
-                            {props.scheme.actions?.length ? (
-                                props.scheme.actions?.map(
+                            {props.scheme.selectActions?.length ? (
+                                props.scheme.selectActions?.map(
                                     (action: ToolbarAction) => (
                                         <Button
                                             key={action.button.label}

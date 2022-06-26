@@ -1,48 +1,38 @@
-import { Scheme, SLUG } from "@/types"
-import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
+import { singleRelation } from "@/fields/singleRelation"
+import { text } from "@/fields/text"
+import { SLUG } from "@/types"
+import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common"
+import { NeoScheme } from "./user"
 
-export const PAYMENT_METHOD_SCHEME: Scheme = {
-    displayName: "결제수단",
+export const NEO_PAYMENT_METHOD_SCHEME: NeoScheme = {
+    name: "결제수단",
+    slug: SLUG.paymentMethod,
     softDelete: true,
     fields: {
-        ...RECORD_BASE_FIELDS,
-        systemId: {
+        ...NEO_RECORD_BASE_FIELDS,
+        systemId: text({
             displayName: "관리 번호",
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
-            typeOption: {
-                type: "string",
-            },
-        },
-        type: {
+        }),
+        type: text({
             displayName: "유형",
             required: true,
-            typeOption: {
-                type: "string",
-            },
-        },
-        color: {
+
+        }),
+        color: text({
             displayName: "색상",
-            typeOption: {
-                type: "string",
-            },
-        },
-        name: {
+        }),
+        name: text({
             displayName: "이름",
-            typeOption: {
-                type: "string",
-            },
-        },
-        User: {
+            required: true,
+        }),
+        User: singleRelation({
             displayName: "소유자",
-            typeOption: {
-                type: "relation-single",
-                target: SLUG.user,
-                displayNameField: "name",
-            },
-        },
+            targetTable: SLUG.user,
+            nameField: "name",
+        })
     },
-    tableName: SLUG.paymentMethod,
-    actions: [DELETE_SELECTED_RECORDS_ACTION],
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

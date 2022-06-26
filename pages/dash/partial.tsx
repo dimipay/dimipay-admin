@@ -1,7 +1,7 @@
 import { Hexile, Vexile } from "@haechi/flexile"
 
 import { LoadSVG, PlainLink, Redirector } from "@/components"
-import { GROUPED_TABLES, STATISTICS } from "@/constants"
+import { GROUPED_TABLES } from "@/constants"
 import { Important, Regular } from "@/typo"
 import { SLUG } from "@/types"
 import { graphIcon, logo } from "@/assets"
@@ -22,14 +22,14 @@ export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = (props) => (
                 <Important>{group.groupName}</Important>
                 {group.content.map((table) => (
                     <PlainLink
-                        key={table.tableName}
+                        key={table.slug}
                         href={`/dash/${
                             Object.entries(SLUG).find(
-                                ([key, v]) => v === table.tableName
+                                ([key, v]) => v === table.slug
                             )?.[0] || ""
                         }`}
                     >
-                        <Regular dark={3}>{table.displayName}</Regular>
+                        <Regular dark={3}>{table.name}</Regular>
                     </PlainLink>
                 ))}
             </Vexile>

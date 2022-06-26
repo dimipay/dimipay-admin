@@ -50,5 +50,6 @@ export const useTimer = (time: number, started: boolean = true) => {
         ),
         lastTime,
         isEnded: lastTime < 1,
+        reset: () => setLastTime(time),
     }
 }

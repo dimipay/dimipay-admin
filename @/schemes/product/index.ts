@@ -1,74 +1,51 @@
-import { Scheme, SLUG } from "@/types"
-import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "../common"
+import { number } from "@/fields/number"
+import { singleRelation } from "@/fields/singleRelation"
+import { text } from "@/fields/text"
+import { SLUG } from "@/types"
+import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "../common"
+import { NeoScheme } from "../user"
 import { ModifyStock } from "./panels"
 
-export const PRODUCT_SCHEME: Scheme = {
-    displayName: "상품",
-    tableName: SLUG.product,
-    softDelete: true,
+export const NEO_PRODUCT: NeoScheme = {
+    name: "상품",
+    slug: SLUG.product,
+    computedFields: {
+        stock: {
+            name: "재고",
+        },
+    },
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
+    panelComponents: [ModifyStock],
     fields: {
-        ...RECORD_BASE_FIELDS,
-        systemId: {
+        ...NEO_RECORD_BASE_FIELDS,
+        systemId: text({
             displayName: "관리 번호",
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
-            typeOption: {
-                type: "string",
-            },
-        },
-        name: {
+        }),
+        name: text({
             displayName: "상품명",
             required: true,
-            typeOption: {
-                type: "string",
-            },
-        },
-        barcode: {
+
+        }),
+        barcode: text({
             displayName: "바코드 번호",
-            description: "없으면 공란",
-            typeOption: {
-                type: "string",
-            },
-        },
-        sellingPrice: {
+            required: true,
+        }),
+        sellingPrice: number({
             displayName: "판매단가",
             required: true,
-            typeOption: {
-                type: "number",
-                suffix: "원",
-            },
-            description: "할인이 적용되지 않은 기준 판매단가",
-        },
-        purchaseCost: {
+        }),
+        purchaseCost: number({
             displayName: "매입단가",
             required: true,
-            typeOption: {
-                type: "number",
-                suffix: "원",
-            },
-        },
-        Category: {
+        }),
+        Category: singleRelation({
             displayName: "분류",
-            required: true,
-            typeOption: {
-                type: "relation-single",
-                target: SLUG.category,
-                displayNameField: "name",
-            },
-        },
-        sellingStopped: {
-            displayName: "판매 중지 여부",
-            typeOption: {
-                type: "boolean",
-            },
-        },
-    },
-    computedFields: {
-        stock: {
-            displayName: "재고",
-        },
-    },
-    actions: [DELETE_SELECTED_RECORDS_ACTION],
-    panelComponents: [ModifyStock],
+            targetTable: SLUG.category,
+            nameField: "name",
+        }),
+
+    }
 }

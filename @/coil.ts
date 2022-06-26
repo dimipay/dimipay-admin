@@ -23,7 +23,6 @@ export const subContentAtom = atom<{
 } | null>({
     default: null,
     key: "SUB_CONTENT",
-    // effects_UNSTABLE: [persistAtom],
 })
 
 export const getAtom = <AtomType>(atom: RecoilState<AtomType>): AtomType => {

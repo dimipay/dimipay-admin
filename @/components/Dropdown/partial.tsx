@@ -27,7 +27,7 @@ export const SelectableList: React.FC<{
                             selected={props.selectedOptions?.some(
                                 (e) =>
                                     (e.key && e.key === option.key) ||
-                                    e.label === option.label
+                                    (!e.key && e.label === option.label)
                             )}
                             onClick={(e) => {
                                 e.stopPropagation()

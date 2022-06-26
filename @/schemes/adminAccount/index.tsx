@@ -1,63 +1,45 @@
 // import { prisma } from "@/storage"
-import { Scheme, SLUG } from "@/types"
+import { multipleRelation } from "@/fields/multipleRelation"
+import { singleRelation } from "@/fields/singleRelation"
+import { text } from "@/fields/text"
+import { SLUG } from "@/types"
+import { AdminAccount } from "@prisma/client"
 import bcrypt from "bcryptjs"
 
-import { RECORD_BASE_FIELDS } from "../common"
+import { NEO_RECORD_BASE_FIELDS } from "../common"
+import { NeoScheme } from "../user"
 import { ResetPassword } from "./ResetPassword"
 
-// prisma.adminAccount.update({
-//     where: {
-//         id: 0,
-//     },
-//     data: {
-//         relatedUserSid: "",
-//     },
-// })
-
-export const ADMIN_ACCOUNT_SCHEME: Scheme = {
-    displayName: "관리자 계정",
-    tableName: SLUG.adminAccount,
-    isUUIDPk: true,
+export const NEO_ADMIN_ACCOUNT: NeoScheme = {
+    name: "관리자 계정",
+    slug: SLUG.adminAccount,
     fields: {
-        ...RECORD_BASE_FIELDS,
-        username: {
-            typeOption: {
-                type: "string",
-            },
+        ...NEO_RECORD_BASE_FIELDS,
+        username: text({
             displayName: "아이디",
             required: true,
-        },
-        User: {
-            typeOption: {
-                type: "relation-single",
-                displayNameField: "name",
-                target: SLUG.user,
-                flattenField: "relatedUserSid",
-            },
-            displayName: "연결된 사용자",
-            required: false,
-        },
-        hashedPassword: {
+        }),
+        hashedPassword: text({
             displayName: "비밀번호",
             required: true,
             invisibleInTable: true,
             autoGenerative: true,
-            typeOption: {
-                type: "password",
+            format: {
+                beforeSave(value, record, isUpdate?) {
+                    if (isUpdate) return bcrypt.hashSync(value, 10)
+
+                    return bcrypt.hashSync(
+                        (record as AdminAccount).username,
+                        10
+                    )
+                },
             },
-            async saveWithComputed(password) {
-                const hash = bcrypt.hashSync(password as string, 10)
-                console.log("SHIT", hash)
-                return hash
-            },
-            async autoGenerate(record) {
-                const hash = bcrypt.hashSync(record.username as string, 10)
-                console.log("SHIT, ", hash)
-                return hash
-            },
-            description:
-                "초기 비밀번호는 아이디와 동일합니다. 계정 생성 후에 꼭 수정해주세요.",
-        },
+        }),
+        User: singleRelation({
+            displayName: "연결된 사용자",
+            targetTable: SLUG.user,
+            nameField: "name",
+        }),
     },
     panelComponents: [ResetPassword],
 }

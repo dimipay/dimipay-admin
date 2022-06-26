@@ -1,47 +1,28 @@
-import { Scheme, SLUG } from "@/types"
-import { DELETE_SELECTED_RECORDS_ACTION } from "../common"
+import { text } from "@/fields/text"
+import { SLUG } from "@/types"
+import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "../common"
+import { NeoScheme } from "../user"
 import { CreatePasscode } from "./panels"
 
-export const POS_DEVICE_SCHEME: Scheme = {
-    displayName: "결제 단말기",
-    tableName: SLUG.posDevice,
-    isUUIDPk: true,
+
+export const NEO_POS_DEVICE_SCHEME: NeoScheme = {
+    name: "결제 단말기",
     softDelete: true,
+    slug: SLUG.posDevice,
     fields: {
-        id: {
-            displayName: "고유번호",
-            required: true,
-            autoGenerative: true,
-            readOnly: true,
-            typeOption: {
-                type: "string",
-            },
-        },
-        name: {
+        ...NEO_RECORD_BASE_FIELDS,
+        name: text({
             displayName: "이름",
             required: true,
-            typeOption: {
-                type: "string",
-            },
-        },
-        disabled: {
-            displayName: "결제 중지 여부",
-            typeOption: {
-                type: "boolean",
-                default: false,
-            },
-        },
-        systemId: {
+        }),
+        systemId: text({
             displayName: "내부관리번호",
             required: true,
-            typeOption: {
-                type: "string",
-            },
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
-        }
+        })
     },
     panelComponents: [CreatePasscode],
-    actions: [DELETE_SELECTED_RECORDS_ACTION],
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

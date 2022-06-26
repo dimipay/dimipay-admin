@@ -1,19 +1,20 @@
 import { REDIS_HASHMAPS } from "@/functions"
-import { loadRedis } from "@/storage"
-import { Scheme, SLUG } from "@/types"
 import { Product } from "@prisma/client"
+import { loadRedis } from "@/storage"
+import { NeoScheme } from "../user"
+import { SLUG } from "@/types"
 
-export const PRODUCT_SCHEME_SERVERSIDE: Partial<Scheme> = {
-    tableName: SLUG.product,
+export const PRODUCT_SCHEME_SERVERSIDE: Partial<NeoScheme> = {
+    slug: SLUG.product,
     computedFields: {
         stock: {
-            displayName: "재고",
-            async func(record: Product) {
+            name: "재고",
+            async func(record) {
                 const redis = await loadRedis()
 
                 const stock = await redis.hGet(
                     REDIS_HASHMAPS.product_stock,
-                    record.systemId
+                    (record as Product).systemId
                 )
 
                 return stock || "미등록"

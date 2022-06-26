@@ -1,10 +1,10 @@
-import { numberInputIcon } from "@/assets"
-import { Description, Regular, Token } from "@/typo"
-import { Hexile } from "@haechi/flexile"
-import { useState } from "react"
-import { LoadSVG } from ".."
-import { FormikHandlers } from "../Subcontent/RecordEditer/partial"
+import { HTMLInputTypeAttribute, useState } from "react"
 import { InputWraper, LogicalInput } from "./style"
+import { numberInputIcon } from "@/assets"
+import { FormikHandlers } from "@/types"
+import { Hexile } from "@haechi/flexile"
+import { Token } from "@/typo"
+import { LoadSVG } from ".."
 
 const TYPE_ICON_MAP: Record<string, string> = {
     number: numberInputIcon,
@@ -20,14 +20,14 @@ export const TEXT_INPUT_COMPATIBLE_TYPES = [
 
 export const Input: React.FC<
     {
-        placeholder: string
+        placeholder?: string
         label: string
         error?: string
         value?: string
         disabled?: boolean
         hideContent?: boolean
         defaultValue?: string
-        type?: typeof TEXT_INPUT_COMPATIBLE_TYPES[number]
+        type?: HTMLInputTypeAttribute
         name?: string
     } & Partial<FormikHandlers>
 > = (props) => {
@@ -39,10 +39,9 @@ export const Input: React.FC<
         onChange: props.onChange,
         onBlur: props.onBlur,
         name: props.name,
-        ...(props.hideContent && {
-            type: "password",
-        }),
+        type: props.type,
     }
+
     const [currentColor, setColor] = useState<string>()
 
     return (
@@ -64,47 +63,48 @@ export const Input: React.FC<
                     )}
                     <Token>{props.label}</Token>
                 </Hexile>
-                {
+                {/* {
                     {
-                        ["string"]: <LogicalInput {...commonProps} />,
-                        ["number"]: (
-                            <LogicalInput
-                                {...commonProps}
-                                onInput={(e) => {
-                                    e.currentTarget.value =
-                                        e.currentTarget.value.replace(
-                                            /[^0-9-]/g,
-                                            ""
-                                        )
-                                }}
-                            />
-                        ),
-                        ["date"]: (
-                            <LogicalInput
-                                {...commonProps}
-                                type="datetime-local"
-                            />
-                        ),
-                        ["password"]: (
-                            <LogicalInput {...commonProps} type="password" />
-                        ),
-                        ["color"]: (
-                            <Hexile y="center">
-                                <LogicalInput
-                                    {...commonProps}
-                                    type="color"
-                                    colorchip
-                                    onChange={(e) => {
-                                        setColor(e.currentTarget.value)
-                                    }}
-                                />
-                                <Hexile fillx>
-                                    <Regular>{currentColor}</Regular>
-                                </Hexile>
-                            </Hexile>
-                        ),
-                    }[props.type || "string"]
-                }
+                        ["string"]: */}
+                <LogicalInput {...commonProps} />
+                {/*         ["number"]: (
+                             <LogicalInput
+                //                 {...commonProps}
+                //                 onInput={(e) => {
+                //                     e.currentTarget.value =
+                //                         e.currentTarget.value.replace(
+                //                             /[^0-9-]/g,
+                //                             ""
+                //                         )
+                //                 }}
+                //             />
+                //         ),
+                //         ["date"]: (
+                //             <LogicalInput
+                //                 {...commonProps}
+                //                 type="datetime-local"
+                //             />
+                //         ),
+                //         ["password"]: (
+                //             <LogicalInput {...commonProps} type="password" />
+                //         ),
+                //         ["color"]: (
+                //             <Hexile y="center">
+                //                 <LogicalInput
+                //                     {...commonProps}
+                //                     type="color"
+                //                     colorchip
+                //                     onChange={(e) => {
+                //                         setColor(e.currentTarget.value)
+                //                     }}
+                //                 />
+                //                 <Hexile fillx>
+                //                     <Regular>{currentColor}</Regular>
+                //                 </Hexile>
+                //             </Hexile>
+                //         ),
+                //     }[props.type || "string"]
+                // }*/}
                 {props.error && <Token color="error">{props.error}</Token>}
             </InputWraper>
         </label>

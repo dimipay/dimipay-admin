@@ -55,4 +55,7 @@ export const LogicalInput = styled("input", {
             },
         },
     },
+    "&::placeholder": {
+        color: "$dark3",
+    }
 })

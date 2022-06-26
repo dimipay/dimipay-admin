@@ -32,8 +32,6 @@ export const ResetPassword: PanelComponent = (props) => {
         },
     })
 
-    // const onSubmit: SubmitHandler<FormContent> =
-
     return (
         <InlineForm onSubmit={handleSubmit}>
             <Vexile gap={4}>

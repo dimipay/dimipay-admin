@@ -1,51 +1,37 @@
-import { Scheme, SLUG } from "@/types"
-import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "./common"
+import { multipleRelation } from "@/fields/multipleRelation"
+import { number } from "@/fields/number"
+import { singleRelation } from "@/fields/singleRelation"
+import { SLUG } from "@/types"
+import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common"
+import { NeoScheme } from "./user"
 
-export const DISCOUNT_POLICY: Scheme = {
-    displayName: "할인 정책",
-    tableName: SLUG.discountPolicy,
+export const NEO_DISCOUNT_POLICY: NeoScheme = {
+    name: "할인 정책",
+    slug: SLUG.discountPolicy,
     fields: {
-        ...RECORD_BASE_FIELDS,
-        percentRate: {
+        ...NEO_RECORD_BASE_FIELDS,
+        percentRate: number({
             displayName: "할인율 (%)",
-            typeOption: {
-                type: "number",
-                default: 0,
-                suffix: "%",
-            },
-            required: false,
-            description: "최소 1%부터 99%까지 설정할 수 있습니다",
-            validateFunc(_data) {
-                if (_data === '' || _data === undefined) return true
-                const data = +(_data as string)
-                if (data >= 1 && data <= 99) return true
-                return "할인율은 1%부터 99%까지 설정할 수 있습니다"
+            validate: {
+                func: async (value: number) => {
+                    if (value < 0 || value > 100) {
+                        return "할인율은 0~100 사이의 숫자여야 합니다"
+                    }
+                }
             }
-        },
-        fixedPrice: {
+        }),
+        fixedPrice: number({
             displayName: "정가 할인",
-            typeOption: {
-                type: "number",
-                suffix: "원",
-            },
-            required: false,
-        },
-        Event: {
+        }),
+        Event: singleRelation({
             displayName: "연계 이벤트",
-            typeOption: {
-                type: "relation-single",
-                target: SLUG.event,
-                displayNameField: "title",
-            },
-        },
-        targetCategory: {
+            targetTable: SLUG.event,
+            nameField: "title",
+        }),
+        targetCategory: multipleRelation({
             displayName: "할인 카테고리",
-            typeOption: {
-                type: "relation-multiple",
-                target: SLUG.category,
-                displayNameField: "name",
-            },
-        },
-    },
-    actions: [DELETE_SELECTED_RECORDS_ACTION],
+            targetTable: SLUG.category,
+            nameField: "name",
+        })
+    }
 }

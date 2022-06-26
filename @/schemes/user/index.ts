@@ -1,76 +1,48 @@
-import { Scheme, SLUG, TableRecord } from "@/types"
-import { User } from "@prisma/client"
-import { DELETE_SELECTED_RECORDS_ACTION, RECORD_BASE_FIELDS } from "../common"
+import { NeoField } from "@/fields"
+import { text } from "@/fields/text"
+import { PanelComponent, SLUG, Sort, TableRecord, ToolbarAction } from "@/types"
+import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "../common"
 
-export const USER_SCHEME: Scheme = {
-    displayName: "사용자",
-    tableName: SLUG.user,
-    isUUIDPk: true,
+export interface NeoScheme {
+    name: string
+    slug: SLUG,
+    fields: Record<string, NeoField<any>>
+    softDelete?: boolean
+    defaultSort?: Sort
+    computedFields?: Record<string, {
+        name: string
+        func?: (data: TableRecord) => any
+    }>
+    panelComponents?: PanelComponent[]
+    selectActions?: ToolbarAction[]
+}
+
+export const NEO_USER: NeoScheme = {
+    name: "사용자",
+    slug: SLUG.user,
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
     fields: {
-        ...RECORD_BASE_FIELDS,
-        systemId: {
+        ...NEO_RECORD_BASE_FIELDS,
+        systemId: text({
             displayName: "관리 번호",
             autoGenerative: true,
             readOnly: true,
-            typeOption: {
-                type: "string",
-            },
-        },
-        accountName: {
-            displayName: "계정 이름",
-            typeOption: {
-                type: "string",
-            },
-        },
-        name: {
+            invisibleInTable: true,
+        }),
+        accountName: text({
+            displayName: "ID",
+            required: true,
+        }),
+        name: text({
             displayName: "이름",
-            typeOption: {
-                type: "string",
-            },
-        },
-        profileImage: {
+            required: true,
+        }),
+        profileImage: text({
             displayName: "프로필 이미지",
-            typeOption: {
-                type: "string",
-            },
-            required: false,
-        },
-        phoneNumber: {
+        }),
+        phoneNumber: text({
             displayName: "전화번호",
-            typeOption: {
-                type: "string",
-            },
-            required: false,
-        },
-        isTeacher: {
-            displayName: "교사 여부",
-            typeOption: {
-                type: "boolean",
-            },
-            required: false,
-        },
-        isDisabled: {
-            displayName: "거래 중지 여부",
-            typeOption: {
-                type: "boolean",
-            },
-        },
+            placeholder: "010-1234-5678",
+        }),
     },
-    actions: [
-        DELETE_SELECTED_RECORDS_ACTION,
-        {
-            button: {
-                color: "accent",
-                label: "거래 중지",
-            },
-            func(selectedRecords: TableRecord[]) {
-                alert(
-                    (selectedRecords as unknown as User[])
-                        .map((e) => e.accountName)
-                        .join(",") + "라네요. 글 내려주세요."
-                )
-            },
-        },
-    ],
-    panelComponents: [],
 }

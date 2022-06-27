@@ -70,7 +70,9 @@ export const Table: React.FC<{
         if (inView) {
             console.log("inView Yeah!")
             element.scrollTop = 0
-            props.nextPage?.()
+            setTimeout(() => {
+                props.nextPage?.()
+            }, 100)
         }
     }, [inView])
 

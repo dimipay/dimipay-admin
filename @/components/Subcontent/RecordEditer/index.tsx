@@ -58,11 +58,14 @@ export const ModifyRecord = (props: {
     const selectedData = useRecoilValue(selectedRowAtom)
     if (!selectedData) return <></>
 
+    console.log("ㅁㄴㅇㄹ", selectedData)
+
     return (
         <>
             <RecordEditer
                 {...props}
                 scheme={props.scheme}
+                data={selectedData}
                 onSubmit={async (data) => {
                     const generalizedData: Partial<TableRecord> =
                         Object.fromEntries(

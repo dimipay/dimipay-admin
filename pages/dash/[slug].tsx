@@ -5,20 +5,20 @@ import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
 import { NextPage } from "next"
 
+import { Button, LoadSVG, MiniInput, Table } from "@/components"
 import { NewRecord } from "@/components/Subcontent/NewRecord"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
 import { FilterItem } from "@/functions/useFilter/partial"
-import { Important, PageHeader, Regular } from "@/typo"
-import { table, useFilter } from "@/functions"
-import { Button, LoadSVG, MiniInput, Table } from "@/components"
-import { SLUG, TableRecord } from "@/types"
 import { selectedRowAtom, subContentAtom } from "@/coil"
+import { Important, PageHeader, Regular } from "@/typo"
+import { MiniSelect } from "@/components/MiniSelect"
+import { MAIN_ACCENT } from "@/stitches.config"
+import { table, useFilter } from "@/functions"
+import { SLUG, TableRecord } from "@/types"
 import { TABLES } from "@/constants"
 
-import { MAIN_ACCENT } from "@/stitches.config"
 import { SubcontentWrapper } from "./style"
 import { Sidebar } from "./partial"
-import { MiniSelect } from "@/components/MiniSelect"
 
 const TableViewer: NextPage = () => {
     const slug = useRouter().query.slug as SLUG

@@ -19,6 +19,7 @@ export const TableWrapper = styled(Vexile, {
     border: "0.5rem solid $dark5",
     position: "relative",
     animated: true,
+    scrollBehavior: "smooth",
     variants: {
         isLoading: {
             true: {

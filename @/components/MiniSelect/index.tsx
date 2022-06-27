@@ -12,6 +12,7 @@ export const MiniSelect: React.FC<{
     selected?: Option
     onChange: (value: string) => void
     placeholder?: string
+    coDisplayKey?: boolean
 }> = (props) => {
     const [isMenuOpened, setMenuOpened] = useState(false)
 
@@ -42,7 +43,7 @@ export const MiniSelect: React.FC<{
                             setMenuOpened(false)
                             props.onChange(clicked.key as string)
                         }}
-                        coDisplayKey
+                        coDisplayKey={props.coDisplayKey}
                     />
                 </ListWrapper>
             )}

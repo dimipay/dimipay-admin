@@ -64,12 +64,12 @@ export const Table: React.FC<{
     )
 
     useEffect(() => {
+        const element = scrollRef.current
+        if (!element) return
+
         if (inView) {
             console.log("inView Yeah!")
-            scrollRef.current?.scrollTo({
-                top: 0,
-                behavior: "smooth",
-            })
+            element.scrollTop = 0
             props.nextPage?.()
         }
     }, [inView])

@@ -8,7 +8,7 @@ import { NextPage } from "next"
 import { NewRecord } from "@/components/Subcontent/NewRecord"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
 import { FilterItem } from "@/functions/useFilter/partial"
-import { Important, PageHeader } from "@/typo"
+import { Important, PageHeader, Regular } from "@/typo"
 import { table, useFilter } from "@/functions"
 import { Button, LoadSVG, MiniInput, Table } from "@/components"
 import { SLUG, TableRecord } from "@/types"
@@ -18,6 +18,7 @@ import { TABLES } from "@/constants"
 import { MAIN_ACCENT } from "@/stitches.config"
 import { SubcontentWrapper } from "./style"
 import { Sidebar } from "./partial"
+import { MiniSelect } from "@/components/MiniSelect"
 
 const TableViewer: NextPage = () => {
     const slug = useRouter().query.slug as SLUG
@@ -39,7 +40,7 @@ const TableViewer: NextPage = () => {
     const [fullRecordAmount, setFullRecordAmount] = useState<number>()
     const [currentCursor, setCurrentCursor] = useState<number>(0)
     const [loading, setLoading] = useState(false)
-    const [pageSize] = useState(15)
+    const [pageSize, setPageSize] = useState(15)
 
     const {
         filter,
@@ -83,12 +84,12 @@ const TableViewer: NextPage = () => {
     useEffect(() => {
         setRecords(undefined)
         clearFilter()
+        setCurrentCursor(0)
         load()
     }, [scheme])
 
     useEffect(() => {
         load()
-        console.log(currentCursor)
     }, [filter, sortField, sortDirection, currentCursor, pageSize])
 
     return (
@@ -141,7 +142,8 @@ const TableViewer: NextPage = () => {
                             enablePagination={
                                 !!(
                                     fullRecordAmount &&
-                                    fullRecordAmount > pageSize
+                                    fullRecordAmount > pageSize &&
+                                    records.length === pageSize
                                 )
                             }
                             nextPage={() => {
@@ -173,33 +175,60 @@ const TableViewer: NextPage = () => {
                     )}
 
                     {fullRecordAmount !== undefined && (
-                        <Hexile fillx y="center" gap={2}>
-                            <Important
-                                color="dark3"
-                                onClick={() =>
-                                    setCurrentCursor((e) => e - pageSize)
-                                }
-                            >
-                                ←
-                            </Important>
-                            <MiniInput
-                                type="number"
-                                onChange={(e) => setCurrentCursor(+e)}
-                                value={currentCursor.toString()}
-                            />
-                            <Important color="dark3">/</Important>
-                            <Important color="dark3">
-                                {fullRecordAmount}
-                            </Important>
+                        <Hexile gap={8} x="left" y="center">
+                            <Hexile y="center" gap={2}>
+                                <Important
+                                    color="dark3"
+                                    onClick={() =>
+                                        setCurrentCursor((e) => e - pageSize)
+                                    }
+                                >
+                                    ←
+                                </Important>
+                                <MiniInput
+                                    type="number"
+                                    onChange={(e) => setCurrentCursor(+e)}
+                                    value={currentCursor.toString()}
+                                />
+                                <Important color="dark3">/</Important>
+                                <Important color="dark3">
+                                    {fullRecordAmount}
+                                </Important>
 
-                            <Important
-                                onClick={() =>
-                                    setCurrentCursor((e) => e + pageSize)
-                                }
-                                color="dark3"
-                            >
-                                →
-                            </Important>
+                                <Important
+                                    onClick={() =>
+                                        setCurrentCursor((e) => e + pageSize)
+                                    }
+                                    color="dark3"
+                                >
+                                    →
+                                </Important>
+                            </Hexile>
+                            <Hexile gap={2} y="center">
+                                <Regular color="dark3">
+                                    한 페이지에 보여줄 갯수
+                                </Regular>
+                                <MiniSelect
+                                    options={[
+                                        {
+                                            label: "15",
+                                            key: 15,
+                                        },
+                                        {
+                                            label: "30",
+                                            key: 30,
+                                        },
+                                        {
+                                            label: "500",
+                                            key: 500,
+                                        },
+                                    ]}
+                                    onChange={(e) => setPageSize(+e)}
+                                    selected={{
+                                        label: pageSize.toString(),
+                                    }}
+                                />
+                            </Hexile>
                         </Hexile>
                     )}
                     {/* dummy for space */}

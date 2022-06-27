@@ -78,6 +78,7 @@ export const FilterItem: React.FC<{
                     })
                 }}
                 placeholder="조건"
+                coDisplayKey
                 selected={
                     operator
                         ? {

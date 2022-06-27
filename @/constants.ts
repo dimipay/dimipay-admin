@@ -22,6 +22,8 @@ export const assert = (name: string, isServersideOnly: boolean = true) => {
 
 export const JWT_SECRET = assert("JWT_SECRET")
 export const REDIS_URI = assert("REDIS_URI")
+export const NOTION_TOKEN = assert("NOTION_TOKEN")
+export const NOTION_TABLE = assert("NOTION_TABLE")
 
 export const SOFT_DELETE_FIELD_NAME = "is_deleted"
 

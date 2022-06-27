@@ -1,4 +1,4 @@
-import { verifyJWT } from "@/functions"
+import { logNotion, verifyJWT } from "@/functions"
 import { HandlerError } from "@/types"
 import { NextApiHandler } from "next"
 
@@ -7,22 +7,38 @@ export type Handlers = Record<string, (props: any, slug: any) => unknown>
 export const endpoint =
     (handlers: Handlers): NextApiHandler =>
         async (req, res) => {
-            try {
-                if (req.url !== '/api/login' && (!req.headers.authorization || !verifyJWT(
-                    req.headers.authorization
-                )))
-                    throw new HandlerError("로그인이 필요해요", 401)
+            const user = req.headers.authorization && verifyJWT<{
+                number: string
+                username: string
+            }>(req.headers.authorization)
 
+            const reqContent = req.method === "GET" && req.query.query
+                ? JSON.parse(req.query.query as string)
+                : req.body
+
+            try {
+                if (!(req.url === '/api/login' || user)) {
+                    console.log(
+                        req.url, user
+                    )
+                    throw new HandlerError("로그인이 필요해요", 401)
+                }
 
                 const handler = handlers[req.method as string]
                 if (!handler) throw new HandlerError(`동작을 찾을 수 없어요`, 404)
 
                 const result = await handler(
-                    req.method === "GET" && req.query.query
-                        ? JSON.parse(req.query.query as string)
-                        : req.body,
+                    reqContent,
                     req.query
                 )
+
+                logNotion({
+                    actioner: user && user.username || 'anonymous',
+                    type: req.method!,
+                    url: req.url!,
+                    data: req.url === '/api/login' ? "BLIND" : reqContent,
+                    result: result,
+                })
 
                 res.json(result)
             } catch (e) {
@@ -40,6 +56,14 @@ export const endpoint =
                         isHandlerError: true,
                     })
                 }
+
+                logNotion({
+                    actioner: user && user.username || 'anonymous',
+                    type: req.method!,
+                    url: req.url!,
+                    data: req.url === '/api/login' ? "BLIND" : reqContent,
+                    result: e,
+                })
             }
         }
 

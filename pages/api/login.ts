@@ -18,6 +18,7 @@ const actions = {
         return {
             token: createJWT({
                 id: user.id,
+                username: user.username,
             }),
             user,
         }

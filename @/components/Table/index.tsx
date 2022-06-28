@@ -17,60 +17,35 @@ export const Table: React.FC<{
     setSort?(key: string): void
     sortField?: string | null
     sortDirection?: "123" | "321" | null
-    nextPage?: () => void
+    goPageBy?: (delta: number) => void
     isLoading?: boolean
     enablePagination?: boolean
+    focusSearch?: () => void
 }> = ({ records: data, ...props }) => {
     const [selectedRecordIds, setSelectedRecordIds] = React.useState<number[]>(
         []
     )
 
-    const [isReached, setIsReached] = useState<boolean>(false)
-
-    const { ref, inView } = useInView({
-        threshold: 0.03,
-    })
-
-    const scrollRef = React.useRef<HTMLDivElement | null>(null)
-    const timeoutRef = React.useRef<NodeJS.Timeout | null>(null)
-
-    const onScroll = useCallback(
-        (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-            if (!props.enablePagination) return
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current)
-            }
-            const target = e.currentTarget as HTMLDivElement
-
-            scrollRef.current = target
-
-            const bottom =
-                target.scrollHeight - target.scrollTop - target.clientHeight
-
-            if (bottom === 0 && !isReached) {
-                timeoutRef.current = setTimeout(() => {
-                    setIsReached(true)
-                }, 100)
-            } else {
-                timeoutRef.current = setTimeout(() => {
-                    setIsReached(false)
-                }, 300)
-            }
-        },
-        [isReached, scrollRef, props]
-    )
-
     useEffect(() => {
-        const element = scrollRef.current
-        if (!element) return
+        const keyboardHandler = (e: KeyboardEvent) => {
+            if ((e.target as HTMLElement).tagName !== "BODY") return
 
-        if (inView) {
-            element.scrollTop = 0
-            setTimeout(() => {
-                props.nextPage?.()
-            }, 100)
+            if (e.key === "ArrowRight") {
+                props.goPageBy?.(1)
+            } else if (e.key === "ArrowLeft") {
+                props.goPageBy?.(-1)
+            } else if (e.key === "q") {
+                props.focusSearch?.()
+                e.preventDefault()
+            }
         }
-    }, [inView])
+
+        document.body.addEventListener("keydown", keyboardHandler)
+
+        return () => {
+            document.body.removeEventListener("keydown", keyboardHandler)
+        }
+    }, [props.goPageBy])
 
     return (
         <div
@@ -87,7 +62,6 @@ export const Table: React.FC<{
                     filly
                     scrollx
                     y="space"
-                    onScroll={onScroll}
                     isLoading={props.isLoading}
                 >
                     <TableContent>
@@ -163,24 +137,6 @@ export const Table: React.FC<{
                             ))}
                         </tbody>
                     </TableContent>
-                    {props.enablePagination && (
-                        <>
-                            <DividerLine />
-                            <Hexile fillx x="center" padding={4}>
-                                <Important color="accent">
-                                    한 번 더 쓸어 내려서 다음 페이지
-                                </Important>
-                            </Hexile>
-                        </>
-                    )}
-                    {isReached && (
-                        <div
-                            ref={ref}
-                            style={{
-                                padding: "6rem",
-                            }}
-                        ></div>
-                    )}
                     {selectedRecordIds.length !== 0 && (
                         <ActionToolbars gap={2} padding={4}>
                             {props.scheme.selectActions?.length ? (

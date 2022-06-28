@@ -42,8 +42,6 @@ export const Input: React.FC<
         type: props.type,
     }
 
-    const [currentColor, setColor] = useState<string>()
-
     return (
         <label>
             <InputWraper
@@ -63,48 +61,7 @@ export const Input: React.FC<
                     )}
                     <Token>{props.label}</Token>
                 </Hexile>
-                {/* {
-                    {
-                        ["string"]: */}
                 <LogicalInput {...commonProps} />
-                {/*         ["number"]: (
-                             <LogicalInput
-                //                 {...commonProps}
-                //                 onInput={(e) => {
-                //                     e.currentTarget.value =
-                //                         e.currentTarget.value.replace(
-                //                             /[^0-9-]/g,
-                //                             ""
-                //                         )
-                //                 }}
-                //             />
-                //         ),
-                //         ["date"]: (
-                //             <LogicalInput
-                //                 {...commonProps}
-                //                 type="datetime-local"
-                //             />
-                //         ),
-                //         ["password"]: (
-                //             <LogicalInput {...commonProps} type="password" />
-                //         ),
-                //         ["color"]: (
-                //             <Hexile y="center">
-                //                 <LogicalInput
-                //                     {...commonProps}
-                //                     type="color"
-                //                     colorchip
-                //                     onChange={(e) => {
-                //                         setColor(e.currentTarget.value)
-                //                     }}
-                //                 />
-                //                 <Hexile fillx>
-                //                     <Regular>{currentColor}</Regular>
-                //                 </Hexile>
-                //             </Hexile>
-                //         ),
-                //     }[props.type || "string"]
-                // }*/}
                 {props.error && <Token color="error">{props.error}</Token>}
             </InputWraper>
         </label>

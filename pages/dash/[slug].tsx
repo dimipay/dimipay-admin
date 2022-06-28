@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import HashLoader from "react-spinners/HashLoader"
 import { Hexile, Vexile } from "@haechi/flexile"
@@ -49,6 +49,8 @@ const TableViewer: NextPage = () => {
         return user.user.AdminRole?.permissions?.[scheme.slug] || []
     }, [scheme, user])
 
+    const [focusSearchbox, setFocusSearchbox] = useState<() => void>()
+
     useEffect(() => {
         if (currentTablePermission && !currentTablePermission.includes("R")) {
             router.replace("/login")
@@ -76,6 +78,15 @@ const TableViewer: NextPage = () => {
         ...filterOptions
     } = useFilter(scheme)
 
+    useEffect(() => {
+        if (!fullRecordAmount) return
+        if (!currentCursor) return
+
+        if (currentCursor > fullRecordAmount)
+            setCurrentCursor(fullRecordAmount - 1)
+        else if (currentCursor < 0) setCurrentCursor(0)
+    }, [currentCursor, fullRecordAmount])
+
     const [records, setRecords] = useState<TableRecord[]>()
 
     const load = useCallback(() => {
@@ -88,7 +99,7 @@ const TableViewer: NextPage = () => {
             .GET({
                 filter: filter,
                 amount: pageSize,
-                skip: currentCursor ? currentCursor : 0,
+                skip: currentCursor ? Math.max(currentCursor, 0) : 0,
                 sort:
                     sortField && sortDirection
                         ? [
@@ -149,7 +160,13 @@ const TableViewer: NextPage = () => {
                         <PageHeader>{scheme.name}</PageHeader>
                         <Hexile gap={2}>
                             {searchableFields?.length !== 0 && (
-                                <InlineInput onChange={setQuickSearchQuery}>
+                                <InlineInput
+                                    onChange={setQuickSearchQuery}
+                                    focusHandler={(e) => {
+                                        console.log("지정해줌")
+                                        setFocusSearchbox(() => e)
+                                    }}
+                                >
                                     빠른 찾기..
                                 </InlineInput>
                             )}
@@ -202,9 +219,10 @@ const TableViewer: NextPage = () => {
                                     records.length === pageSize
                                 )
                             }
-                            nextPage={() => {
-                                setCurrentCursor((e) => e + pageSize)
+                            goPageBy={(delta) => {
+                                setCurrentCursor((e) => e + pageSize * delta)
                             }}
+                            focusSearch={focusSearchbox}
                             setSort={(fieldName: string) => {
                                 if (sortField === fieldName) {
                                     if (sortDirection === "123") {
@@ -244,7 +262,10 @@ const TableViewer: NextPage = () => {
                                 <MiniInput
                                     type="number"
                                     onChange={(e) => setCurrentCursor(+e)}
-                                    value={currentCursor.toString()}
+                                    value={Math.max(
+                                        currentCursor,
+                                        0
+                                    ).toString()}
                                 />
                                 <Important color="dark3">/</Important>
                                 <Important color="dark3">

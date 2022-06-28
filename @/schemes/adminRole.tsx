@@ -1,12 +1,14 @@
 import { Description, Important, Regular } from "@/typo"
-import { NEO_RECORD_BASE_FIELDS } from "./common"
+import {
+    DELETE_SELECTED_RECORDS_ACTION,
+    NEO_RECORD_BASE_FIELDS,
+} from "./common"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { text } from "@/fields/text"
 import { TABLES } from "@/constants"
 import { NeoField } from "@/fields"
-import { NeoScheme } from "./user"
 import { useState } from "react"
-import { SLUG } from "@/types"
+import { NeoScheme, SLUG } from "@/types"
 
 const EXTRA_PERMISSION_DOMAINS = [
     {
@@ -206,4 +208,5 @@ export const NEO_ADMIN_ROLE_SCHEME: NeoScheme = {
         }),
         permissions: permissionSelector,
     },
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

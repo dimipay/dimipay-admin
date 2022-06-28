@@ -2,9 +2,8 @@ import { date } from "@/fields/date";
 import { multipleRelation } from "@/fields/multipleRelation";
 import { singleRelation } from "@/fields/singleRelation";
 import { text } from "@/fields/text";
-import { SLUG } from "@/types";
-import { NEO_RECORD_BASE_FIELDS } from "./common";
-import { NeoScheme } from "./user";
+import { NeoScheme, SLUG } from "@/types";
+import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common";
 
 export const NEO_STORE_PRODUCT: NeoScheme = {
     name: "상품 입고",
@@ -41,5 +40,6 @@ export const NEO_STORE_PRODUCT: NeoScheme = {
             nameField: "id",
             invisibleInTable: true
         })
-    }
+    },
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

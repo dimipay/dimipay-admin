@@ -1,8 +1,7 @@
 import { REDIS_HASHMAPS } from "@/functions"
 import { Product } from "@prisma/client"
 import { loadRedis } from "@/storage"
-import { NeoScheme } from "../user"
-import { SLUG } from "@/types"
+import { NeoScheme, SLUG } from "@/types"
 
 export const PRODUCT_SCHEME_SERVERSIDE: Partial<NeoScheme> = {
     slug: SLUG.product,
@@ -20,5 +19,5 @@ export const PRODUCT_SCHEME_SERVERSIDE: Partial<NeoScheme> = {
                 return stock || "미등록"
             },
         },
-    },
+    }
 }

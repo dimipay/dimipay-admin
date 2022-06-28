@@ -1,6 +1,5 @@
-import { NeoScheme } from "@/schemes"
-
 import {
+    NeoScheme,
     TableRecord,
 } from "@/types"
 import { useFormik } from "formik"

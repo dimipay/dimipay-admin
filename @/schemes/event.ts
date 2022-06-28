@@ -1,8 +1,7 @@
 import { date } from "@/fields/date"
 import { text } from "@/fields/text"
-import { SLUG } from "@/types"
+import { NeoScheme, SLUG } from "@/types"
 import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common"
-import { NeoScheme } from "./user"
 
 export const NEO_EVENT_SCHEME: NeoScheme = {
     name: "이벤트",

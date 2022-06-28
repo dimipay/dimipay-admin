@@ -3,7 +3,7 @@ import { number } from "@/fields/number"
 import { singleRelation } from "@/fields/singleRelation"
 import { text } from "@/fields/text"
 import { NeoScheme, SLUG } from "@/types"
-import { NEO_RECORD_BASE_FIELDS } from "./common"
+import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common"
 
 export const NEO_TRANSACTION_SCHEME: NeoScheme = {
     name: "판매 기록",
@@ -71,5 +71,6 @@ export const NEO_TRANSACTION_SCHEME: NeoScheme = {
             nameField: "name",
             searchable: true
         })
-    }
+    },
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

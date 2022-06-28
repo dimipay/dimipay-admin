@@ -1,7 +1,7 @@
 import { RecordEditer } from "../RecordEditer"
-import { NeoScheme } from "@/schemes"
 import { table } from "@/functions"
 import { toast } from "react-toastify"
+import { NeoScheme } from "@/types"
 
 export const NewRecord = (props: {
     scheme: NeoScheme

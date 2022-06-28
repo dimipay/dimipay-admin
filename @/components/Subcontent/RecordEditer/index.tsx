@@ -1,10 +1,9 @@
 import { Button, DividerLine, InlineForm } from "@/components"
 import { Vexile } from "@haechi/flexile"
 import { toast } from "react-toastify"
-import { TableRecord } from "@/types"
+import { NeoScheme, TableRecord } from "@/types"
 import { Fragment } from "react"
 
-import { NeoScheme } from "@/schemes"
 import { table } from "@/functions"
 import { Important } from "@/typo"
 import { useLogic } from "./logic"

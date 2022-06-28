@@ -2,9 +2,8 @@ import { multipleRelation } from "@/fields/multipleRelation";
 import { number } from "@/fields/number";
 import { singleRelation } from "@/fields/singleRelation";
 import { text } from "@/fields/text";
-import { SLUG } from "@/types";
-import { NEO_RECORD_BASE_FIELDS } from "./common";
-import { NeoScheme } from "./user";
+import { NeoScheme, SLUG } from "@/types";
+import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common";
 
 export const NEO_PRODUCT_IN_OUT_LOG_SCHEME: NeoScheme = {
     name: "입출고 기록",
@@ -49,5 +48,6 @@ export const NEO_PRODUCT_IN_OUT_LOG_SCHEME: NeoScheme = {
             targetTable: SLUG.transaction,
             nameField: "id",
         })
-    }
+    },
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

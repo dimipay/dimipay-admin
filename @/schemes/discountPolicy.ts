@@ -1,9 +1,8 @@
 import { multipleRelation } from "@/fields/multipleRelation"
 import { number } from "@/fields/number"
 import { singleRelation } from "@/fields/singleRelation"
-import { SLUG } from "@/types"
+import { NeoScheme, SLUG } from "@/types"
 import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common"
-import { NeoScheme } from "./user"
 
 export const NEO_DISCOUNT_POLICY: NeoScheme = {
     name: "할인 정책",
@@ -33,5 +32,6 @@ export const NEO_DISCOUNT_POLICY: NeoScheme = {
             targetTable: SLUG.category,
             nameField: "name",
         })
-    }
+    },
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

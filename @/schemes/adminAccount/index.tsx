@@ -4,7 +4,10 @@ import { NeoScheme, SLUG } from "@/types"
 import { text } from "@/fields/text"
 import bcrypt from "bcryptjs"
 
-import { NEO_RECORD_BASE_FIELDS } from "../common"
+import {
+    DELETE_SELECTED_RECORDS_ACTION,
+    NEO_RECORD_BASE_FIELDS,
+} from "../common"
 import { ResetPassword } from "./ResetPassword"
 
 export const NEO_ADMIN_ACCOUNT: NeoScheme = {
@@ -48,4 +51,5 @@ export const NEO_ADMIN_ACCOUNT: NeoScheme = {
         }),
     },
     panelComponents: [ResetPassword],
+    selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

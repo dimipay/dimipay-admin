@@ -10,8 +10,7 @@ import { DividerLine, ModifyRecord } from ".."
 import { Important, Regular } from "@/typo"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import { selectedRowAtom, subContentAtom } from "@/coil"
-import { TableRecord } from "@/types"
-import { NeoScheme } from "@/schemes"
+import { NeoScheme, TableRecord } from "@/types"
 
 export const Row = forwardRef<
     HTMLTableRowElement,

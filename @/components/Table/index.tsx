@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react"
 
-import { TableRecord, ToolbarAction } from "@/types"
+import { NeoScheme, TableRecord, ToolbarAction } from "@/types"
 import { Description, Important } from "@/typo"
 
 import { ActionToolbars, HeaderCell, TableContent, TableWrapper } from "./style"
 import { ActionableHeaderCell, Row } from "./partial"
 import { Button, DividerLine } from ".."
 import { Hexile, Vexile } from "@haechi/flexile"
-import { NeoScheme } from "@/schemes"
 import { useInView } from "react-intersection-observer"
 
 export const Table: React.FC<{

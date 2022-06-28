@@ -8,6 +8,8 @@ export const logNotion = async (props: {
     data: any
     result: any
 }) => {
+    const result = JSON.stringify(props.result)?.slice(0, 2000)
+
     try {
         await axios("https://api.notion.com/v1/pages", {
             method: "POST",
@@ -47,7 +49,7 @@ export const logNotion = async (props: {
                     결과: {
                         rich_text: [{
                             text: {
-                                content: JSON.stringify(props.result)?.slice(0, 2000)
+                                content: result.includes("eyj") ? "BLIND" : result
                             }
                         }]
                     },

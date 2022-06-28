@@ -20,11 +20,6 @@ const actions = {
         try {
             const redis = await loadRedis()
 
-            console.log(
-                content,
-                `${content.posId}:${await bcrypt.hash(randomKey, 10)}`
-            )
-
             await redis.set(
                 key.posRegistrationPasscode,
                 `${content.posId}:${await bcrypt.hash(randomKey, 10)}`

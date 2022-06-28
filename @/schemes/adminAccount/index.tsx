@@ -1,13 +1,10 @@
-// import { prisma } from "@/storage"
-import { multipleRelation } from "@/fields/multipleRelation"
 import { singleRelation } from "@/fields/singleRelation"
-import { text } from "@/fields/text"
-import { SLUG } from "@/types"
 import { AdminAccount } from "@prisma/client"
+import { NeoScheme, SLUG } from "@/types"
+import { text } from "@/fields/text"
 import bcrypt from "bcryptjs"
 
 import { NEO_RECORD_BASE_FIELDS } from "../common"
-import { NeoScheme } from "../user"
 import { ResetPassword } from "./ResetPassword"
 
 export const NEO_ADMIN_ACCOUNT: NeoScheme = {
@@ -18,6 +15,7 @@ export const NEO_ADMIN_ACCOUNT: NeoScheme = {
         username: text({
             displayName: "아이디",
             required: true,
+            searchable: true,
         }),
         hashedPassword: text({
             displayName: "비밀번호",
@@ -26,12 +24,13 @@ export const NEO_ADMIN_ACCOUNT: NeoScheme = {
             autoGenerative: true,
             format: {
                 beforeSave(value, record, isUpdate?) {
-                    if (isUpdate) return bcrypt.hashSync(value, 10)
-
-                    return bcrypt.hashSync(
-                        (record as AdminAccount).username,
-                        10
-                    )
+                    if (value) return bcrypt.hashSync(value, 10)
+                    else if ((record as AdminAccount).username) {
+                        return bcrypt.hashSync(
+                            (record as AdminAccount).username,
+                            10
+                        )
+                    }
                 },
             },
         }),
@@ -39,6 +38,13 @@ export const NEO_ADMIN_ACCOUNT: NeoScheme = {
             displayName: "연결된 사용자",
             targetTable: SLUG.user,
             nameField: "name",
+            searchable: true,
+        }),
+        AdminRole: singleRelation({
+            displayName: "권한",
+            targetTable: SLUG.adminRole,
+            nameField: "name",
+            searchable: true,
         }),
     },
     panelComponents: [ResetPassword],

@@ -58,8 +58,6 @@ export const ModifyRecord = (props: {
     const selectedData = useRecoilValue(selectedRowAtom)
     if (!selectedData) return <></>
 
-    console.log("ㅁㄴㅇㄹ", selectedData)
-
     return (
         <>
             <RecordEditer
@@ -76,6 +74,10 @@ export const ModifyRecord = (props: {
                                         !props.scheme.fields[key].field
                                             .autoGenerative
                                 )
+                                .map(([key, value]) => [
+                                    key,
+                                    value === null ? undefined : value,
+                                ])
                                 .filter((e) => e[0])
                         )
 

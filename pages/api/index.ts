@@ -18,9 +18,6 @@ export const endpoint =
 
             try {
                 if (!(req.url === '/api/login' || user)) {
-                    console.log(
-                        req.url, user
-                    )
                     throw new HandlerError("로그인이 필요해요", 401)
                 }
 

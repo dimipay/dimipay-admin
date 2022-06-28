@@ -9,6 +9,7 @@ export interface FieldProps<DBType> {
     placeholder?: string
     description?: string
     invisibleInTable?: boolean
+    searchable?: boolean
     validate?: {
         func: (value: any) => Promise<string | undefined>
         yup?: SchemaLike
@@ -54,6 +55,13 @@ const fieldTypes = [
     "MULTIPLE_RELATION",
     "SINGLE_RELATION",
     "NUMBER",
+    "CUSTOM"
 ] as const
 
 export type FieldType = typeof fieldTypes[number]
+
+export * from "./date"
+export * from "./multipleRelation"
+export * from "./number"
+export * from "./singleRelation"
+export * from "./text"

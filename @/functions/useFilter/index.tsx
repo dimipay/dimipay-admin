@@ -1,5 +1,4 @@
-import { NeoScheme } from "@/schemes"
-import { Filter } from "@/types"
+import { Filter, NeoScheme } from "@/types"
 import { Hexile } from "@haechi/flexile"
 import { useEffect, useMemo, useState } from "react"
 import { FilterItem, FilterWithDisablity } from "./partial"
@@ -62,8 +61,6 @@ export const useFilter = (scheme?: NeoScheme) => {
                                 disabled={disabled}
                                 field={scheme.fields[content[0]]}
                                 updateFilter={(update) => {
-                                    console.log(update)
-
                                     if (update === null)
                                         return setFilters((prev) => [
                                             ...prev.slice(0, index),

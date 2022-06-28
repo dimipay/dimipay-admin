@@ -20,10 +20,6 @@ async function saveProductStocksToRedis() {
         },
     })
 
-    console.log(
-        summary
-    )
-
     for (const product of summary) {
         if (product._sum.delta === null) continue
         redis.hSet(
@@ -181,7 +177,7 @@ export const statisticsGetters: {
         return {
             list: summary.map((product) => ({
                 label: products[product.productSid.toString()],
-                secondaryLabel: (-product._sum.delta!).toString() + "개",
+                secondaryLabel: (product._sum.delta!).toString() + "개",
             })),
         }
     },

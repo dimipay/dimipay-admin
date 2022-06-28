@@ -1,8 +1,7 @@
 import { SOFT_DELETE_FIELD_NAME, TABLES } from "@/constants"
 import { NeoField, FieldType } from "@/fields"
-import { MultipleRelationFieldFactoryProps } from "@/fields/multipleRelation"
+import { MultipleRelationFieldFactoryProps, MultipleRelationNeoField } from "@/fields/multipleRelation"
 import { SingleRelationFieldFactoryProps } from "@/fields/singleRelation"
-import { NeoScheme } from "@/schemes"
 import { serversideSchemes } from "@/schemes/serverside"
 import { prisma } from "@/storage"
 import {
@@ -10,23 +9,32 @@ import {
     Filter,
     HandlerError,
     MultipleRelation,
+    NeoScheme,
     SingleRelation,
     Sort,
     TableRecord,
 } from "@/types"
 import { endpoint } from ".."
 
-const applyFieldFormats = (data: Partial<TableRecord>, fields: NeoScheme['fields'], isUpdate = false) => Object.entries(data).reduce(
-    (acc, [key, _value]) => {
-        let value: DataValue = _value
-        const field: NeoField<any> = fields[key]
+const applyFieldFormats = (data: Partial<TableRecord>, fields: NeoScheme['fields'], isUpdate = false) => Object.entries(fields).reduce(
+    (acc, [key, field]) => {
+        let value: DataValue = data[key]
 
+        if (!(key in fields) && !field.field.autoGenerative) return acc
         if (!field) return acc
 
-        if (field.format?.beforeSave)
+        if (field.format?.beforeSave && value)
             value = field.format.beforeSave(value, data, isUpdate)
 
-        if (field.field.format?.beforeSave)
+        // value is empty, but it's auto generative
+        if (field.format?.beforeSave && !value && field.field.autoGenerative)
+            value = field.format.beforeSave(value, data, isUpdate)
+
+        if (field.field.format?.beforeSave && value)
+            value = field.field.format.beforeSave(value, data, isUpdate)
+
+        // value is empty, but it's auto generative
+        if (field.field.format?.beforeSave && !value && field.field.autoGenerative)
             value = field.field.format.beforeSave(value, data, isUpdate)
 
         return {
@@ -37,19 +45,70 @@ const applyFieldFormats = (data: Partial<TableRecord>, fields: NeoScheme['fields
     {}
 )
 
-const filtersToPrismaWhereOption = (filters: Filter[]) => {
+const createFieldQuery = (filter: Filter, field: NeoField<any>) => {
+    const [
+        fieldName,
+        operator,
+        value
+    ] = filter
+
+    const operation = {
+        [{
+            "=": "equals",
+            ">": "gt",
+            ">=": "gte",
+            "<": "lt",
+            "<=": "lte",
+        }[operator] || operator]: value,
+    }
+
+    if (field.type === "MULTIPLE_RELATION") {
+        const nameField = (field as MultipleRelationNeoField).field.nameField
+        if (!nameField) return null
+
+        return {
+            [fieldName]: {
+                every: {
+                    [nameField]: operation
+                }
+            }
+        }
+    }
+
+    if (field.type === "SINGLE_RELATION") {
+        const nameField = (field as MultipleRelationNeoField).field.nameField
+        if (!nameField) return null
+
+        return {
+            [fieldName]: {
+                is: {
+                    [nameField]: operation
+                }
+            }
+        }
+    }
+
     return {
-        AND: filters.map((e) => ({
-            [e[0]]: {
-                [{
-                    "=": "equals",
-                    ">": "gt",
-                    ">=": "gte",
-                    "<": "lt",
-                    "<=": "lte",
-                }[e[1]] || e[1]]: e[2],
-            },
-        })),
+        [fieldName]: operation,
+    }
+}
+
+const filtersToPrismaWhereOption = (filters: Filter[], searchQuery: string | null, fields: NeoScheme['fields']) => {
+    return {
+        AND: [...filters.map((filter) => createFieldQuery(
+            filter,
+            fields[filter[0]]
+        )).filter(e => e !== null), searchQuery && {
+            OR:
+                Object.entries(fields)
+                    .filter(([key, value]) => value.field.searchable)
+                    .map(([fieldName, field]) => createFieldQuery(
+                        [
+                            fieldName, 'contains', searchQuery
+                        ],
+                        field
+                    ))
+        }],
     }
 }
 
@@ -66,6 +125,7 @@ const actions = {
             sort?: Sort[]
             amount: number
             skip?: number
+            searchQuery?: string
         },
         slug: {
             slug: string
@@ -95,7 +155,7 @@ const actions = {
 
         try {
             const filter =
-                props.filter && filtersToPrismaWhereOption(props.filter)
+                props.filter && filtersToPrismaWhereOption(props.filter, props.searchQuery || null, table.fields)
             const sort = props.sort && sortsToPrismaOrderByOption(props.sort)
 
             try {
@@ -218,11 +278,9 @@ const actions = {
                     amount: fullAmount,
                 }
             } catch (e) {
-                console.log(e)
                 throw e
             }
         } catch (e) {
-            console.log(e)
             throw e
         }
     },
@@ -235,9 +293,6 @@ const actions = {
             slug: string
         }
     ) {
-        console.log(
-            TABLES.map(e => e.slug)
-        )
         const table = TABLES.find((table) => table.slug === slug.slug)
 
         if (!table) {
@@ -292,10 +347,6 @@ const actions = {
             props.data,
             table.fields,
             true
-        )
-
-        console.log(
-            data
         )
 
         const res: TableRecord = await (prisma[table.slug].update as any)({

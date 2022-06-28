@@ -34,7 +34,6 @@ export const useLogic = (props: {
                     } catch (e) {
                         if (e instanceof Error)
                             errors[key] = (e).message
-                        else console.log(e)
                     }
                 }
             }

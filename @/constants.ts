@@ -8,10 +8,11 @@ import {
     NEO_PRODUCT_IN_OUT_LOG_SCHEME,
     NEO_STORE_PRODUCT,
     NEO_TRANSACTION_SCHEME,
-    NEO_USER
+    NEO_USER,
+    NEO_ADMIN_ROLE_SCHEME,
+    NEO_ADMIN_ACCOUNT
 } from "./schemes"
-import { NEO_ADMIN_ACCOUNT } from "./schemes/adminAccount"
-import { SchemeGroup, StatisticsCard } from "./types"
+import { NeoScheme, SchemeGroup, StatisticsCard } from "./types"
 
 export const assert = (name: string, isServersideOnly: boolean = true) => {
     const content = process.env[name]
@@ -47,7 +48,8 @@ export const GROUPED_TABLES: SchemeGroup[] = [
             NEO_POS_DEVICE_SCHEME,
             NEO_USER,
             NEO_ADMIN_ACCOUNT,
-            NEO_PAYMENT_METHOD_SCHEME
+            NEO_PAYMENT_METHOD_SCHEME,
+            NEO_ADMIN_ROLE_SCHEME
         ],
     },
 ]
@@ -113,4 +115,4 @@ export const STATISTICS: {
         },
     ]
 
-export const TABLES = GROUPED_TABLES.flatMap((group) => group.content)
+export const TABLES: NeoScheme[] = GROUPED_TABLES.flatMap((group) => group.content)

@@ -1,21 +1,6 @@
-import { NeoField } from "@/fields"
 import { text } from "@/fields/text"
-import { PanelComponent, SLUG, Sort, TableRecord, ToolbarAction } from "@/types"
+import { NeoScheme, SLUG } from "@/types"
 import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "../common"
-
-export interface NeoScheme {
-    name: string
-    slug: SLUG,
-    fields: Record<string, NeoField<any>>
-    softDelete?: boolean
-    defaultSort?: Sort
-    computedFields?: Record<string, {
-        name: string
-        func?: (data: TableRecord) => any
-    }>
-    panelComponents?: PanelComponent[]
-    selectActions?: ToolbarAction[]
-}
 
 export const NEO_USER: NeoScheme = {
     name: "사용자",
@@ -28,14 +13,17 @@ export const NEO_USER: NeoScheme = {
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
+            searchable: true,
         }),
         accountName: text({
             displayName: "ID",
             required: true,
+            searchable: true,
         }),
         name: text({
             displayName: "이름",
             required: true,
+            searchable: true,
         }),
         profileImage: text({
             displayName: "프로필 이미지",
@@ -43,6 +31,7 @@ export const NEO_USER: NeoScheme = {
         phoneNumber: text({
             displayName: "전화번호",
             placeholder: "010-1234-5678",
+            searchable: true,
         }),
     },
 }

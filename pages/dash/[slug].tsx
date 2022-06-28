@@ -1,27 +1,32 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { useRecoilState, useSetRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import HashLoader from "react-spinners/HashLoader"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
 import { NextPage } from "next"
 
-import { Button, LoadSVG, MiniInput, Table } from "@/components"
+import { Button, InlineInput, LoadSVG, MiniInput, Table } from "@/components"
 import { NewRecord } from "@/components/Subcontent/NewRecord"
 import { addIcon, closeIcon, downloadIcon } from "@/assets"
 import { FilterItem } from "@/functions/useFilter/partial"
-import { selectedRowAtom, subContentAtom } from "@/coil"
+import { selectedRowAtom, subContentAtom, userAtom } from "@/coil"
 import { Important, PageHeader, Regular } from "@/typo"
 import { MiniSelect } from "@/components/MiniSelect"
 import { MAIN_ACCENT } from "@/stitches.config"
-import { table, useFilter } from "@/functions"
-import { SLUG, TableRecord } from "@/types"
+import { logNotion, table, useFilter } from "@/functions"
+import { Filter, SLUG, TableRecord } from "@/types"
 import { TABLES } from "@/constants"
 
 import { SubcontentWrapper } from "./style"
 import { Sidebar } from "./partial"
+import { PermissionSymbol } from "@/schemes"
 
 const TableViewer: NextPage = () => {
-    const slug = useRouter().query.slug as SLUG
+    const router = useRouter()
+    const slug = router.query.slug as SLUG
+
+    const user = useRecoilValue(userAtom)
+
     const [subcontent, setSubcontent] = useRecoilState(subContentAtom)
     const setSelectedRow = useSetRecoilState(selectedRowAtom)
     const setSubContent = useSetRecoilState(subContentAtom)
@@ -30,6 +35,25 @@ const TableViewer: NextPage = () => {
         () => TABLES.find((table) => table.slug === SLUG[slug]),
         [slug]
     )
+
+    const searchableFields = useMemo(() => {
+        if (!scheme) return undefined
+
+        return Object.entries(scheme.fields)
+            .filter(([key, value]) => value.field.searchable)
+            .map((e) => e[0])
+    }, [scheme?.slug])
+
+    const currentTablePermission: PermissionSymbol[] | null = useMemo(() => {
+        if (!user || !scheme) return null
+        return user.user.AdminRole?.permissions?.[scheme.slug] || []
+    }, [scheme, user])
+
+    useEffect(() => {
+        if (currentTablePermission && !currentTablePermission.includes("R")) {
+            router.replace("/login")
+        }
+    }, [currentTablePermission, user, scheme])
 
     const [sortField, setSortField] = useState<string | null>(
         scheme?.defaultSort?.field || null
@@ -41,6 +65,7 @@ const TableViewer: NextPage = () => {
     const [currentCursor, setCurrentCursor] = useState<number>(0)
     const [loading, setLoading] = useState(false)
     const [pageSize, setPageSize] = useState(15)
+    const [quickSearchQuery, setQuickSearchQuery] = useState<string>()
 
     const {
         filter,
@@ -61,7 +86,7 @@ const TableViewer: NextPage = () => {
 
         table[scheme.slug]
             .GET({
-                filter,
+                filter: filter,
                 amount: pageSize,
                 skip: currentCursor ? currentCursor : 0,
                 sort:
@@ -73,24 +98,47 @@ const TableViewer: NextPage = () => {
                               },
                           ]
                         : undefined,
+                searchQuery: quickSearchQuery,
             })
             .then((e) => {
                 setRecords(e.records)
                 setFullRecordAmount(e.amount)
                 setLoading(false)
             })
-    }, [filter, scheme, sortField, sortDirection, filterOptions, pageSize])
+    }, [
+        filter,
+        scheme,
+        sortField,
+        sortDirection,
+        filterOptions,
+        pageSize,
+        quickSearchQuery,
+        searchableFields,
+    ])
 
     useEffect(() => {
         setRecords(undefined)
         clearFilter()
         setCurrentCursor(0)
+        setSortDirection(scheme?.defaultSort?.order || null)
+        setSortField(scheme?.defaultSort?.field || null)
         load()
     }, [scheme])
 
     useEffect(() => {
+        setCurrentCursor(0)
+    }, [fullRecordAmount])
+
+    useEffect(() => {
         load()
-    }, [filter, sortField, sortDirection, currentCursor, pageSize])
+    }, [
+        filter,
+        sortField,
+        sortDirection,
+        currentCursor,
+        pageSize,
+        quickSearchQuery,
+    ])
 
     return (
         <Hexile fillx filly>
@@ -100,7 +148,12 @@ const TableViewer: NextPage = () => {
                     <Hexile x="space">
                         <PageHeader>{scheme.name}</PageHeader>
                         <Hexile gap={2}>
-                            <Button color="black">
+                            {searchableFields?.length !== 0 && (
+                                <InlineInput onChange={setQuickSearchQuery}>
+                                    빠른 찾기..
+                                </InlineInput>
+                            )}
+                            {/* <Button color="black">
                                 <LoadSVG
                                     src={downloadIcon}
                                     alt="다운로드 아이콘"
@@ -108,28 +161,31 @@ const TableViewer: NextPage = () => {
                                     width={4}
                                 />
                                 <Important white>다운로드</Important>
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    setSubContent({
-                                        element: (
-                                            <NewRecord
-                                                onReloadRequested={load}
-                                                scheme={scheme}
-                                            />
-                                        ),
-                                        name: scheme.name + " 만들기",
-                                    })
-                                }}
-                            >
-                                <LoadSVG
-                                    src={addIcon}
-                                    alt="추가 아이콘"
-                                    height={4}
-                                    width={4}
-                                />
-                                <Important white>추가</Important>
-                            </Button>
+                            </Button> */}
+                            {currentTablePermission &&
+                                currentTablePermission.includes("C") && (
+                                    <Button
+                                        onClick={() => {
+                                            setSubContent({
+                                                element: (
+                                                    <NewRecord
+                                                        onReloadRequested={load}
+                                                        scheme={scheme}
+                                                    />
+                                                ),
+                                                name: scheme.name + " 만들기",
+                                            })
+                                        }}
+                                    >
+                                        <LoadSVG
+                                            src={addIcon}
+                                            alt="추가 아이콘"
+                                            height={4}
+                                            width={4}
+                                        />
+                                        <Important white>추가</Important>
+                                    </Button>
+                                )}
                         </Hexile>
                     </Hexile>
                     {records ? (

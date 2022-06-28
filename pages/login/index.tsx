@@ -7,7 +7,7 @@ import { Button, InlineForm, Input, LoadSVG } from "@/components"
 import { AuthIdentification, HandlerError } from "@/types"
 import { Description, Important } from "@/typo"
 import { login } from "@/functions"
-import { userAtom } from "@/coil"
+import { UserAtom, userAtom } from "@/coil"
 import { logo } from "@/assets"
 
 import { LoginWrapper } from "./style"
@@ -25,7 +25,7 @@ export const Login = () => {
             async onSubmit(data) {
                 try {
                     const res = await login(data)
-                    setUser(res)
+                    setUser(res as UserAtom)
                     router.replace("/dash")
                 } catch (e) {
                     if (e instanceof HandlerError) {

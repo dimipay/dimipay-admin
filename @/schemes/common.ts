@@ -1,11 +1,9 @@
-import { NeoField } from "@/fields"
 import { date } from "@/fields/date"
 import { text } from "@/fields/text"
 import { table } from "@/functions"
-import { TableRecord, ToolbarAction } from "@/types"
+import { NeoScheme, TableRecord, ToolbarAction } from "@/types"
 import { Product } from "@prisma/client"
 import { toast } from "react-toastify"
-import { NeoScheme } from "./user"
 
 export const DELETE_SELECTED_RECORDS_ACTION: ToolbarAction = {
     button: {
@@ -14,7 +12,7 @@ export const DELETE_SELECTED_RECORDS_ACTION: ToolbarAction = {
     },
     func: async (selectedRecords: TableRecord[], scheme: NeoScheme) => {
         const ids = selectedRecords.map((e) => e.id)
-        const res = await table[scheme.slug].DELETE({ ids })
+        await table[scheme.slug].DELETE({ ids })
         toast.success(
             `${(selectedRecords as unknown as Product[]).map(e => e?.name || (e?.id + "번")).join(", ").이가
             } 삭제되었습니다`,

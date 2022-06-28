@@ -57,7 +57,7 @@ const SingleRelationComponent: FieldComponent<
                                       displayName: (e[1] || e[0]).label,
                                   },
                               }
-                            : null
+                            : undefined
                     )
                 }}
             />
@@ -87,12 +87,14 @@ export const singleRelation: FieldFunction<
     },
     type: "SINGLE_RELATION",
     format: {
-        beforeSave(value) {
-            console.log("너요 너", value)
-            if (!value)
+        beforeSave(value, _, isUpdate) {
+            if (!value && isUpdate)
                 return {
                     disconnect: true,
                 }
+
+            if (!value) return undefined
+
             return {
                 connect: {
                     id: value.target.id,

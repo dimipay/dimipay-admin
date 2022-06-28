@@ -7,6 +7,9 @@ import { Statistics, StatisticsCard } from "@/types"
 import { getStatistics, useKone } from "@/functions"
 import { STATISTICS } from "@/constants"
 import { Sidebar } from "./partial"
+import { useRecoilValue } from "recoil"
+import { userAtom } from "@/coil"
+import { useRouter } from "next/router"
 
 const StatisticsCard = styled(Vexile, {
     backgroundColor: "white",
@@ -79,6 +82,15 @@ export const StatisticsRenderer: React.FC<{
 }
 
 export const StatisticsDashboard = () => {
+    const user = useRecoilValue(userAtom)
+    const router = useRouter()
+
+    useEffect(() => {
+        if (!user?.user?.AdminRole?.permissions?.extra?.statistics) {
+            router.replace("/login")
+        }
+    }, [user, router])
+
     const [statisticsValues] = useKone(getStatistics)
 
     return (

@@ -1,7 +1,8 @@
 import { AdminAccount } from "@prisma/client"
 import { atom, RecoilState } from "recoil"
 import { recoilPersist } from "recoil-persist"
-import { TableRecord } from "./types"
+import { PermissionType } from "./schemes"
+import { SLUG, TableRecord } from "./types"
 
 export const LOCALSTORAGE_KEY = "PERSISTENCY"
 
@@ -9,10 +10,16 @@ const { persistAtom } = recoilPersist({
     key: LOCALSTORAGE_KEY,
 })
 
-export const userAtom = atom<{
-    user: AdminAccount
+export interface UserAtom {
+    user: AdminAccount & {
+        AdminRole: {
+            permissions: PermissionType | null;
+        } | null
+    }
     token: string
-} | null>({
+}
+
+export const userAtom = atom<UserAtom | null>({
     default: null,
     key: "USER",
     effects_UNSTABLE: [persistAtom],

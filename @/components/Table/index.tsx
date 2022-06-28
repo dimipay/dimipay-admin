@@ -40,7 +40,6 @@ export const Table: React.FC<{
             if (!props.enablePagination) return
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current)
-                console.log("풀었다")
             }
             const target = e.currentTarget as HTMLDivElement
 
@@ -50,7 +49,6 @@ export const Table: React.FC<{
                 target.scrollHeight - target.scrollTop - target.clientHeight
 
             if (bottom === 0 && !isReached) {
-                console.log("걸었다")
                 timeoutRef.current = setTimeout(() => {
                     setIsReached(true)
                 }, 100)
@@ -68,7 +66,6 @@ export const Table: React.FC<{
         if (!element) return
 
         if (inView) {
-            console.log("inView Yeah!")
             element.scrollTop = 0
             setTimeout(() => {
                 props.nextPage?.()

@@ -1,4 +1,4 @@
-import { FieldComponent, FieldFunction, FieldProps } from "."
+import { FieldComponent, FieldFunction, FieldProps, NeoField } from "."
 import { MultipleRelation, Option, SLUG } from "@/types"
 import { Description, Regular } from "@/typo"
 import { useCallback, useMemo } from "react"
@@ -11,6 +11,11 @@ export interface MultipleRelationFieldFactoryProps
     targetTable?: SLUG
     nameField?: string
 }
+
+export type MultipleRelationNeoField = NeoField<
+    MultipleRelation,
+    MultipleRelationFieldFactoryProps
+>
 
 export const createRelationOptionRetriever =
     (targetTable?: SLUG, nameField?: string) => async (keyword?: string) => {
@@ -71,7 +76,7 @@ const MultipleRelationComponent: FieldComponent<
                                   id: e.key,
                                   displayName: e.label,
                               }))
-                            : null,
+                            : undefined,
                     })
                 }}
             />
@@ -91,7 +96,6 @@ export const multipleRelation: FieldFunction<
     format: {
         beforeSave(value, _, isUpdate) {
             const relKey = isUpdate ? "set" : "connect"
-            console.log(isUpdate)
             return {
                 [relKey]: value.target.map((e) => ({
                     id: e.id,
@@ -102,7 +106,6 @@ export const multipleRelation: FieldFunction<
     type: "MULTIPLE_RELATION",
     TableComponent({ value }) {
         if (!value?.target) return <></>
-        console.log(value.target)
         return (
             <Regular>
                 {value.target.map((e) => e.displayName).join(", ")}

@@ -232,6 +232,8 @@ model AdminAccount {
   systemId       String          @unique @default(dbgenerated("gen_random_uuid()"))
   id             Int             @id @default(autoincrement())
   relatedUserSid String?         @unique
+  adminRoleId    Int?
+  AdminRole      AdminRole?      @relation(fields: [adminRoleId], references: [id])
   User           User?           @relation(fields: [relatedUserSid], references: [systemId])
   StoreProducts  StoreProducts[]
 }
@@ -253,6 +255,15 @@ model StoreProducts {
   workerSid       String
   AdminAccount    AdminAccount      @relation(fields: [workerSid], references: [systemId])
   ProductInOutLog ProductInOutLog[]
+}
+
+model AdminRole {
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now())
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  permissions  Json
+  AdminAccount AdminAccount[]
 }
 
 enum PaymentMethodType {

@@ -1,5 +1,20 @@
-import { NeoScheme } from "@/schemes"
+import { NeoField } from "@/fields"
 import { ChangeEventHandler, FocusEventHandler } from "react"
+
+export interface NeoScheme {
+    name: string
+    slug: SLUG,
+    fields: Record<string, NeoField<any>>
+    softDelete?: boolean
+    defaultSort?: Sort
+    searchableFields?: keyof this['fields'][]
+    computedFields?: Record<string, {
+        name: string
+        func?: (data: TableRecord) => any
+    }>
+    panelComponents?: PanelComponent[]
+    selectActions?: ToolbarAction[]
+}
 
 export interface Sort {
     field: string
@@ -18,6 +33,7 @@ export enum SLUG {
     transaction = "transaction",
     productInOutLog = "productInOutLog",
     storeProducts = "storeProducts",
+    adminRole = "adminRole",
 }
 
 export interface RelationItem {

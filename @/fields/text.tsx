@@ -1,9 +1,11 @@
 import { FieldComponent, FieldFunction, FieldProps } from "."
 import { Vexile } from "@haechi/flexile"
 import { Input } from "@/components"
-import { Description } from "@/typo"
+import { Description, Regular } from "@/typo"
 
-interface TextProps extends FieldProps<string> {}
+interface TextProps extends FieldProps<string> {
+    monospace?: boolean
+}
 
 export const TextFieldComponent: FieldComponent<string> = (props) => {
     const placeholder = props.field.autoGenerative
@@ -28,8 +30,13 @@ export const TextFieldComponent: FieldComponent<string> = (props) => {
     )
 }
 
-export const text: FieldFunction<string> = (field: TextProps) => ({
+export const text: FieldFunction<string, TextProps> = (field) => ({
     field,
     EditComponent: TextFieldComponent,
     type: "TEXT",
+    TableComponent({ value }) {
+        if (!value) return <></>
+
+        return <Regular monospace={field.monospace}>{value}</Regular>
+    },
 })

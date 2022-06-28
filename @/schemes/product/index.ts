@@ -33,7 +33,8 @@ export const NEO_PRODUCT: NeoScheme = {
         barcode: text({
             displayName: "바코드 번호",
             required: true,
-            searchable: true
+            searchable: true,
+            monospace: true
         }),
         sellingPrice: number({
             displayName: "판매단가",

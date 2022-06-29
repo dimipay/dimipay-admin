@@ -49,7 +49,7 @@ export const logNotion = async (props: {
                     결과: {
                         rich_text: [{
                             text: {
-                                content: result.includes("eyj") ? "BLIND" : result
+                                content: result.includes("eyJ") ? "BLIND" : result
                             }
                         }]
                     },

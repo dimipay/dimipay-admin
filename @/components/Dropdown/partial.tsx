@@ -31,18 +31,25 @@ export const SelectableList: React.FC<{
                             )}
                             onClick={(e) => {
                                 e.stopPropagation()
+
+                                if (option.disabled) return
                                 props.onItemSelected?.(option)
                             }}
+                            disabled={option.disabled}
                         >
                             <Hexile gap={2} y="center">
                                 {option.color && (
                                     <ColorBubble color={option.color} />
                                 )}
-                                <Description dark={1}>
-                                    {props.itemLabelMap?.[option.label] ||
-                                        option.label}{" "}
-                                    {props.coDisplayKey && `(${option.key})`}
-                                </Description>
+                                <Hexile gap={1}>
+                                    <Description dark={1}>
+                                        {props.itemLabelMap?.[option.label] ||
+                                            option.label}{" "}
+                                        {props.coDisplayKey &&
+                                            `(${option.key})`}
+                                    </Description>
+                                    {option.icon}
+                                </Hexile>
                             </Hexile>
                         </Item>
                         <DividerLine />

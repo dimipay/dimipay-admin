@@ -17,7 +17,7 @@ export const Row = forwardRef<
     {
         selected: boolean
         onCheckboxClicked: (selected: boolean) => void
-        onReloadRequested: () => void
+        onReloadRequested?: () => void
         row: TableRecord
         scheme: NeoScheme
     }

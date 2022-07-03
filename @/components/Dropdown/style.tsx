@@ -42,6 +42,14 @@ export const Item = styled(Hexile, {
                 backgroundColor: "$dark6",
             },
         },
+        disabled: {
+            true: {
+                "& p": {
+                    textDecoration: "line-through",
+                    opacity: 0.5,
+                },
+            },
+        },
     },
 })
 

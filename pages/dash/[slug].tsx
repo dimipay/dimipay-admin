@@ -7,15 +7,20 @@ import { NextPage } from "next"
 
 import { Button, InlineInput, LoadSVG, MiniInput, Table } from "@/components"
 import { NewRecord } from "@/components/Subcontent/NewRecord"
-import { addIcon, closeIcon, downloadIcon } from "@/assets"
+import { addIcon, closeIcon, downloadIcon, refineIcon } from "@/assets"
 import { FilterItem } from "@/functions/useFilter/partial"
-import { selectedRowAtom, subContentAtom, userAtom } from "@/coil"
+import {
+    experimentalFlagsAtom,
+    selectedRowAtom,
+    subContentAtom,
+    userAtom,
+} from "@/coil"
 import { Important, PageHeader, Regular } from "@/typo"
 import { MiniSelect } from "@/components/MiniSelect"
 import { MAIN_ACCENT } from "@/stitches.config"
 import { logNotion, table, useFilter } from "@/functions"
 import { Filter, SLUG, TableRecord } from "@/types"
-import { TABLES } from "@/constants"
+import { EXPERIMENTAL_FLAGS, TABLES } from "@/constants"
 
 import { SubcontentWrapper } from "./style"
 import { Sidebar } from "./partial"
@@ -30,6 +35,7 @@ const TableViewer: NextPage = () => {
     const [subcontent, setSubcontent] = useRecoilState(subContentAtom)
     const setSelectedRow = useSetRecoilState(selectedRowAtom)
     const setSubContent = useSetRecoilState(subContentAtom)
+    const experimentalFlags = useRecoilValue(experimentalFlagsAtom)
 
     const scheme = useMemo(
         () => TABLES.find((table) => table.slug === SLUG[slug]),
@@ -179,6 +185,31 @@ const TableViewer: NextPage = () => {
                                 />
                                 <Important white>다운로드</Important>
                             </Button> */}
+                            {currentTablePermission &&
+                                currentTablePermission.includes("U") &&
+                                experimentalFlags.includes(
+                                    EXPERIMENTAL_FLAGS.wiz
+                                ) && (
+                                    <Button
+                                        color={"black"}
+                                        onClick={() => {
+                                            router.push(
+                                                "/dash/wizard/batchfile/" +
+                                                    scheme.slug
+                                            )
+                                        }}
+                                    >
+                                        <LoadSVG
+                                            src={refineIcon}
+                                            alt="한 번에 수정 아이콘"
+                                            height={4}
+                                            width={4}
+                                        />
+                                        <Important white>
+                                            한 번에 수정
+                                        </Important>
+                                    </Button>
+                                )}
                             {currentTablePermission &&
                                 currentTablePermission.includes("C") && (
                                     <Button

@@ -195,6 +195,23 @@ const permissionSelector: NeoField<PermissionType> = {
         )
     },
     type: "CUSTOM",
+    format: {
+        parseFromString(value) {
+            // return
+            const dummy = {
+                ...(TABLES.reduce(
+                    (match, current) => ({
+                        ...match,
+                        [current.slug]: [],
+                    }),
+                    {}
+                ) as Record<SLUG, PermissionSymbol[]>),
+                extra: {},
+            }
+
+            return dummy
+        },
+    },
 }
 
 export const NEO_ADMIN_ROLE_SCHEME: NeoScheme = {

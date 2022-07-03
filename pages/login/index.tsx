@@ -1,5 +1,5 @@
 import { Vexile } from "@haechi/flexile"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useSetRecoilState } from "recoil"
 import { useRouter } from "next/router"
 import { useFormik } from "formik"
 
@@ -7,13 +7,14 @@ import { Button, InlineForm, Input, LoadSVG } from "@/components"
 import { AuthIdentification, HandlerError } from "@/types"
 import { Description, Important } from "@/typo"
 import { login } from "@/functions"
-import { UserAtom, userAtom } from "@/coil"
+import { experimentalFlagsAtom, UserAtom, userAtom } from "@/coil"
 import { logo } from "@/assets"
 
 import { LoginWrapper } from "./style"
 
 export const Login = () => {
-    const setUser = useRecoilState(userAtom)[1]
+    const setUser = useSetRecoilState(userAtom)
+    const setFlag = useSetRecoilState(experimentalFlagsAtom)
     const router = useRouter()
 
     const { handleSubmit, handleBlur, handleChange, errors } =
@@ -26,6 +27,8 @@ export const Login = () => {
                 try {
                     const res = await login(data)
                     setUser(res as UserAtom)
+                    const flag = router.query.flag as string
+                    if (flag) setFlag(flag.split("|"))
                     router.replace("/dash")
                 } catch (e) {
                     if (e instanceof HandlerError) {

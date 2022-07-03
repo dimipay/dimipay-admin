@@ -87,6 +87,12 @@ const MultipleRelationComponent: FieldComponent<
     )
 }
 
+export const isMultipleRelationField = (
+    field: NeoField<any>
+): field is MultipleRelationNeoField => {
+    return field.type === "MULTIPLE_RELATION"
+}
+
 export const multipleRelation: FieldFunction<
     MultipleRelation,
     MultipleRelationFieldFactoryProps
@@ -99,6 +105,15 @@ export const multipleRelation: FieldFunction<
             return {
                 [relKey]: value.target.map((e) => ({
                     id: e.id,
+                })),
+            }
+        },
+        parseFromString(value) {
+            return {
+                slug: field.targetTable!,
+                target: value.split(",").map((e) => ({
+                    displayName: e.trim(),
+                    id: Math.random() * 1000,
                 })),
             }
         },

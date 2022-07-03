@@ -52,7 +52,7 @@ export const RecordEditer: React.FC<{
 
 export const ModifyRecord = (props: {
     scheme: NeoScheme
-    onReloadRequested(): void
+    onReloadRequested?(): void
 }) => {
     const selectedData = useRecoilValue(selectedRowAtom)
     if (!selectedData) return <></>

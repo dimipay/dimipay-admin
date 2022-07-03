@@ -12,8 +12,8 @@ import { useInView } from "react-intersection-observer"
 export const Table: React.FC<{
     scheme: NeoScheme
     records: TableRecord[]
-    onReloadRequested(): void
-    addFilter(key: string): void
+    onReloadRequested?(): void
+    addFilter?(key: string): void
     setSort?(key: string): void
     sortField?: string | null
     sortDirection?: "123" | "321" | null
@@ -85,7 +85,7 @@ export const Table: React.FC<{
                                             <ActionableHeaderCell
                                                 key={key}
                                                 onFilter={() =>
-                                                    props.addFilter(key)
+                                                    props.addFilter?.(key)
                                                 }
                                                 sortDirection={
                                                     (props.sortField === key &&
@@ -153,7 +153,7 @@ export const Table: React.FC<{
                                                     ),
                                                     props.scheme
                                                 )
-                                                props.onReloadRequested()
+                                                props.onReloadRequested?.()
                                             }}
                                         >
                                             <Important white>

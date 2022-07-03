@@ -71,6 +71,8 @@ export interface Option {
     key?: string | number
     color?: string
     amount?: number
+    disabled?: boolean
+    icon?: JSX.Element
 }
 
 
@@ -85,7 +87,7 @@ export interface ToolbarAction {
 export type PanelComponent = React.FC<{
     scheme: NeoScheme
     record: TableRecord
-    reload: () => void
+    reload?: () => void
 }>
 
 export interface SchemeGroup {

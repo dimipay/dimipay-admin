@@ -3,6 +3,7 @@ import { SchemaLike } from "yup/lib/types"
 
 export interface FieldProps<DBType> {
     displayName: string
+    isUnique?: boolean
     required?: boolean
     autoGenerative?: boolean
     readOnly?: boolean
@@ -35,6 +36,11 @@ export type FieldComponentProps<DBType, _FieldProps> = {
 
 export type FieldComponent<DBType, _FieldProps extends FieldProps<DBType> = FieldProps<DBType>> = React.FC<FieldComponentProps<DBType, _FieldProps>>
 
+export const isNeoField = (field: any): field is NeoField<any> => {
+    return "type" in field &&
+        fieldTypes.includes(field.type)
+}
+
 export interface NeoField<DBType, _FieldProps extends FieldProps<DBType> = FieldProps<DBType>> {
     field: _FieldProps
     EditComponent: FieldComponent<DBType, _FieldProps>
@@ -42,8 +48,9 @@ export interface NeoField<DBType, _FieldProps extends FieldProps<DBType> = Field
         value: DBType
     }>
     type: FieldType
-    format?: {
+    format: {
         beforeSave?: (value: DBType, record?: Partial<TableRecord>, isUpdate?: boolean) => any
+        parseFromString(value: string): DBType
     }
 }
 

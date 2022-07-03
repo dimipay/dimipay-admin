@@ -34,6 +34,12 @@ export const Button = styled("button", {
                 },
             },
         },
+        disabled: {
+            true: {
+                backgroundColor: "$dark4",
+                high: "none",
+            },
+        },
         block: {
             true: {
                 display: "block",

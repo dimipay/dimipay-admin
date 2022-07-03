@@ -23,7 +23,7 @@ export const Input: React.FC<
         placeholder?: string
         label: string
         error?: string
-        value?: string
+        value?: string | number
         disabled?: boolean
         hideContent?: boolean
         defaultValue?: string

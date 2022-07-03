@@ -27,8 +27,8 @@ export const NEO_PRODUCT: NeoScheme = {
         name: text({
             displayName: "상품명",
             required: true,
-            searchable: true
-
+            searchable: true,
+            isUnique: true
         }),
         barcode: text({
             displayName: "바코드 번호",

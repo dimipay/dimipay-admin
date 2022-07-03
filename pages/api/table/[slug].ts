@@ -16,7 +16,7 @@ import {
 } from "@/types"
 import { endpoint } from ".."
 
-const applyFieldFormats = (data: Partial<TableRecord>, fields: NeoScheme['fields'], isUpdate = false) => Object.entries(fields).reduce(
+export const applyFieldFormats = (data: Partial<TableRecord>, fields: NeoScheme['fields'], isUpdate = false) => Object.entries(fields).reduce(
     (acc, [key, field]) => {
         let value: DataValue = data[key]
 
@@ -26,14 +26,14 @@ const applyFieldFormats = (data: Partial<TableRecord>, fields: NeoScheme['fields
         if (field.format?.beforeSave && value)
             value = field.format.beforeSave(value, data, isUpdate)
 
-        // value is empty, but it's auto generative
+        // value is empty, but it's auto generative, and generation function is available
         if (field.format?.beforeSave && !value && field.field.autoGenerative)
             value = field.format.beforeSave(value, data, isUpdate)
 
         if (field.field.format?.beforeSave && value)
             value = field.field.format.beforeSave(value, data, isUpdate)
 
-        // value is empty, but it's auto generative
+        // value is empty, but it's auto generative, and generation function is available
         if (field.field.format?.beforeSave && !value && field.field.autoGenerative)
             value = field.field.format.beforeSave(value, data, isUpdate)
 
@@ -126,6 +126,10 @@ const actions = {
             amount: number
             skip?: number
             searchQuery?: string
+            only?: {
+                fieldName: string
+                values: (string | number | Date | boolean)[]
+            }
         },
         slug: {
             slug: string
@@ -169,7 +173,12 @@ const actions = {
                             table.softDelete && {
                                 [SOFT_DELETE_FIELD_NAME]: false
                             }
-                        )
+                        ),
+                        ...(props.only && {
+                            [props.only.fieldName]: {
+                                in: props.only.values
+                            }
+                        })
                     },
                     take: props.amount || 15,
                     skip: props.skip || 0,

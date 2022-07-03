@@ -2,6 +2,7 @@ import { ColorBubble, Dropdown } from "@/components"
 import { Option, SingleRelation, SLUG } from "@/types"
 import { Description, Regular } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
+import { randomUUID } from "crypto"
 import { useMemo, useCallback } from "react"
 import { FieldComponent, FieldFunction, FieldProps } from "."
 import {
@@ -98,6 +99,15 @@ export const singleRelation: FieldFunction<
             return {
                 connect: {
                     id: value.target.id,
+                },
+            }
+        },
+        parseFromString(value) {
+            return {
+                slug: field.targetTable!,
+                target: {
+                    displayName: value,
+                    id: Math.random() * 1000,
                 },
             }
         },

@@ -26,3 +26,7 @@ export const ColorBubble: React.FC<{ color: string }> = ({ color }) => (
         }}
     />
 )
+
+export const Accent = styled("span", {
+    color: "$accent",
+})

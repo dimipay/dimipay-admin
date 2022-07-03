@@ -34,6 +34,11 @@ export const text: FieldFunction<string, TextProps> = (field) => ({
     field,
     EditComponent: TextFieldComponent,
     type: "TEXT",
+    format: {
+        parseFromString(value) {
+            return value.toString()
+        },
+    },
     TableComponent({ value }) {
         if (!value) return <></>
 

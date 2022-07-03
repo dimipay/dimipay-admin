@@ -52,5 +52,8 @@ export const date: FieldFunction<string, DateProps> = (field: DateProps) => ({
 
             return undefined
         },
+        parseFromString(value) {
+            return new Date(value).toISOString()
+        },
     },
 })

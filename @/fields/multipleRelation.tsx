@@ -28,7 +28,7 @@ export const createRelationOptionRetriever =
                     ? [[nameField, "contains", keyword]]
                     : undefined,
             })
-        ).records.map((row) => ({
+        ).records.map(row => ({
             label: row[nameField!] as string,
             key: row.id,
             color: row.color as string,
@@ -40,24 +40,24 @@ export const createRelationOptionRetriever =
 const MultipleRelationComponent: FieldComponent<
     MultipleRelation,
     MultipleRelationFieldFactoryProps
-> = (props) => {
+> = props => {
     const selected: Option[] = useMemo(
         () =>
             props.value
-                ? props.value.target.map((e) => ({
+                ? props.value.target.map(e => ({
                       key: e.id,
                       label: e.displayName,
                   }))
                 : [],
-        [props.value]
+        [props.value],
     )
 
     const relationOptionRetriever = useCallback(
         createRelationOptionRetriever(
             props.field.targetTable,
-            props.field.nameField
+            props.field.nameField,
         ),
-        [props.field]
+        [props.field],
     )
 
     return (
@@ -68,11 +68,11 @@ const MultipleRelationComponent: FieldComponent<
                 placeholder={props.field.placeholder}
                 name={props.name}
                 label={props.field.displayName}
-                onChange={(e) => {
+                onChange={e => {
                     props.setFieldValue?.(props.name, {
                         slug: props.name,
                         target: e.length
-                            ? e.map((e) => ({
+                            ? e.map(e => ({
                                   id: e.key,
                                   displayName: e.label,
                               }))
@@ -88,7 +88,7 @@ const MultipleRelationComponent: FieldComponent<
 }
 
 export const isMultipleRelationField = (
-    field: NeoField<any>
+    field: NeoField<any>,
 ): field is MultipleRelationNeoField => {
     return field.type === "MULTIPLE_RELATION"
 }
@@ -96,14 +96,14 @@ export const isMultipleRelationField = (
 export const multipleRelation: FieldFunction<
     MultipleRelation,
     MultipleRelationFieldFactoryProps
-> = (field) => ({
+> = field => ({
     field,
     EditComponent: MultipleRelationComponent,
     format: {
         beforeSave(value, _, isUpdate) {
             const relKey = isUpdate ? "set" : "connect"
             return {
-                [relKey]: value.target.map((e) => ({
+                [relKey]: value.target.map(e => ({
                     id: e.id,
                 })),
             }
@@ -111,7 +111,7 @@ export const multipleRelation: FieldFunction<
         parseFromString(value) {
             return {
                 slug: field.targetTable!,
-                target: value.split(",").map((e) => ({
+                target: value.split(",").map(e => ({
                     displayName: e.trim(),
                     id: Math.random() * 1000,
                 })),
@@ -122,9 +122,7 @@ export const multipleRelation: FieldFunction<
     TableComponent({ value }) {
         if (!value?.target) return <></>
         return (
-            <Regular>
-                {value.target.map((e) => e.displayName).join(", ")}
-            </Regular>
+            <Regular>{value.target.map(e => e.displayName).join(", ")}</Regular>
         )
     },
 })

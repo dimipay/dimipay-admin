@@ -19,6 +19,6 @@ export interface StatisticsCard {
     id: string
     type: "number" | "text" | "pie" | "list"
     computedField?: (
-        statistics: Record<string, Statistics | null>
+        statistics: Record<string, Statistics | null>,
     ) => Promise<Statistics | null> | Statistics | null
 }

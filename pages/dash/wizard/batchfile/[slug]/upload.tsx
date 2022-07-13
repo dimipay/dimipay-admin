@@ -1,7 +1,6 @@
 import { batchEditWizardFileAtom } from "@/coil"
-import { Button, WizardFrame } from "@/components"
+import { WizardFrame } from "@/components"
 import { UploadFile } from "@/components/UploadFile"
-import { Important } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
 import { Sidebar } from "pages/dash/partial"
@@ -19,12 +18,11 @@ export const FileUpload = () => {
                 <WizardFrame
                     description="파일을 업로드 해주세요. 한셀로 생성한 파일은 제대로 읽지 못할 수 있어요. xlsx, csv 파일을 지원합니다."
                     title="한번에 수정 마법사"
-                    filly
-                >
+                    filly>
                     <UploadFile
-                        onLoaded={async (loaded) => {
+                        onLoaded={async loaded => {
                             const [header, ...records] = await readXlsxFile(
-                                loaded
+                                loaded,
                             )
 
                             const parsed: (Record<
@@ -40,13 +38,13 @@ export const FileUpload = () => {
                                     }),
                                     {
                                         id: index + 1,
-                                    }
-                                )
+                                    },
+                                ),
                             )
 
                             setBatchFile({
                                 records: parsed,
-                                header: header.map((e) => e.toString()),
+                                header: header.map(e => e.toString()),
                             })
                             console.log(parsed)
                             router.push(location.href + "/../loadcheck")

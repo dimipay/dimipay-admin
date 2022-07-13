@@ -8,10 +8,10 @@ const actions = {
         [key: string]: Statistics | null
     }> => {
         const statistics = await Promise.all(
-            STATISTICS.flatMap((e) => e.items).map(async (e) => [
+            STATISTICS.flatMap(e => e.items).map(async e => [
                 e.id,
                 await statisticsGetters[e.id]?.(),
-            ])
+            ]),
         )
 
         return Object.fromEntries(statistics)

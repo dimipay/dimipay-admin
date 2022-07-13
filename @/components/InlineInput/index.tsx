@@ -7,7 +7,7 @@ export const InlineInput: React.FC<{
     children: string
     onChange?(content: string): void
     focusHandler?(focus: () => void): void
-}> = (props) => {
+}> = props => {
     const ref = useRef<HTMLInputElement | null>(null)
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export const InlineInput: React.FC<{
     return (
         <Wrapper filly y="center" x="space">
             <LogicalInput
-                onChange={(e) => props.onChange?.(e.target.value)}
+                onChange={e => props.onChange?.(e.target.value)}
                 ref={ref}
                 placeholder={props.children}
             />

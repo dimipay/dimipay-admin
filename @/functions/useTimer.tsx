@@ -19,15 +19,15 @@ export const TimeLeftIndicator = styled("div", {
     },
 })
 
-export const useTimer = (time: number, started: boolean = true) => {
+export const useTimer = (time: number, started = true) => {
     const [lastTime, setLastTime] = useState(time)
 
     useEffect(() => {
         if (!started) return
 
         const decreaseInterval = setInterval(
-            () => setLastTime((prev) => prev - 1),
-            1000
+            () => setLastTime(prev => prev - 1),
+            1000,
         )
 
         return () => {

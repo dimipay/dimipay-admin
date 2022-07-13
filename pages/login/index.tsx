@@ -1,5 +1,5 @@
 import { Vexile } from "@haechi/flexile"
-import { useRecoilState, useSetRecoilState } from "recoil"
+import { useSetRecoilState } from "recoil"
 import { useRouter } from "next/router"
 import { useFormik } from "formik"
 

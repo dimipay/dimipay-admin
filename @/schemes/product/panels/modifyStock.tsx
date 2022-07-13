@@ -30,7 +30,7 @@ export const ModifyStock: PanelComponent = ({ record, reload }) => {
                     toast.success(`재고를 변경했습니다`)
                 } catch (e) {
                     toast.error(
-                        "재고 수정에 실패했습니다. 잠시 후 다시 시도해주세요."
+                        "재고 수정에 실패했습니다. 잠시 후 다시 시도해주세요.",
                     )
                 } finally {
                     reload?.()

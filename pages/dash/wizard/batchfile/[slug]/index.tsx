@@ -1,6 +1,5 @@
-import { closeIcon } from "@/assets"
-import { Button, LoadSVG, WizardFrame } from "@/components"
-import { Description, Important, PageHeader, Regular } from "@/typo"
+import { Button, WizardFrame } from "@/components"
+import { Description, Important, Regular } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
 import Link from "next/link"
 import { Sidebar } from "pages/dash/partial"
@@ -14,8 +13,7 @@ export const BatchFile = () => {
                 <WizardFrame
                     description="엑셀파일을 업로드해서 데이터를 한번에 수정할 수 있습니다"
                     title="한번에 수정 마법사"
-                    gap={3}
-                >
+                    gap={3}>
                     <Description color="dark4">
                         상품 이름별 단가를 수정하는 예시 파일
                     </Description>

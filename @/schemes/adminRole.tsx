@@ -32,17 +32,17 @@ const TablePermission: React.FC<{
     table: NeoScheme
     allowed: PermissionSymbol[]
     onChange: (allowed: PermissionSymbol[]) => void
-}> = (props) => {
+}> = props => {
     const [isOpen, setOpen] = useState(false)
 
     const changeHandler = (crud: PermissionSymbol, checked: boolean) => {
         if (checked) return props.onChange([...props.allowed, crud])
-        return props.onChange(props.allowed.filter((c) => c !== crud))
+        return props.onChange(props.allowed.filter(c => c !== crud))
     }
 
     return (
         <Vexile gap={3}>
-            <Hexile onClick={() => setOpen((e) => !e)} gap={2}>
+            <Hexile onClick={() => setOpen(e => !e)} gap={2}>
                 <Regular>{isOpen ? "↑" : "↓"}</Regular>
                 <Hexile x="space" fillx linebreak gap={1} y="center">
                     <Regular>{props.table.name}</Regular>
@@ -50,7 +50,7 @@ const TablePermission: React.FC<{
                         {props.allowed.length === 4
                             ? "모두"
                             : props.allowed
-                                  .map((char) => PermissionKormap[char])
+                                  .map(char => PermissionKormap[char])
                                   .join(", ")}
                     </Description>
                 </Hexile>
@@ -60,15 +60,13 @@ const TablePermission: React.FC<{
                     {props.allowed.length !== 4 ? (
                         <Description
                             onClick={() => props.onChange(["C", "R", "U", "D"])}
-                            color="accent"
-                        >
+                            color="accent">
                             모두 선택
                         </Description>
                     ) : (
                         <Description
                             onClick={() => props.onChange([])}
-                            color="accent"
-                        >
+                            color="accent">
                             모두 해제
                         </Description>
                     )}
@@ -79,10 +77,10 @@ const TablePermission: React.FC<{
                                     <input
                                         type="checkbox"
                                         checked={props.allowed.includes(crud)}
-                                        onChange={(e) =>
+                                        onChange={e =>
                                             changeHandler(
                                                 crud,
-                                                e.target.checked
+                                                e.target.checked,
                                             )
                                         }
                                     />
@@ -108,11 +106,11 @@ const permissionSelector: NeoField<PermissionType> = {
         return (
             <Vexile gap={5}>
                 <Important>{label}</Important>
-                {TABLES.map((e) => (
+                {TABLES.map(e => (
                     <TablePermission
                         table={e}
                         allowed={value[e.slug] || []}
-                        onChange={(allowed) => {
+                        onChange={allowed => {
                             setFieldValue?.(name, {
                                 ...value,
                                 [e.slug]: allowed,
@@ -121,14 +119,14 @@ const permissionSelector: NeoField<PermissionType> = {
                     />
                 ))}
                 <Vexile gap={2}>
-                    {EXTRA_PERMISSION_DOMAINS.map((permission) => (
+                    {EXTRA_PERMISSION_DOMAINS.map(permission => (
                         <Hexile x="space">
                             <Regular>{permission.name}</Regular>
                             <input
                                 type="checkbox"
                                 readOnly
                                 checked={!!value.extra?.[permission.id]}
-                                onChange={(e) => {
+                                onChange={e => {
                                     setFieldValue?.(name, {
                                         ...value,
                                         extra: {
@@ -154,14 +152,13 @@ const permissionSelector: NeoField<PermissionType> = {
             <Hexile>
                 <Vexile gap={2}>
                     {Object.keys(props.value)
-                        .filter((key) => TABLES.some((e) => e.slug === key))
+                        .filter(key => TABLES.some(e => e.slug === key))
                         .map((slug: string) => (
                             <Hexile gap={6} x="space">
                                 <Regular>
-                                    {TABLES.find((e) => e.slug === slug)
-                                        ?.name ||
+                                    {TABLES.find(e => e.slug === slug)?.name ||
                                         EXTRA_PERMISSION_DOMAINS.find(
-                                            (e) => e.id === slug
+                                            e => e.id === slug,
                                         )?.name}
                                 </Regular>
                                 <Description color="dark3">
@@ -169,8 +166,8 @@ const permissionSelector: NeoField<PermissionType> = {
                                         ? "전체"
                                         : props.value[slug as SLUG]
                                               .map(
-                                                  (crud) =>
-                                                      PermissionKormap[crud]
+                                                  crud =>
+                                                      PermissionKormap[crud],
                                               )
                                               .join(", ")}
                                 </Description>
@@ -178,13 +175,13 @@ const permissionSelector: NeoField<PermissionType> = {
                         ))}
 
                     {Object.keys(props.value.extra || {})
-                        .filter((e) => props.value.extra[e])
-                        .map((extraAllowed) => (
+                        .filter(e => props.value.extra[e])
+                        .map(extraAllowed => (
                             <Hexile gap={6} x="space">
                                 <Regular>
                                     {
                                         EXTRA_PERMISSION_DOMAINS.find(
-                                            (e) => e.id === extraAllowed
+                                            e => e.id === extraAllowed,
                                         )?.name
                                     }
                                 </Regular>
@@ -204,7 +201,7 @@ const permissionSelector: NeoField<PermissionType> = {
                         ...match,
                         [current.slug]: [],
                     }),
-                    {}
+                    {},
                 ) as Record<SLUG, PermissionSymbol[]>),
                 extra: {},
             }

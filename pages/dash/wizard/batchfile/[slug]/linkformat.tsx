@@ -7,12 +7,12 @@ import {
     WizardFrame,
 } from "@/components"
 import { TABLES } from "@/constants"
-import { Decorative, Description, Important, Regular } from "@/typo"
+import { Decorative, Important, Regular } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
 import { Sidebar } from "pages/dash/partial"
 import { useCallback, useMemo, useState } from "react"
-import { useRecoilSnapshot, useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilState } from "recoil"
 import produce from "immer"
 import { FieldItem } from "./style"
 import { get을를 } from "josa-complete"
@@ -26,16 +26,16 @@ const LinkForat = () => {
     const [fieldMatches, setFieldMatches] = useState<string[]>([])
 
     const updateMatchField = useCallback((index: number, value: string) => {
-        setFieldMatches((prev) =>
-            produce(prev, (draft) => {
+        setFieldMatches(prev =>
+            produce(prev, draft => {
                 draft[index] = value
-            })
+            }),
         )
     }, [])
 
     const scheme = useMemo(() => {
         if (!router.query.slug) return
-        const loadedScheme = TABLES.find((e) => e.slug === router.query.slug)
+        const loadedScheme = TABLES.find(e => e.slug === router.query.slug)
         return loadedScheme
     }, [router])
 
@@ -45,7 +45,7 @@ const LinkForat = () => {
         if (fieldMatches.includes("id")) return "id"
 
         const alignField = fieldMatches.find(
-            (match) => scheme.fields[match].field.isUnique
+            match => scheme.fields[match].field.isUnique,
         )
 
         return alignField
@@ -62,8 +62,7 @@ const LinkForat = () => {
                     기준으로 데이터가 수정되니, 닻 모양⚓을 하나 이상
                     선택해주세요.`}
                     title="한번에 수정 마법사"
-                    filly
-                >
+                    filly>
                     <Vexile gap={4} filly y="center">
                         <Hexile gap={10}>
                             <Vexile fillx>
@@ -75,7 +74,7 @@ const LinkForat = () => {
                         </Hexile>
                         <Hexile gap={2} y="center">
                             <Vexile fillx gap={2}>
-                                {batchFile?.header.map((fieldName) => (
+                                {batchFile?.header.map(fieldName => (
                                     <FieldItem key={fieldName}>
                                         <Regular>{fieldName}</Regular>
                                     </FieldItem>
@@ -88,17 +87,17 @@ const LinkForat = () => {
                                         <InlineSelect
                                             key={_}
                                             placeholder="선택하지 않음"
-                                            onChange={(e) =>
+                                            onChange={e =>
                                                 updateMatchField(index, e)
                                             }
                                             options={Object.entries(
-                                                scheme.fields
+                                                scheme.fields,
                                             ).map(([key, value]) => ({
                                                 key,
                                                 label: value.field.displayName,
                                                 disabled:
                                                     fieldMatches.includes(
-                                                        key
+                                                        key,
                                                     ) &&
                                                     fieldMatches[index] !== key,
                                                 icon: value.field.isUnique ? (
@@ -127,7 +126,8 @@ const LinkForat = () => {
                                     }
                                 </Accent>
                                 {get을를(
-                                    scheme!.fields[alignField].field.displayName
+                                    scheme!.fields[alignField].field
+                                        .displayName,
                                 )}{" "}
                                 기준으로 자료가 수정됩니다
                             </Regular>
@@ -142,8 +142,7 @@ const LinkForat = () => {
                                         alignField,
                                     })
                                     router.push(location.href + "/../preview")
-                                }}
-                            >
+                                }}>
                                 <Important white>다음</Important>
                             </Button>
                         </Vexile>

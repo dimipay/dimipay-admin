@@ -13,11 +13,11 @@ export const PRODUCT_SCHEME_SERVERSIDE: Partial<NeoScheme> = {
 
                 const stock = await redis.hGet(
                     REDIS_HASHMAPS.product_stock,
-                    (record as Product).systemId
+                    (record as Product).systemId,
                 )
 
                 return stock || "미등록"
             },
         },
-    }
+    },
 }

@@ -11,12 +11,12 @@ interface FormContent {
     hashedPassword: string
 }
 
-export const ResetPassword: PanelComponent = (props) => {
+export const ResetPassword: PanelComponent = props => {
     const { handleSubmit, handleBlur, handleChange } = useFormik<FormContent>({
         initialValues: {
             hashedPassword: "",
         },
-        onSubmit: async (content) => {
+        onSubmit: async content => {
             const res = await table.adminAccount.PATCH({
                 id: props.record.id,
                 data: {

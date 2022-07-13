@@ -20,7 +20,7 @@ const Preview = () => {
 
     const scheme = useMemo(() => {
         if (!router.query.slug) return
-        const matchedTable = TABLES.find((e) => e.slug === router.query.slug)
+        const matchedTable = TABLES.find(e => e.slug === router.query.slug)
 
         if (!matchedTable) {
             router.replace("/")
@@ -68,12 +68,12 @@ const Preview = () => {
                         ...map,
                         [current]: current,
                     }),
-                    {}
-                ) as Record<string, string>
+                    {},
+                ) as Record<string, string>,
             )
 
             const uniqueIds = batchFile.records.map(
-                (e) => e[headerMatchMap[batchFile.alignField!]!]
+                e => e[headerMatchMap[batchFile.alignField!]!],
             )
 
             const originRecords = await table[scheme.slug].GET({
@@ -84,15 +84,15 @@ const Preview = () => {
                 amount: uniqueIds.length,
             })
 
-            if (originRecords.records.length !== uniqueIds.length) {
-            }
+            // if (originRecords.records.length !== uniqueIds.length) {
+            // }
 
             const records: TableRecord[] = originRecords.records.map(
                 (e, index) => {
                     const currentBatchRecord = batchFile.records[index]
 
                     const formattedBatch = Object.entries(
-                        currentBatchRecord
+                        currentBatchRecord,
                     ).reduce((formatted, [batchKey, batchValue]) => {
                         const key = headerMatchMap[batchKey]
 
@@ -112,14 +112,16 @@ const Preview = () => {
                         ...e,
                         ...formattedBatch,
                     }
-                }
+                },
             )
 
             setModifiedRecords(records)
         })()
     }, [batchFile, scheme])
 
-    const apply = useCallback(() => {}, [])
+    const apply = useCallback(() => {
+        return
+    }, [])
 
     return (
         <Hexile fillx filly>

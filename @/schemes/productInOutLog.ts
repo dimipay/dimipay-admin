@@ -1,9 +1,12 @@
-import { multipleRelation } from "@/fields/multipleRelation";
-import { number } from "@/fields/number";
-import { singleRelation } from "@/fields/singleRelation";
-import { text } from "@/fields/text";
-import { NeoScheme, SLUG } from "@/types";
-import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common";
+import { multipleRelation } from "@/fields/multipleRelation"
+import { number } from "@/fields/number"
+import { singleRelation } from "@/fields/singleRelation"
+import { text } from "@/fields/text"
+import { NeoScheme, SLUG } from "@/types"
+import {
+    DELETE_SELECTED_RECORDS_ACTION,
+    NEO_RECORD_BASE_FIELDS,
+} from "./common"
 
 export const NEO_PRODUCT_IN_OUT_LOG_SCHEME: NeoScheme = {
     name: "입출고 기록",
@@ -18,7 +21,6 @@ export const NEO_PRODUCT_IN_OUT_LOG_SCHEME: NeoScheme = {
         delta: number({
             displayName: "변화량",
             required: true,
-
         }),
         message: text({
             displayName: "메모",
@@ -47,7 +49,7 @@ export const NEO_PRODUCT_IN_OUT_LOG_SCHEME: NeoScheme = {
             displayName: "구매 내역",
             targetTable: SLUG.transaction,
             nameField: "id",
-        })
+        }),
     },
     selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

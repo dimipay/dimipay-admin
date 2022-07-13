@@ -65,5 +65,5 @@ export type Filter = [string, Operator, string | number]
 export type PartialFilter = [
     string,
     Operator | undefined,
-    string | number | undefined
+    string | number | undefined,
 ]

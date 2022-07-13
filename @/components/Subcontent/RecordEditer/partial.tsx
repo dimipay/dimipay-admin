@@ -11,7 +11,7 @@ export const PropertyEditer: React.FC<{
     name: string
     setFieldValue?: SetFieldValueFunction
     value?: DataValue
-}> = (props) => {
+}> = props => {
     return (
         <props.field.EditComponent
             field={props.field.field}

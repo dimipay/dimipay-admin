@@ -7,7 +7,7 @@ export const LoadSVG: React.FC<{
     alt: string
     color?: string
     onClick?(): void
-}> = (props) => {
+}> = props => {
     return (
         <div
             onClick={props.onClick}
@@ -15,8 +15,7 @@ export const LoadSVG: React.FC<{
                 position: "relative",
                 minHeight: props.height + "rem",
                 minWidth: props.width + "rem",
-            }}
-        >
+            }}>
             <Image src={props.src} layout="fill" alt={props.alt} />
         </div>
     )

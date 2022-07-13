@@ -24,16 +24,14 @@ export const FilterItem: React.FC<{
             gap={2}
             y="center"
             keepsize
-            disabled={props.disabled}
-        >
+            disabled={props.disabled}>
             <HitSlop
                 onClick={() =>
                     props.updateFilter({
                         content: [key, operator, value],
                         disabled: !props.disabled,
                     })
-                }
-            >
+                }>
                 <LoadSVG
                     src={eyeIcon}
                     width={4}
@@ -51,7 +49,7 @@ export const FilterItem: React.FC<{
             </HitSlop>
             <Regular>{props.field.field.displayName.이가}</Regular>
             <MiniInput
-                onChange={(enteredValue) => {
+                onChange={enteredValue => {
                     props.updateFilter({
                         content: [
                             key,
@@ -71,7 +69,7 @@ export const FilterItem: React.FC<{
                         : "...")}
             </Regular>
             <MiniSelect
-                onChange={(selectedOperator) => {
+                onChange={selectedOperator => {
                     props.updateFilter({
                         content: [key, selectedOperator, value],
                         disabled: props.disabled,

@@ -10,7 +10,7 @@ import { LogicalInput, UploadField } from "./style"
 
 export const UploadFile: React.FC<{
     onLoaded?(file: File): void
-}> = (props) => {
+}> = props => {
     const [isHover, setIsHover] = useState(false)
 
     const dragHover = () => {
@@ -21,7 +21,7 @@ export const UploadFile: React.FC<{
         setIsHover(false)
     }
 
-    const onChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
+    const onChange: ChangeEventHandler<HTMLInputElement> = async e => {
         const loaded = e.target.files?.[0]
         if (!loaded) return
 
@@ -40,8 +40,7 @@ export const UploadFile: React.FC<{
             onDragEnter={dragHover}
             onDragLeave={dragEnd}
             onDragEnd={dragEnd}
-            onDrop={dragEnd}
-        >
+            onDrop={dragEnd}>
             <LoadSVG
                 alt="파일 업로드 아이콘"
                 height={8}

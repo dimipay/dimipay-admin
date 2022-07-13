@@ -21,7 +21,7 @@ export const LoadCheck = () => {
                     displayName: value === "id" ? "#" : value,
                 }),
             }),
-            {} as Record<string, NeoField<string>>
+            {} as Record<string, NeoField<string>>,
         )
 
         return {
@@ -39,8 +39,7 @@ export const LoadCheck = () => {
                     description="파일이 올바르게 불러와졌는지 확인해주세요. 미리보기는 첫 7개만 표시됩니다"
                     title="한번에 수정 마법사"
                     filly
-                    fillx
-                >
+                    fillx>
                     {batchFile && (
                         <Vexile gap={2} filly>
                             <Description>
@@ -50,7 +49,7 @@ export const LoadCheck = () => {
                                 <Table
                                     records={batchFile.records
                                         .slice(0, 7)
-                                        .map((e) => ({
+                                        .map(e => ({
                                             ...e,
                                             createdAt: new Date(),
                                             updatedAt: new Date(),

@@ -33,7 +33,7 @@ globalCss({
     },
 })()
 
-const LoginChecker: React.FC = (props) => {
+const LoginChecker: React.FC = props => {
     const router = useRouter()
     const [user] = useRecoilState(userAtom)
     const { element } = useModal()
@@ -54,7 +54,7 @@ const LoginChecker: React.FC = (props) => {
 const MyApp: React.FC<{
     Component: React.ComponentType
     pageProps: any
-}> = (props) => {
+}> = props => {
     return (
         <RecoilRoot>
             <ToastContainer />

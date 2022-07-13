@@ -3,9 +3,9 @@ import { Description, Regular } from "@/typo"
 import { Vexile } from "@haechi/flexile"
 import { FieldComponent, FieldFunction, FieldProps } from "."
 
-interface DateProps extends FieldProps<string> {}
+type DateProps = FieldProps<string>
 
-export const DateFieldComponent: FieldComponent<string> = (props) => {
+export const DateFieldComponent: FieldComponent<string> = props => {
     const placeholder = props.field.autoGenerative
         ? "자동으로 설정됩니다"
         : props.field.placeholder

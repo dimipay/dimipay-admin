@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 
 export const useKone = <Input, Output>(
     koneFunction: ((data?: Input) => Promise<Output>) | undefined,
-    input?: Input
+    input?: Input,
 ): [Output | undefined, () => void] => {
     const [result, setResult] = useState<Output>()
     const serialized = JSON.stringify(input)

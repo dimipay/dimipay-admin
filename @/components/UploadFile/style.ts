@@ -1,5 +1,5 @@
-import { MAIN_ACCENT, styled } from "@/stitches.config";
-import { Vexile } from "@haechi/flexile";
+import { MAIN_ACCENT, styled } from "@/stitches.config"
+import { Vexile } from "@haechi/flexile"
 
 export const UploadField = styled(Vexile, {
     backgroundColor: "$dark6",
@@ -9,10 +9,10 @@ export const UploadField = styled(Vexile, {
     variants: {
         isFileHovered: {
             true: {
-                boxShadow: `inset ${MAIN_ACCENT} 0rem 0rem 0rem 1rem`
-            }
-        }
-    }
+                boxShadow: `inset ${MAIN_ACCENT} 0rem 0rem 0rem 1rem`,
+            },
+        },
+    },
 })
 
 export const LogicalInput = styled("input", {
@@ -20,5 +20,5 @@ export const LogicalInput = styled("input", {
     width: "100%",
     opacity: 0,
     position: "absolute",
-    display: "block"
+    display: "block",
 })

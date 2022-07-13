@@ -22,7 +22,7 @@ const actions = {
 
             await redis.set(
                 key.posRegistrationPasscode,
-                `${content.posId}:${await bcrypt.hash(randomKey, 10)}`
+                `${content.posId}:${await bcrypt.hash(randomKey, 10)}`,
             )
 
             await redis.expire(key.posRegistrationPasscode, 100)

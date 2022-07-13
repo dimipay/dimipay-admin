@@ -1,7 +1,4 @@
-import {
-    NeoScheme,
-    TableRecord,
-} from "@/types"
+import { NeoScheme, TableRecord } from "@/types"
 import { useFormik } from "formik"
 import { useEffect } from "react"
 
@@ -31,28 +28,22 @@ export const useLogic = (props: {
                     try {
                         await yup.validate(data[key])
                     } catch (e) {
-                        if (e instanceof Error)
-                            errors[key] = (e).message
+                        if (e instanceof Error) errors[key] = e.message
                     }
                 }
             }
 
             return errors
         },
-        onSubmit: async (data) => {
+        onSubmit: async data => {
             await props.onSubmit?.(data)
             return true
-        }
+        },
     })
 
     useEffect(() => {
-        console.log(
-            "Form value updated!",
-            formik.values
-        )
-    }, [
-        formik.values
-    ])
+        console.log("Form value updated!", formik.values)
+    }, [formik.values])
 
     return formik
 }

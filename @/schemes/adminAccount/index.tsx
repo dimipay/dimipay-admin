@@ -31,7 +31,7 @@ export const NEO_ADMIN_ACCOUNT: NeoScheme = {
                     else if ((record as AdminAccount).username) {
                         return bcrypt.hashSync(
                             (record as AdminAccount).username,
-                            10
+                            10,
                         )
                     }
                 },

@@ -13,11 +13,11 @@ export const SelectableList: React.FC<{
     onItemSelected?: (clicked: Option) => void
     style?: React.CSSProperties
     coDisplayKey?: boolean
-}> = (props) => {
+}> = props => {
     return (
         <Vexile style={props.style}>
             {props.options.length ? (
-                props.options.map((option) => (
+                props.options.map(option => (
                     <>
                         <Item
                             tabIndex={0}
@@ -25,18 +25,17 @@ export const SelectableList: React.FC<{
                             x="space"
                             padding={3}
                             selected={props.selectedOptions?.some(
-                                (e) =>
+                                e =>
                                     (e.key && e.key === option.key) ||
-                                    (!e.key && e.label === option.label)
+                                    (!e.key && e.label === option.label),
                             )}
-                            onClick={(e) => {
+                            onClick={e => {
                                 e.stopPropagation()
 
                                 if (option.disabled) return
                                 props.onItemSelected?.(option)
                             }}
-                            disabled={option.disabled}
-                        >
+                            disabled={option.disabled}>
                             <Hexile gap={2} y="center">
                                 {option.color && (
                                     <ColorBubble color={option.color} />

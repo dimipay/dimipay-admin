@@ -38,8 +38,8 @@ const TableViewer: NextPage = () => {
     const experimentalFlags = useRecoilValue(experimentalFlagsAtom)
 
     const scheme = useMemo(
-        () => TABLES.find((table) => table.slug === SLUG[slug]),
-        [slug]
+        () => TABLES.find(table => table.slug === SLUG[slug]),
+        [slug],
     )
 
     const searchableFields = useMemo(() => {
@@ -47,7 +47,7 @@ const TableViewer: NextPage = () => {
 
         return Object.entries(scheme.fields)
             .filter(([key, value]) => value.field.searchable)
-            .map((e) => e[0])
+            .map(e => e[0])
     }, [scheme?.slug])
 
     const currentTablePermission: PermissionSymbol[] | null = useMemo(() => {
@@ -64,10 +64,10 @@ const TableViewer: NextPage = () => {
     }, [currentTablePermission, user, scheme])
 
     const [sortField, setSortField] = useState<string | null>(
-        scheme?.defaultSort?.field || null
+        scheme?.defaultSort?.field || null,
     )
     const [sortDirection, setSortDirection] = useState<"123" | "321" | null>(
-        scheme?.defaultSort?.order || null
+        scheme?.defaultSort?.order || null,
     )
     const [fullRecordAmount, setFullRecordAmount] = useState<number>()
     const [currentCursor, setCurrentCursor] = useState<number>(0)
@@ -117,7 +117,7 @@ const TableViewer: NextPage = () => {
                         : undefined,
                 searchQuery: quickSearchQuery,
             })
-            .then((e) => {
+            .then(e => {
                 setRecords(e.records)
                 setFullRecordAmount(e.amount)
                 setLoading(false)
@@ -168,11 +168,10 @@ const TableViewer: NextPage = () => {
                             {searchableFields?.length !== 0 && (
                                 <InlineInput
                                     onChange={setQuickSearchQuery}
-                                    focusHandler={(e) => {
+                                    focusHandler={e => {
                                         console.log("지정해줌")
                                         setFocusSearchbox(() => e)
-                                    }}
-                                >
+                                    }}>
                                     빠른 찾기..
                                 </InlineInput>
                             )}
@@ -188,17 +187,16 @@ const TableViewer: NextPage = () => {
                             {currentTablePermission &&
                                 currentTablePermission.includes("U") &&
                                 experimentalFlags.includes(
-                                    EXPERIMENTAL_FLAGS.wiz
+                                    EXPERIMENTAL_FLAGS.wiz,
                                 ) && (
                                     <Button
                                         color={"black"}
                                         onClick={() => {
                                             router.push(
                                                 "/dash/wizard/batchfile/" +
-                                                    scheme.slug
+                                                    scheme.slug,
                                             )
-                                        }}
-                                    >
+                                        }}>
                                         <LoadSVG
                                             src={refineIcon}
                                             alt="한 번에 수정 아이콘"
@@ -223,8 +221,7 @@ const TableViewer: NextPage = () => {
                                                 ),
                                                 name: scheme.name + " 만들기",
                                             })
-                                        }}
-                                    >
+                                        }}>
                                         <LoadSVG
                                             src={addIcon}
                                             alt="추가 아이콘"
@@ -250,8 +247,8 @@ const TableViewer: NextPage = () => {
                                     records.length === pageSize
                                 )
                             }
-                            goPageBy={(delta) => {
-                                setCurrentCursor((e) => e + pageSize * delta)
+                            goPageBy={delta => {
+                                setCurrentCursor(e => e + pageSize * delta)
                             }}
                             focusSearch={focusSearchbox}
                             setSort={(fieldName: string) => {
@@ -285,17 +282,16 @@ const TableViewer: NextPage = () => {
                                 <Important
                                     color="dark3"
                                     onClick={() =>
-                                        setCurrentCursor((e) => e - pageSize)
-                                    }
-                                >
+                                        setCurrentCursor(e => e - pageSize)
+                                    }>
                                     ←
                                 </Important>
                                 <MiniInput
                                     type="number"
-                                    onChange={(e) => setCurrentCursor(+e)}
+                                    onChange={e => setCurrentCursor(+e)}
                                     value={Math.max(
                                         currentCursor,
-                                        0
+                                        0,
                                     ).toString()}
                                 />
                                 <Important color="dark3">/</Important>
@@ -305,10 +301,9 @@ const TableViewer: NextPage = () => {
 
                                 <Important
                                     onClick={() =>
-                                        setCurrentCursor((e) => e + pageSize)
+                                        setCurrentCursor(e => e + pageSize)
                                     }
-                                    color="dark3"
-                                >
+                                    color="dark3">
                                     →
                                 </Important>
                             </Hexile>
@@ -331,7 +326,7 @@ const TableViewer: NextPage = () => {
                                             key: 500,
                                         },
                                     ]}
-                                    onChange={(e) => setPageSize(+e)}
+                                    onChange={e => setPageSize(+e)}
                                     selected={{
                                         label: pageSize.toString(),
                                     }}
@@ -346,7 +341,9 @@ const TableViewer: NextPage = () => {
                                 disabled
                                 field={Object.values(scheme.fields)[0]}
                                 filter={["", undefined, undefined]}
-                                updateFilter={() => {}}
+                                updateFilter={() => {
+                                    return
+                                }}
                             />
                         </div>
                     )}

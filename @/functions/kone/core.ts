@@ -1,4 +1,4 @@
-import { getAtom, LOCALSTORAGE_KEY, userAtom } from "@/coil"
+import { getAtom, userAtom } from "@/coil"
 import { HandlerError } from "@/types"
 import { toast } from "react-toastify"
 

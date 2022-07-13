@@ -1,6 +1,5 @@
 import { Description } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
-import { useState } from "react"
 import { Sidebar } from "./partial"
 
 export const Dash = () => {

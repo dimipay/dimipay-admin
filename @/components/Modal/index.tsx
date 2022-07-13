@@ -1,8 +1,7 @@
 import { modalContentAtom } from "@/coil"
-import { Description, Important, PageHeader, Regular } from "@/typo"
+import { Important, PageHeader, Regular } from "@/typo"
 import { Hexile } from "@haechi/flexile"
-import { useState } from "react"
-import { atom, useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilState } from "recoil"
 import { Button } from ".."
 import { ModalBackdrop, ModalWrapper } from "./style"
 

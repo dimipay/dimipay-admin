@@ -1,10 +1,6 @@
 import { fileIcon } from "@/assets"
-import { batchEditWizardFileAtom } from "@/coil"
 import { Description } from "@/typo"
-import { useRouter } from "next/router"
 import { ChangeEventHandler, useState } from "react"
-import readXlsxFile from "read-excel-file"
-import { useSetRecoilState } from "recoil"
 import { LoadSVG } from "../LoadSVG"
 import { LogicalInput, UploadField } from "./style"
 

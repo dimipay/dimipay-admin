@@ -26,7 +26,9 @@ export const WizardFrame: React.FC<{
                         height={3}
                         width={3}
                         src={closeIcon}
-                        onClick={() => {}}
+                        onClick={() => {
+                            return
+                        }}
                     />
                 </Hexile>
                 <Regular>{props.description}</Regular>

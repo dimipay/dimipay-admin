@@ -1,4 +1,3 @@
-import { multipleRelation } from "@/fields/multipleRelation"
 import { number } from "@/fields/number"
 import { singleRelation } from "@/fields/singleRelation"
 import { text } from "@/fields/text"

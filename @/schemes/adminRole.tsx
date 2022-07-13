@@ -72,7 +72,7 @@ const TablePermission: React.FC<{
                     )}
                     <Hexile gap={2} y="center" linebreak>
                         {PermissionSymbols.map((crud, index) => (
-                            <label>
+                            <label key={index}>
                                 <Hexile y="center" key={index} gap={1}>
                                     <input
                                         type="checkbox"
@@ -106,8 +106,9 @@ const permissionSelector: NeoField<PermissionType> = {
         return (
             <Vexile gap={5}>
                 <Important>{label}</Important>
-                {TABLES.map(e => (
+                {TABLES.map((e, index) => (
                     <TablePermission
+                        key={index}
                         table={e}
                         allowed={value[e.slug] || []}
                         onChange={allowed => {
@@ -119,8 +120,8 @@ const permissionSelector: NeoField<PermissionType> = {
                     />
                 ))}
                 <Vexile gap={2}>
-                    {EXTRA_PERMISSION_DOMAINS.map(permission => (
-                        <Hexile x="space">
+                    {EXTRA_PERMISSION_DOMAINS.map((permission, index) => (
+                        <Hexile key={index} x="space">
                             <Regular>{permission.name}</Regular>
                             <input
                                 type="checkbox"
@@ -153,8 +154,8 @@ const permissionSelector: NeoField<PermissionType> = {
                 <Vexile gap={2}>
                     {Object.keys(props.value)
                         .filter(key => TABLES.some(e => e.slug === key))
-                        .map((slug: string) => (
-                            <Hexile gap={6} x="space">
+                        .map((slug: string, index: number) => (
+                            <Hexile key={index} gap={6} x="space">
                                 <Regular>
                                     {TABLES.find(e => e.slug === slug)?.name ||
                                         EXTRA_PERMISSION_DOMAINS.find(
@@ -176,8 +177,8 @@ const permissionSelector: NeoField<PermissionType> = {
 
                     {Object.keys(props.value.extra || {})
                         .filter(e => props.value.extra[e])
-                        .map(extraAllowed => (
-                            <Hexile gap={6} x="space">
+                        .map((extraAllowed, index) => (
+                            <Hexile key={index} gap={6} x="space">
                                 <Regular>
                                     {
                                         EXTRA_PERMISSION_DOMAINS.find(

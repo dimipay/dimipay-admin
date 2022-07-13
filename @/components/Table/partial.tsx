@@ -73,6 +73,7 @@ export const Row = forwardRef<
         </HighlightableTableRow>
     )
 })
+Row.displayName = "Row"
 
 export const ActionableHeaderCell: React.FC<{
     onSort?(): void

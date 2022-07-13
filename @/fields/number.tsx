@@ -1,7 +1,7 @@
 import { Input } from "@/components"
 import { Description, Regular } from "@/typo"
 import { Vexile } from "@haechi/flexile"
-import { FieldComponent, FieldFunction, FieldProps } from "."
+import { FieldComponent, FieldFunction } from "."
 
 export const NumberFieldComponent: FieldComponent<number> = props => {
     const placeholder = props.field.autoGenerative

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import HashLoader from "react-spinners/HashLoader"
 import { Hexile, Vexile } from "@haechi/flexile"
@@ -7,7 +7,7 @@ import { NextPage } from "next"
 
 import { Button, InlineInput, LoadSVG, MiniInput, Table } from "@/components"
 import { NewRecord } from "@/components/Subcontent/NewRecord"
-import { addIcon, closeIcon, downloadIcon, refineIcon } from "@/assets"
+import { addIcon, closeIcon, refineIcon } from "@/assets"
 import { FilterItem } from "@/functions/useFilter/partial"
 import {
     experimentalFlagsAtom,
@@ -18,8 +18,8 @@ import {
 import { Important, PageHeader, Regular } from "@/typo"
 import { MiniSelect } from "@/components/MiniSelect"
 import { MAIN_ACCENT } from "@/stitches.config"
-import { logNotion, table, useFilter } from "@/functions"
-import { Filter, SLUG, TableRecord } from "@/types"
+import { table, useFilter } from "@/functions"
+import { SLUG, TableRecord } from "@/types"
 import { EXPERIMENTAL_FLAGS, TABLES } from "@/constants"
 
 import { SubcontentWrapper } from "./style"

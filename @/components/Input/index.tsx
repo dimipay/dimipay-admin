@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute, useState } from "react"
+import { HTMLInputTypeAttribute } from "react"
 import { InputWraper, LogicalInput } from "./style"
 import { numberInputIcon } from "@/assets"
 import { FormikHandlers } from "@/types"

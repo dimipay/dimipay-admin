@@ -3,15 +3,18 @@ import { ChangeEventHandler, FocusEventHandler } from "react"
 
 export interface NeoScheme {
     name: string
-    slug: SLUG,
+    slug: SLUG
     fields: Record<string, NeoField<any>>
     softDelete?: boolean
     defaultSort?: Sort
-    searchableFields?: keyof this['fields'][]
-    computedFields?: Record<string, {
-        name: string
-        func?: (data: TableRecord) => any
-    }>
+    searchableFields?: keyof this["fields"][]
+    computedFields?: Record<
+        string,
+        {
+            name: string
+            func?: (data: TableRecord) => any
+        }
+    >
     panelComponents?: PanelComponent[]
     selectActions?: ToolbarAction[]
 }
@@ -75,13 +78,15 @@ export interface Option {
     icon?: JSX.Element
 }
 
-
 export interface ToolbarAction {
     button: {
         label: string
         color: "danger" | "normal" | "accent"
     }
-    func(selectedRecords: TableRecord[], scheme: NeoScheme): void | Promise<void>
+    func(
+        selectedRecords: TableRecord[],
+        scheme: NeoScheme,
+    ): void | Promise<void>
 }
 
 export type PanelComponent = React.FC<{

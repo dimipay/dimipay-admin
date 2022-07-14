@@ -7,7 +7,7 @@ interface TextProps extends FieldProps<string> {
     monospace?: boolean
 }
 
-export const TextFieldComponent: FieldComponent<string> = (props) => {
+export const TextFieldComponent: FieldComponent<string> = props => {
     const placeholder = props.field.autoGenerative
         ? "자동으로 설정됩니다"
         : props.field.placeholder
@@ -30,7 +30,7 @@ export const TextFieldComponent: FieldComponent<string> = (props) => {
     )
 }
 
-export const text: FieldFunction<string, TextProps> = (field) => ({
+export const text: FieldFunction<string, TextProps> = field => ({
     field,
     EditComponent: TextFieldComponent,
     type: "TEXT",

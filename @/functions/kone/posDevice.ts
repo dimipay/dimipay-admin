@@ -3,5 +3,5 @@ import { kone } from "./core"
 
 export const createPasscode = kone<passcodeKone["POST"]>(
     "pos-device/create-passcode",
-    "POST"
+    "POST",
 )

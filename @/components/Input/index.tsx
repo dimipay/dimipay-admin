@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute, useState } from "react"
+import { HTMLInputTypeAttribute } from "react"
 import { InputWraper, LogicalInput } from "./style"
 import { numberInputIcon } from "@/assets"
 import { FormikHandlers } from "@/types"
@@ -30,7 +30,7 @@ export const Input: React.FC<
         type?: HTMLInputTypeAttribute
         name?: string
     } & Partial<FormikHandlers>
-> = (props) => {
+> = props => {
     const commonProps = {
         disabled: props.disabled,
         defaultValue: props.defaultValue,
@@ -48,8 +48,7 @@ export const Input: React.FC<
                 gap={1.5}
                 padding={3}
                 disabled={props.disabled}
-                hasError={typeof props.error === "string"}
-            >
+                hasError={typeof props.error === "string"}>
                 <Hexile gap={1} y="center">
                     {props.type && TYPE_ICON_MAP[props.type] && (
                         <LoadSVG

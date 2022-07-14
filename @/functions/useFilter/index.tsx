@@ -15,15 +15,15 @@ export const useFilter = (scheme?: NeoScheme) => {
             scheme?.fields
                 ? (filters
                       .filter(
-                          (f) =>
+                          f =>
                               !f.disabled &&
                               !!f.content[1] &&
                               f.content[2] &&
-                              f.content[0] in scheme.fields
+                              f.content[0] in scheme.fields,
                       )
-                      .map((e) => e.content) as Filter[])
+                      .map(e => e.content) as Filter[])
                 : [],
-        [filters, scheme]
+        [filters, scheme],
     )
 
     return {
@@ -32,7 +32,7 @@ export const useFilter = (scheme?: NeoScheme) => {
         filterTargetTable: scheme?.name,
         clearFilter: () => setFilters([]),
         addFilter(key: string) {
-            setFilters((prev) => [
+            setFilters(prev => [
                 ...prev,
                 {
                     content: [key, undefined, undefined],
@@ -51,8 +51,7 @@ export const useFilter = (scheme?: NeoScheme) => {
                     height: "100%",
                     pointerEvents: "none",
                 }}
-                y="bottom"
-            >
+                y="bottom">
                 {filters.map(
                     ({ content, disabled }, index) =>
                         scheme.fields[content[0]] && (
@@ -60,21 +59,21 @@ export const useFilter = (scheme?: NeoScheme) => {
                                 filter={content}
                                 disabled={disabled}
                                 field={scheme.fields[content[0]]}
-                                updateFilter={(update) => {
+                                updateFilter={update => {
                                     if (update === null)
-                                        return setFilters((prev) => [
+                                        return setFilters(prev => [
                                             ...prev.slice(0, index),
                                             ...prev.slice(index + 1),
                                         ])
 
-                                    setFilters((prev) => [
+                                    setFilters(prev => [
                                         ...prev.slice(0, index),
                                         update,
                                         ...prev.slice(index + 1),
                                     ])
                                 }}
                             />
-                        )
+                        ),
                 )}
             </Hexile>
         ),

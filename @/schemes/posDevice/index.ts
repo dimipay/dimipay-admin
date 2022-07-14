@@ -1,8 +1,10 @@
 import { text } from "@/fields/text"
 import { NeoScheme, SLUG } from "@/types"
-import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "../common"
+import {
+    DELETE_SELECTED_RECORDS_ACTION,
+    NEO_RECORD_BASE_FIELDS,
+} from "../common"
 import { CreatePasscode } from "./panels"
-
 
 export const NEO_POS_DEVICE_SCHEME: NeoScheme = {
     name: "결제 단말기",
@@ -20,7 +22,7 @@ export const NEO_POS_DEVICE_SCHEME: NeoScheme = {
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
-        })
+        }),
     },
     panelComponents: [CreatePasscode],
     selectActions: [DELETE_SELECTED_RECORDS_ACTION],

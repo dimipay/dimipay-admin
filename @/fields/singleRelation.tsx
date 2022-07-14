@@ -2,13 +2,9 @@ import { ColorBubble, Dropdown } from "@/components"
 import { Option, SingleRelation, SLUG } from "@/types"
 import { Description, Regular } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
-import { randomUUID } from "crypto"
 import { useMemo, useCallback } from "react"
 import { FieldComponent, FieldFunction, FieldProps } from "."
-import {
-    createRelationOptionRetriever,
-    MultipleRelationFieldFactoryProps,
-} from "./multipleRelation"
+import { createRelationOptionRetriever } from "./multipleRelation"
 
 export interface SingleRelationFieldFactoryProps
     extends FieldProps<SingleRelation> {
@@ -19,7 +15,7 @@ export interface SingleRelationFieldFactoryProps
 const SingleRelationComponent: FieldComponent<
     SingleRelation,
     SingleRelationFieldFactoryProps
-> = (props) => {
+> = props => {
     const selected: Option[] = useMemo(() => {
         return props.value?.target
             ? [
@@ -34,9 +30,9 @@ const SingleRelationComponent: FieldComponent<
     const relationOptionRetriever = useCallback(
         createRelationOptionRetriever(
             props.field.targetTable,
-            props.field.nameField
+            props.field.nameField,
         ),
-        [props.field]
+        [props.field],
     )
 
     return (
@@ -47,7 +43,7 @@ const SingleRelationComponent: FieldComponent<
                 placeholder={props.field.placeholder}
                 name={props.name}
                 label={props.field.displayName}
-                onChange={(e) => {
+                onChange={e => {
                     props.setFieldValue?.(
                         props.name,
                         e.length
@@ -58,7 +54,7 @@ const SingleRelationComponent: FieldComponent<
                                       displayName: (e[1] || e[0]).label,
                                   },
                               }
-                            : undefined
+                            : undefined,
                     )
                 }}
             />
@@ -72,7 +68,7 @@ const SingleRelationComponent: FieldComponent<
 export const singleRelation: FieldFunction<
     SingleRelation,
     SingleRelationFieldFactoryProps
-> = (field) => ({
+> = field => ({
     field,
     EditComponent: SingleRelationComponent,
     TableComponent({ value }) {

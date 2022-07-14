@@ -25,7 +25,7 @@ async function saveProductStocksToRedis() {
         redis.hSet(
             REDIS_HASHMAPS.product_stock,
             product.productSid,
-            product._sum.delta
+            product._sum.delta,
         )
     }
 
@@ -82,7 +82,7 @@ export const statisticsGetters: {
                 await prisma.product.findMany({
                     where: {
                         systemId: {
-                            in: sales.map((s) => s.productSid),
+                            in: sales.map(s => s.productSid),
                         },
                     },
                     select: {
@@ -90,12 +90,12 @@ export const statisticsGetters: {
                         name: true,
                     },
                 })
-            ).map((product) => [product.systemId, product.name])
+            ).map(product => [product.systemId, product.name]),
         )
 
         return {
             list: [
-                ...sales.map((product) => ({
+                ...sales.map(product => ({
                     label: products[product.productSid.toString()],
                     secondaryLabel: (-product._sum.delta!).toString() + "개",
                 })),
@@ -110,7 +110,7 @@ export const statisticsGetters: {
                         createdAt: {
                             gte: new Date(
                                 new Date().setHours(0, 0, 0, 0) -
-                                24 * 60 * 60 * 1000
+                                    24 * 60 * 60 * 1000,
                             ),
                         },
                     },
@@ -118,7 +118,7 @@ export const statisticsGetters: {
                         createdAt: {
                             lte: new Date(
                                 new Date().setHours(23, 59, 59, 999) -
-                                24 * 60 * 60 * 1000
+                                    24 * 60 * 60 * 1000,
                             ),
                         },
                     },
@@ -156,28 +156,30 @@ export const statisticsGetters: {
         }
     },
     async lowStock() {
-        const summary = [...(await saveProductStocksToRedis())].reverse().slice(0, 5)
+        const summary = [...(await saveProductStocksToRedis())]
+            .reverse()
+            .slice(0, 5)
 
         const products = Object.fromEntries(
             (
                 await prisma.product.findMany({
                     where: {
                         systemId: {
-                            in: summary.map((s) => s.productSid),
-                        }
+                            in: summary.map(s => s.productSid),
+                        },
                     },
                     select: {
                         systemId: true,
                         name: true,
                     },
                 })
-            ).map((product) => [product.systemId, product.name])
+            ).map(product => [product.systemId, product.name]),
         )
 
         return {
-            list: summary.map((product) => ({
+            list: summary.map(product => ({
                 label: products[product.productSid.toString()],
-                secondaryLabel: (product._sum.delta!).toString() + "개",
+                secondaryLabel: product._sum.delta!.toString() + "개",
             })),
         }
     },

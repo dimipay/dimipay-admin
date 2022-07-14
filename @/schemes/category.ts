@@ -1,7 +1,9 @@
 import { text } from "@/fields/text"
 import { NeoScheme, SLUG } from "@/types"
-import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common"
-
+import {
+    DELETE_SELECTED_RECORDS_ACTION,
+    NEO_RECORD_BASE_FIELDS,
+} from "./common"
 
 export const NEO_CATEGORY_SCHEME: NeoScheme = {
     name: "분류",

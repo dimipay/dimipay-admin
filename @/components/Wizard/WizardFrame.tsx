@@ -10,15 +10,14 @@ export const WizardFrame: React.FC<{
     fillx?: boolean
     filly?: boolean
     gap?: number
-}> = (props) => {
+}> = props => {
     return (
         <Wrapper
             padding={6}
             gap={props.gap ?? 6}
             fillx={props.fillx}
             filly={props.filly}
-            noMaxWidth={props.fillx}
-        >
+            noMaxWidth={props.fillx}>
             <Vexile gap={2}>
                 <Hexile x="space" y="center">
                     <PageHeader>{props.title}</PageHeader>
@@ -27,7 +26,9 @@ export const WizardFrame: React.FC<{
                         height={3}
                         width={3}
                         src={closeIcon}
-                        onClick={() => {}}
+                        onClick={() => {
+                            return
+                        }}
                     />
                 </Hexile>
                 <Regular>{props.description}</Regular>

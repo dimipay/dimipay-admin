@@ -11,7 +11,7 @@ export const NewRecord = (props: {
         <RecordEditer
             scheme={props.scheme}
             onReloadRequested={props.onReloadRequested}
-            onSubmit={async (data) => {
+            onSubmit={async data => {
                 const generalizedData = Object.fromEntries(
                     Object.entries(data)
                         .filter(
@@ -19,9 +19,9 @@ export const NewRecord = (props: {
                                 key in props.scheme.fields &&
                                 !props.scheme.fields[key].field
                                     .autoGenerative &&
-                                !(value === undefined || value === null)
+                                !(value === undefined || value === null),
                         )
-                        .filter((e) => e[0])
+                        .filter(e => e[0]),
                 )
 
                 const res = await table[props.scheme.slug].POST({

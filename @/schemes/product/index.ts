@@ -2,7 +2,10 @@ import { number } from "@/fields/number"
 import { singleRelation } from "@/fields/singleRelation"
 import { text } from "@/fields/text"
 import { NeoScheme, SLUG } from "@/types"
-import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "../common"
+import {
+    DELETE_SELECTED_RECORDS_ACTION,
+    NEO_RECORD_BASE_FIELDS,
+} from "../common"
 import { ModifyStock } from "./panels"
 
 export const NEO_PRODUCT: NeoScheme = {
@@ -22,19 +25,19 @@ export const NEO_PRODUCT: NeoScheme = {
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
-            searchable: true
+            searchable: true,
         }),
         name: text({
             displayName: "상품명",
             required: true,
             searchable: true,
-            isUnique: true
+            isUnique: true,
         }),
         barcode: text({
             displayName: "바코드 번호",
             required: true,
             searchable: true,
-            monospace: true
+            monospace: true,
         }),
         sellingPrice: number({
             displayName: "판매단가",
@@ -48,8 +51,7 @@ export const NEO_PRODUCT: NeoScheme = {
             displayName: "분류",
             targetTable: SLUG.category,
             nameField: "name",
-            searchable: true
+            searchable: true,
         }),
-
-    }
+    },
 }

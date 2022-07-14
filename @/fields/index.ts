@@ -16,7 +16,11 @@ export interface FieldProps<DBType> {
         yup?: SchemaLike
     }
     format?: {
-        beforeSave?: (value: DBType, record: Partial<TableRecord>, isUpdate?: boolean) => any
+        beforeSave?: (
+            value: DBType,
+            record: Partial<TableRecord>,
+            isUpdate?: boolean,
+        ) => any
     }
 }
 
@@ -34,14 +38,19 @@ export type FieldComponentProps<DBType, _FieldProps> = {
     setFieldValue?: SetFieldValueFunction
 }
 
-export type FieldComponent<DBType, _FieldProps extends FieldProps<DBType> = FieldProps<DBType>> = React.FC<FieldComponentProps<DBType, _FieldProps>>
+export type FieldComponent<
+    DBType,
+    _FieldProps extends FieldProps<DBType> = FieldProps<DBType>,
+> = React.FC<FieldComponentProps<DBType, _FieldProps>>
 
 export const isNeoField = (field: any): field is NeoField<any> => {
-    return "type" in field &&
-        fieldTypes.includes(field.type)
+    return "type" in field && fieldTypes.includes(field.type)
 }
 
-export interface NeoField<DBType, _FieldProps extends FieldProps<DBType> = FieldProps<DBType>> {
+export interface NeoField<
+    DBType,
+    _FieldProps extends FieldProps<DBType> = FieldProps<DBType>,
+> {
     field: _FieldProps
     EditComponent: FieldComponent<DBType, _FieldProps>
     TableComponent?: React.FC<{
@@ -49,12 +58,19 @@ export interface NeoField<DBType, _FieldProps extends FieldProps<DBType> = Field
     }>
     type: FieldType
     format: {
-        beforeSave?: (value: DBType, record?: Partial<TableRecord>, isUpdate?: boolean) => any
+        beforeSave?: (
+            value: DBType,
+            record?: Partial<TableRecord>,
+            isUpdate?: boolean,
+        ) => any
         parseFromString(value: string): DBType
     }
 }
 
-export type FieldFunction<T, _FieldProps extends FieldProps<T> = FieldProps<T>> = (field: _FieldProps) => NeoField<T, _FieldProps>
+export type FieldFunction<
+    T,
+    _FieldProps extends FieldProps<T> = FieldProps<T>,
+> = (field: _FieldProps) => NeoField<T, _FieldProps>
 
 const fieldTypes = [
     "DATE",
@@ -62,7 +78,7 @@ const fieldTypes = [
     "MULTIPLE_RELATION",
     "SINGLE_RELATION",
     "NUMBER",
-    "CUSTOM"
+    "CUSTOM",
 ] as const
 
 export type FieldType = typeof fieldTypes[number]

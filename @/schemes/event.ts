@@ -1,7 +1,10 @@
 import { date } from "@/fields/date"
 import { text } from "@/fields/text"
 import { NeoScheme, SLUG } from "@/types"
-import { DELETE_SELECTED_RECORDS_ACTION, NEO_RECORD_BASE_FIELDS } from "./common"
+import {
+    DELETE_SELECTED_RECORDS_ACTION,
+    NEO_RECORD_BASE_FIELDS,
+} from "./common"
 
 export const NEO_EVENT_SCHEME: NeoScheme = {
     name: "이벤트",
@@ -28,7 +31,7 @@ export const NEO_EVENT_SCHEME: NeoScheme = {
         startsAt: date({
             displayName: "시작일",
             required: false,
-        })
+        }),
     },
     selectActions: [DELETE_SELECTED_RECORDS_ACTION],
 }

@@ -11,11 +11,11 @@ const actions = {
     }) => {
         const product = await prisma.product.findFirst({
             where: {
-                id: content.productId
+                id: content.productId,
             },
             select: {
                 purchaseCost: true,
-                systemId: true
+                systemId: true,
             },
         })
 
@@ -38,9 +38,8 @@ const actions = {
         redis.hIncrBy(
             REDIS_HASHMAPS.product_stock,
             product.systemId,
-            content.delta
+            content.delta,
         )
-
 
         return result
     },

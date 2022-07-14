@@ -4,7 +4,7 @@ export const Wrapper = styled("div", {
     backgroundColor: "$dark6",
     padding: "2rem 3rem",
     position: "relative",
-    borderRadius: "2rem"
+    borderRadius: "2rem",
 })
 
 export const ListWrapper = styled("div", {
@@ -12,5 +12,5 @@ export const ListWrapper = styled("div", {
     position: "absolute",
     width: "30rem",
     top: "10rem",
-    zIndex: 2
+    zIndex: 2,
 })

@@ -5,12 +5,12 @@ export const MiniInput: React.FC<{
     placeholder?: string
     type?: "number"
     value?: string
-}> = (props) => {
+}> = props => {
     return (
         <LogicalInput
             type={props.type}
             placeholder={props.placeholder}
-            onChange={(e) => props.onChange(e.currentTarget.value)}
+            onChange={e => props.onChange(e.currentTarget.value)}
             value={props.value}
         />
     )

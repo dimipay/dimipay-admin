@@ -1,8 +1,7 @@
 import { modalContentAtom } from "@/coil"
-import { Description, Important, PageHeader, Regular } from "@/typo"
+import { Important, PageHeader, Regular } from "@/typo"
 import { Hexile } from "@haechi/flexile"
-import { useState } from "react"
-import { atom, useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilState } from "recoil"
 import { Button } from ".."
 import { ModalBackdrop, ModalWrapper } from "./style"
 
@@ -25,26 +24,23 @@ export const useModal = () => {
             filly
             x="center"
             y="center"
-            onClick={() => setContent(null)}
-        >
+            onClick={() => setContent(null)}>
             <ModalWrapper
                 fillx
                 gap={2}
                 padding={6}
-                onClick={(e) => {
+                onClick={e => {
                     e.preventDefault()
                     e.stopPropagation()
-                }}
-            >
+                }}>
                 <PageHeader>{content.title}</PageHeader>
                 <Regular>{content.content}</Regular>
                 <Hexile x="right">
-                    {content.button.map((button) => (
+                    {content.button.map(button => (
                         <Button
                             key={button.label}
                             color={button.color}
-                            onClick={button.action}
-                        >
+                            onClick={button.action}>
                             <Important white>{button.label}</Important>
                         </Button>
                     ))}

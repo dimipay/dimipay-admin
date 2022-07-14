@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useEffect } from "react"
 
 import { NeoScheme, TableRecord, ToolbarAction } from "@/types"
 import { Description, Important } from "@/typo"
 
 import { ActionToolbars, HeaderCell, TableContent, TableWrapper } from "./style"
 import { ActionableHeaderCell, Row } from "./partial"
-import { Button, DividerLine } from ".."
-import { Hexile, Vexile } from "@haechi/flexile"
-import { useInView } from "react-intersection-observer"
+import { Button } from ".."
+import { Vexile } from "@haechi/flexile"
 
 export const Table: React.FC<{
     scheme: NeoScheme
@@ -23,7 +22,7 @@ export const Table: React.FC<{
     focusSearch?: () => void
 }> = ({ records: data, ...props }) => {
     const [selectedRecordIds, setSelectedRecordIds] = React.useState<number[]>(
-        []
+        [],
     )
 
     useEffect(() => {
@@ -54,27 +53,25 @@ export const Table: React.FC<{
                 display: "flex",
                 flexDirection: "column",
                 overflow: "hidden",
-            }}
-        >
+            }}>
             <Vexile gap={4} filly>
                 <TableWrapper
                     fillx
                     filly
                     scrollx
                     y="space"
-                    isLoading={props.isLoading}
-                >
+                    isLoading={props.isLoading}>
                     <TableContent>
                         <thead>
                             <tr>
                                 <HeaderCell>
                                     <input
                                         type="checkbox"
-                                        onChange={(e) =>
+                                        onChange={e =>
                                             setSelectedRecordIds(
                                                 e.currentTarget.checked
-                                                    ? data.map((e) => e.id)
-                                                    : []
+                                                    ? data.map(e => e.id)
+                                                    : [],
                                             )
                                         }
                                     />
@@ -94,15 +91,14 @@ export const Table: React.FC<{
                                                 }
                                                 onSort={() =>
                                                     props.setSort?.(key)
-                                                }
-                                            >
+                                                }>
                                                 {field.field.displayName || key}
                                             </ActionableHeaderCell>
-                                        )
+                                        ),
                                 )}
                                 {props.scheme.computedFields &&
                                     Object.entries(
-                                        props.scheme.computedFields
+                                        props.scheme.computedFields,
                                     ).map(([key, field]) => (
                                         <ActionableHeaderCell key={key}>
                                             {field.name}
@@ -111,22 +107,22 @@ export const Table: React.FC<{
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((row) => (
+                            {data.map(row => (
                                 <Row
                                     key={row.id}
                                     selected={selectedRecordIds.includes(
-                                        row.id
+                                        row.id,
                                     )}
                                     onReloadRequested={props.onReloadRequested}
-                                    onCheckboxClicked={(selected) => {
+                                    onCheckboxClicked={selected => {
                                         if (selected)
-                                            setSelectedRecordIds((prev) =>
+                                            setSelectedRecordIds(prev =>
                                                 prev.filter(
-                                                    (id) => id !== row.id
-                                                )
+                                                    id => id !== row.id,
+                                                ),
                                             )
                                         else
-                                            setSelectedRecordIds((prev) => [
+                                            setSelectedRecordIds(prev => [
                                                 ...prev,
                                                 row.id,
                                             ])
@@ -146,21 +142,20 @@ export const Table: React.FC<{
                                             key={action.button.label}
                                             onClick={async () => {
                                                 await action.func(
-                                                    data.filter((d) =>
+                                                    data.filter(d =>
                                                         selectedRecordIds.includes(
-                                                            d.id
-                                                        )
+                                                            d.id,
+                                                        ),
                                                     ),
-                                                    props.scheme
+                                                    props.scheme,
                                                 )
                                                 props.onReloadRequested?.()
-                                            }}
-                                        >
+                                            }}>
                                             <Important white>
                                                 {action.button.label}
                                             </Important>
                                         </Button>
-                                    )
+                                    ),
                                 )
                             ) : (
                                 <Description>

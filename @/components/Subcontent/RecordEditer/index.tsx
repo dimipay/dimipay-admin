@@ -15,7 +15,7 @@ export const RecordEditer: React.FC<{
     data?: TableRecord
     onReloadRequested?(): void
     onSubmit?(data: Partial<TableRecord>): void
-}> = (props) => {
+}> = props => {
     const formik = useLogic(props)
 
     return (
@@ -63,7 +63,7 @@ export const ModifyRecord = (props: {
                 {...props}
                 scheme={props.scheme}
                 data={selectedData}
-                onSubmit={async (data) => {
+                onSubmit={async data => {
                     const generalizedData: Partial<TableRecord> =
                         Object.fromEntries(
                             Object.entries(data)
@@ -71,13 +71,13 @@ export const ModifyRecord = (props: {
                                     ([key]) =>
                                         key in props.scheme.fields &&
                                         !props.scheme.fields[key].field
-                                            .autoGenerative
+                                            .autoGenerative,
                                 )
                                 .map(([key, value]) => [
                                     key,
                                     value === null ? undefined : value,
                                 ])
-                                .filter((e) => e[0])
+                                .filter(e => e[0]),
                         )
 
                     const res = await table[props.scheme.slug].PATCH({
@@ -94,7 +94,7 @@ export const ModifyRecord = (props: {
                     props.onReloadRequested?.()
                 }}
             />
-            {props.scheme.panelComponents?.map((Component) => (
+            {props.scheme.panelComponents?.map(Component => (
                 <Fragment key={Component.name}>
                     <DividerLine />
                     <Component

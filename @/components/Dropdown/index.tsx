@@ -22,16 +22,16 @@ export const Dropdown: React.FC<{
     disabled?: boolean
     maxSelectAmount?: number
     onChange(item: Option[]): void
-}> = (props) => {
+}> = props => {
     const [loadedOptions, setLoadedOptions] = useState<Option[]>(
-        props.options || []
+        props.options || [],
     )
     const [searchQuery, setSearchQuery] = useState<string>()
     const [opened, setOpened] = useState(false)
 
     useEffect(() => {
         if (props.optionsRetriever) {
-            props.optionsRetriever(searchQuery).then((options) => {
+            props.optionsRetriever(searchQuery).then(options => {
                 setLoadedOptions(options)
             })
         }
@@ -42,31 +42,27 @@ export const Dropdown: React.FC<{
             <Wrapper
                 hasError={!!props.error}
                 onKeyDown={clickWithSpace}
-                onFocus={props.disabled ? undefined : (e) => setOpened(true)}
+                onFocus={props.disabled ? undefined : e => setOpened(true)}
                 onBlur={
                     props.disabled
                         ? undefined
-                        : (e) => {
+                        : e => {
                               if (e.currentTarget.contains(e.relatedTarget))
                                   return
                               setOpened(false)
                           }
                 }
                 tabIndex={props.disabled ? -1 : 0}
-                disabled={!!props.disabled}
-            >
+                disabled={!!props.disabled}>
                 <DataView
                     gap={1.5}
                     padding={3}
                     hasError={!!props.error}
-                    disabled={!!props.disabled}
-                >
+                    disabled={!!props.disabled}>
                     <Token>{props.label}</Token>
                     <Regular dark={props.value && props.value.length ? 1 : 3}>
                         {props.value?.length
-                            ? props.value
-                                  .map((e) => e.label || e.key)
-                                  .join(", ")
+                            ? props.value.map(e => e.label || e.key).join(", ")
                             : props.placeholder}
                     </Regular>
                     {props.error && <Token color="error">{props.error}</Token>}
@@ -82,8 +78,8 @@ export const Dropdown: React.FC<{
                             />
                             <SearchInput
                                 placeholder="검색"
-                                onKeyDown={(e) => e.stopPropagation()}
-                                onChange={(e) => {
+                                onKeyDown={e => e.stopPropagation()}
+                                onChange={e => {
                                     setSearchQuery(() => e.target?.value)
                                 }}
                             />
@@ -92,22 +88,22 @@ export const Dropdown: React.FC<{
                             options={loadedOptions}
                             itemLabelMap={props.displayMap}
                             selectedOptions={props.value}
-                            onItemSelected={(option) => {
+                            onItemSelected={option => {
                                 if (
                                     props.value?.some(
-                                        (e) =>
+                                        e =>
                                             e.key === option.key ||
-                                            e.label === option.label
+                                            e.label === option.label,
                                     )
                                 ) {
                                     props.onChange?.(
                                         props.value.filter(
-                                            (v) =>
+                                            v =>
                                                 !(
                                                     v.key === option.key ||
                                                     v.label === option.label
-                                                )
-                                        )
+                                                ),
+                                        ),
                                     )
                                 } else {
                                     if (
@@ -115,7 +111,7 @@ export const Dropdown: React.FC<{
                                         props.value?.length
                                     ) {
                                         toast.info(
-                                            `${props.label.은는} 최대 ${props.maxSelectAmount}개 까지 선택할 수 있어요`
+                                            `${props.label.은는} 최대 ${props.maxSelectAmount}개 까지 선택할 수 있어요`,
                                         )
                                         return
                                     }

@@ -38,16 +38,16 @@ export const StatisticsRenderer: React.FC<{
     id: string
     statistics: Record<string, Statistics | null>
     cardInfo: StatisticsCard
-}> = (props) => {
+}> = props => {
     const [data, setData] = useState<Statistics | null>(
-        props.statistics[props.id]
+        props.statistics[props.id],
     )
 
     useEffect(() => {
         ;(async () => {
             if (!props.cardInfo.computedField) return
             const computeResult = await props.cardInfo.computedField(
-                props.statistics
+                props.statistics,
             )
             setData(() => computeResult)
         })()
@@ -67,7 +67,7 @@ export const StatisticsRenderer: React.FC<{
     if (data.list !== undefined)
         return (
             <Vexile gap={2}>
-                {data.list.map((item) => (
+                {data.list.map(item => (
                     <ListItem key={item.label}>
                         <Important>{item.label}</Important>
                         {item.secondaryLabel && (
@@ -112,12 +112,12 @@ export const StatisticsDashboard = () => {
                                 </StatisticsCard>
                             )
                     )} */}
-                    {STATISTICS.map((group) => (
+                    {STATISTICS.map(group => (
                         <>
                             <Important>{group.label}</Important>
                             <Hexile gap={2} y="top">
                                 {group.items.map(
-                                    (card) =>
+                                    card =>
                                         statisticsValues && (
                                             <StatisticsCard key={card.id}>
                                                 <Regular>{card.name}</Regular>
@@ -131,7 +131,7 @@ export const StatisticsDashboard = () => {
                                                     />
                                                 }
                                             </StatisticsCard>
-                                        )
+                                        ),
                                 )}
                             </Hexile>
                         </>

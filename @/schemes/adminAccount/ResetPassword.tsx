@@ -2,7 +2,6 @@ import { Input, Button, InlineForm } from "@/components"
 import { PanelComponent } from "@/types"
 import { PageHeader, Important } from "@/typo"
 import { Vexile } from "@haechi/flexile"
-import bcrypt from "bcryptjs"
 import { table } from "@/functions"
 import { toast } from "react-toastify"
 import { useFormik } from "formik"
@@ -11,12 +10,12 @@ interface FormContent {
     hashedPassword: string
 }
 
-export const ResetPassword: PanelComponent = (props) => {
+export const ResetPassword: PanelComponent = props => {
     const { handleSubmit, handleBlur, handleChange } = useFormik<FormContent>({
         initialValues: {
             hashedPassword: "",
         },
-        onSubmit: async (content) => {
+        onSubmit: async content => {
             const res = await table.adminAccount.PATCH({
                 id: props.record.id,
                 data: {

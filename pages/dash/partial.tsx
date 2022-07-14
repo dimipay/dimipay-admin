@@ -11,17 +11,17 @@ import { SLUG } from "@/types"
 
 import { SidebarWrapper } from "./style"
 
-export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = (props) => {
+export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = props => {
     const user = useRecoilValue(userAtom)
     const readAllowedTables = useMemo(
         () =>
             Object.entries(user?.user.AdminRole?.permissions || {})
                 .filter(
                     ([_, permission]) =>
-                        permission instanceof Array && permission.includes("R")
+                        permission instanceof Array && permission.includes("R"),
                 )
-                .map((e) => e[0]),
-        [user]
+                .map(e => e[0]),
+        [user],
     )
 
     return (
@@ -32,25 +32,24 @@ export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = (props) => {
                 width={40}
                 src={logo}
             />
-            {GROUPED_TABLES.map((e) => ({
+            {GROUPED_TABLES.map(e => ({
                 ...e,
-                content: e.content.filter((table) =>
-                    readAllowedTables.includes(table.slug)
+                content: e.content.filter(table =>
+                    readAllowedTables.includes(table.slug),
                 ),
             }))
-                .filter((e) => e.content.length !== 0)
-                .map((group) => (
+                .filter(e => e.content.length !== 0)
+                .map(group => (
                     <Vexile gap={2} key={group.groupName}>
                         <Important>{group.groupName}</Important>
-                        {group.content.map((table) => (
+                        {group.content.map(table => (
                             <PlainLink
                                 key={table.slug}
                                 href={`/dash/${
                                     Object.entries(SLUG).find(
-                                        ([key, v]) => v === table.slug
+                                        ([key, v]) => v === table.slug,
                                     )?.[0] || ""
-                                }`}
-                            >
+                                }`}>
                                 <Regular dark={3}>{table.name}</Regular>
                             </PlainLink>
                         ))}

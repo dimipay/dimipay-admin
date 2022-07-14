@@ -2,15 +2,15 @@ import { styled } from "@/stitches.config"
 import { Description } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
 
-export const HighlightableTableRow = styled('tr', {
+export const HighlightableTableRow = styled("tr", {
     animated: true,
     variants: {
         elevated: {
             true: {
-                boxShadow: "rgba(0, 0, 0, 0.12) 0rem 0rem 0rem 1rem"
-            }
-        }
-    }
+                boxShadow: "rgba(0, 0, 0, 0.12) 0rem 0rem 0rem 1rem",
+            },
+        },
+    },
 })
 
 export const TableWrapper = styled(Vexile, {
@@ -24,9 +24,9 @@ export const TableWrapper = styled(Vexile, {
         isLoading: {
             true: {
                 opacity: 0.5,
-            }
-        }
-    }
+            },
+        },
+    },
 })
 
 export const TableContent = styled("table", {
@@ -67,7 +67,7 @@ export const ActionToolbars = styled(Hexile, {
     position: "absolute",
     width: "100%",
     backgroundColor: "white",
-    bottom: "0rem"
+    bottom: "0rem",
 })
 
 export const TooltipWrapper = styled(Hexile, {

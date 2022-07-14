@@ -14,7 +14,7 @@ export const InlineSelect: React.FC<{
     onChange: (value: string) => void
     placeholder?: string
     coDisplayKey?: boolean
-}> = (props) => {
+}> = props => {
     const [isMenuOpened, setMenuOpened] = useState(false)
 
     useEffect(() => {
@@ -31,15 +31,15 @@ export const InlineSelect: React.FC<{
 
     const selectedOption = useMemo(() => {
         if (props.selected)
-            return props.options.find((option) =>
+            return props.options.find(option =>
                 props.selected
                     ? option.key && option.key === props.selected.key
-                    : !option.key && option.label === props.selected!.label
+                    : !option.key && option.label === props.selected!.label,
             )
 
         if (props.selectedKey)
             return props.options.find(
-                (option) => option.key === props.selectedKey
+                option => option.key === props.selectedKey,
             )
     }, [props.selected, props.selectedKey])
 
@@ -47,8 +47,7 @@ export const InlineSelect: React.FC<{
         <Wrapper
             onClick={() => {
                 setMenuOpened(true)
-            }}
-        >
+            }}>
             <Hexile gap={2} y="center" x="space">
                 {props.selected?.color && (
                     <ColorBubble color={props.selected.color} />
@@ -83,15 +82,15 @@ export const InlineSelect: React.FC<{
                                           key: props.selectedKey,
                                           label:
                                               props.options.find(
-                                                  (e) =>
+                                                  e =>
                                                       e.key ===
-                                                      props.selectedKey
+                                                      props.selectedKey,
                                               )?.label || "",
                                       },
                                   ]
                                 : []
                         }
-                        onItemSelected={(clicked) => {
+                        onItemSelected={clicked => {
                             setMenuOpened(false)
                             props.onChange(clicked.key as string)
                         }}

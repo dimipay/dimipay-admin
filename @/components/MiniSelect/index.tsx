@@ -13,7 +13,7 @@ export const MiniSelect: React.FC<{
     onChange: (value: string) => void
     placeholder?: string
     coDisplayKey?: boolean
-}> = (props) => {
+}> = props => {
     const [isMenuOpened, setMenuOpened] = useState(false)
 
     return (
@@ -39,7 +39,7 @@ export const MiniSelect: React.FC<{
                     <SelectableList
                         options={props.options}
                         selectedOptions={props.selected && [props.selected]}
-                        onItemSelected={(clicked) => {
+                        onItemSelected={clicked => {
                             setMenuOpened(false)
                             props.onChange(clicked.key as string)
                         }}

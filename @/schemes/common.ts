@@ -11,10 +11,13 @@ export const DELETE_SELECTED_RECORDS_ACTION: ToolbarAction = {
         label: "삭제",
     },
     func: async (selectedRecords: TableRecord[], scheme: NeoScheme) => {
-        const ids = selectedRecords.map((e) => e.id)
+        const ids = selectedRecords.map(e => e.id)
         await table[scheme.slug].DELETE({ ids })
         toast.success(
-            `${(selectedRecords as unknown as Product[]).map(e => e?.name || (e?.id + "번")).join(", ").이가
+            `${
+                (selectedRecords as unknown as Product[])
+                    .map(e => e?.name || e?.id + "번")
+                    .join(", ").이가
             } 삭제되었습니다`,
         )
     },
@@ -35,6 +38,6 @@ export const NEO_RECORD_BASE_FIELDS = {
         displayName: "수정일",
         readOnly: true,
         autoGenerative: true,
-        invisibleInTable: true
-    })
+        invisibleInTable: true,
+    }),
 }

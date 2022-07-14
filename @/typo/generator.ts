@@ -49,7 +49,7 @@ export const createTypo = (props: {
             monospace: {
                 true: {
                     fontVariantNumeric: "tabular-nums",
-                }
+                },
             },
             dark: Object.fromEntries(
                 [...Array(6)].map((_, i) => [
@@ -57,15 +57,15 @@ export const createTypo = (props: {
                     {
                         color: `$dark` + i,
                     },
-                ])
+                ]),
             ),
             color: Object.fromEntries(
-                Object.keys(config.theme.colors).map((key) => [
+                Object.keys(config.theme.colors).map(key => [
                     key,
                     {
                         color: `$${key}`,
                     },
-                ])
+                ]),
             ) as Record<
                 keyof typeof config.theme.colors,
                 {

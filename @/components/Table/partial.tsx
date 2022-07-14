@@ -40,14 +40,13 @@ export const Row = forwardRef<
                     ),
                     name: props.scheme.name,
                 })
-            }}
-        >
+            }}>
             <Cell>
                 <input
                     type="checkbox"
                     checked={props.selected}
                     readOnly
-                    onClick={(e) => {
+                    onClick={e => {
                         props.onCheckboxClicked(props.selected)
                         e.stopPropagation()
                     }}
@@ -63,10 +62,10 @@ export const Row = forwardRef<
                                 <Regular>{row[key]?.toString()}</Regular>
                             )}
                         </Cell>
-                    )
+                    ),
             )}
             {props.scheme.computedFields &&
-                Object.keys(props.scheme.computedFields).map((key) => (
+                Object.keys(props.scheme.computedFields).map(key => (
                     <Cell key={key}>
                         <Regular>{row[key]}</Regular>
                     </Cell>
@@ -74,17 +73,18 @@ export const Row = forwardRef<
         </HighlightableTableRow>
     )
 })
+Row.displayName = "Row"
 
 export const ActionableHeaderCell: React.FC<{
     onSort?(): void
     onFilter?(): void
     isSorted?: boolean
     sortDirection?: "123" | "321"
-}> = (props) => {
+}> = props => {
     const [isActionsVisible, showActions] = useState(false)
 
     return (
-        <HeaderCell onClick={() => showActions((prev) => !prev)}>
+        <HeaderCell onClick={() => showActions(prev => !prev)}>
             {props.sortDirection && (
                 <SortArrow>
                     {props.sortDirection === "123" ? "↑" : "↓"}

@@ -1,8 +1,8 @@
 export interface Modal {
-    content: string;
-    title: string;
+    content: string
+    title: string
     button: {
-        label: string;
-        action(): void;
-    };
+        label: string
+        action(): void
+    }
 }

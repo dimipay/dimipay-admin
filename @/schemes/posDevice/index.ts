@@ -15,6 +15,7 @@ export const NEO_POS_DEVICE_SCHEME: NeoScheme = {
         name: text({
             displayName: "이름",
             required: true,
+            isUnique: true,
         }),
         systemId: text({
             displayName: "내부관리번호",
@@ -22,6 +23,7 @@ export const NEO_POS_DEVICE_SCHEME: NeoScheme = {
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
+            isUnique: true,
         }),
     },
     panelComponents: [CreatePasscode],

@@ -17,6 +17,8 @@ export const NEO_PAYMENT_METHOD_SCHEME: NeoScheme = {
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
+
+            isUnique: true,
         }),
         type: text({
             displayName: "유형",

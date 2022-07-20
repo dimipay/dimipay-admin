@@ -14,6 +14,7 @@ export const NEO_CATEGORY_SCHEME: NeoScheme = {
         name: text({
             displayName: "이름",
             required: true,
+            isUnique: true,
         }),
         color: text({
             displayName: "표시 색",

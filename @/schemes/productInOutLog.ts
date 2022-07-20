@@ -23,6 +23,7 @@ export const NEO_PRODUCT_IN_OUT_LOG_SCHEME: NeoScheme = {
         }),
         message: text({
             displayName: "메모",
+            isUnique: true,
         }),
         type: text({
             displayName: "종류",
@@ -38,6 +39,7 @@ export const NEO_PRODUCT_IN_OUT_LOG_SCHEME: NeoScheme = {
             autoGenerative: true,
             readOnly: true,
             invisibleInTable: true,
+            isUnique: true,
         }),
         StoreProducts: singleRelation({
             displayName: "연결된 입고 이력",

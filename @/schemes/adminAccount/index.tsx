@@ -19,6 +19,7 @@ export const NEO_ADMIN_ACCOUNT: NeoScheme = {
             displayName: "아이디",
             required: true,
             searchable: true,
+            isUnique: true,
         }),
         hashedPassword: text({
             displayName: "비밀번호",
@@ -42,6 +43,7 @@ export const NEO_ADMIN_ACCOUNT: NeoScheme = {
             targetTable: SLUG.user,
             nameField: "name",
             searchable: true,
+            isUnique: true,
         }),
         AdminRole: singleRelation({
             displayName: "권한",

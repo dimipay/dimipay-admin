@@ -28,6 +28,7 @@ export const NEO_DISCOUNT_POLICY: NeoScheme = {
         Event: singleRelation({
             displayName: "연계 이벤트",
             targetTable: SLUG.event,
+            isUnique: true,
             nameField: "title",
         }),
         targetCategory: multipleRelation({

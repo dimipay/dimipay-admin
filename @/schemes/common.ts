@@ -28,6 +28,7 @@ export const NEO_RECORD_BASE_FIELDS = {
         displayName: "ID",
         readOnly: true,
         autoGenerative: true,
+        isUnique: true,
     }),
     createdAt: date({
         displayName: "생성일",

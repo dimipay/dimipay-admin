@@ -20,10 +20,12 @@ export const NEO_TRANSACTION_SCHEME: NeoScheme = {
         billingId: text({
             displayName: "PG 결제 ID",
             invisibleInTable: true,
+            isUnique: true,
             searchable: true,
         }),
         totalPrice: number({
             displayName: "금액",
+            isUnique: true,
         }),
         status: text({
             displayName: "상태",
@@ -41,6 +43,7 @@ export const NEO_TRANSACTION_SCHEME: NeoScheme = {
             readOnly: true,
             invisibleInTable: true,
             autoGenerative: true,
+            isUnique: true,
             searchable: true,
         }),
         purchaseType: text({

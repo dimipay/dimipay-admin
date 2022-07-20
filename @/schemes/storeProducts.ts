@@ -30,6 +30,7 @@ export const NEO_STORE_PRODUCT: NeoScheme = {
         title: text({
             displayName: "메모",
             required: true,
+            isUnique: true,
         }),
         AdminAccount: singleRelation({
             displayName: "입고자",

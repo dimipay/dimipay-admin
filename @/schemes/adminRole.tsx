@@ -220,6 +220,7 @@ export const NEO_ADMIN_ROLE_SCHEME: NeoScheme = {
         name: text({
             displayName: "이름",
             required: true,
+            isUnique: true,
         }),
         permissions: permissionSelector,
     },

@@ -26,6 +26,7 @@ export const NEO_PRODUCT: NeoScheme = {
             readOnly: true,
             invisibleInTable: true,
             searchable: true,
+            isUnique: true,
         }),
         name: text({
             displayName: "상품명",
@@ -37,6 +38,7 @@ export const NEO_PRODUCT: NeoScheme = {
             displayName: "바코드 번호",
             required: true,
             searchable: true,
+            isUnique: true,
             monospace: true,
         }),
         sellingPrice: number({

@@ -1,7 +1,7 @@
 import { batchEditWizardFileAtom, modalContentAtom } from "@/coil"
 import { Button, Table } from "@/components"
 import { TABLES } from "@/constants"
-import { table } from "@/functions"
+import { batchEdit, table } from "@/functions"
 import { NEO_RECORD_BASE_FIELDS } from "@/schemes/common"
 import { TableRecord } from "@/types"
 import { Important, PageHeader, Regular } from "@/typo"
@@ -9,6 +9,7 @@ import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
 import { Sidebar } from "pages/dash/partial"
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { toast } from "react-toastify"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { CheckPreviewBar } from "./style"
 
@@ -43,6 +44,7 @@ const Preview = () => {
                 !batchFile.match
             )
                 return
+
             showModal({
                 title: "현재 보고있는 화면은 미리보기입니다",
                 content:
@@ -84,8 +86,28 @@ const Preview = () => {
                 amount: uniqueIds.length,
             })
 
-            // if (originRecords.records.length !== uniqueIds.length) {
-            // }
+            if (originRecords.records.length !== uniqueIds.length) {
+                const originAlign = originRecords.records.map(
+                    e => e[batchFile.alignField!],
+                )
+
+                const notfound = uniqueIds.filter(
+                    unique => !originAlign.includes(unique),
+                )
+
+                showModal({
+                    title: "다음 데이터를 찾을 수 없어요",
+                    content: notfound.join(", "),
+                    button: [
+                        {
+                            label: "무시하고 진행",
+                            action() {
+                                showModal(null)
+                            },
+                        },
+                    ],
+                })
+            }
 
             const records: TableRecord[] = originRecords.records.map(
                 (e, index) => {
@@ -119,9 +141,24 @@ const Preview = () => {
         })()
     }, [batchFile, scheme])
 
-    const apply = useCallback(() => {
-        return
-    }, [])
+    const apply = useCallback(async () => {
+        if (!batchFile) return
+
+        const { records, alignField, match, header } = batchFile
+
+        if (!records || !alignField || !match || !header) return
+
+        const { affected } = await batchEdit[scheme!.slug]({
+            records,
+            alignField,
+            match,
+            header,
+        })
+
+        toast.success(`${affected}개의 데이터에 변경사항이 적용됐어요`)
+
+        router.push(`/dash/${router.query.slug}`)
+    }, [scheme])
 
     return (
         <Hexile fillx filly>

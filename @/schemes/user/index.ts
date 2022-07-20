@@ -17,11 +17,13 @@ export const NEO_USER: NeoScheme = {
             readOnly: true,
             invisibleInTable: true,
             searchable: true,
+            isUnique: true,
         }),
         accountName: text({
             displayName: "ID",
             required: true,
             searchable: true,
+            isUnique: true,
         }),
         name: text({
             displayName: "이름",
@@ -35,6 +37,7 @@ export const NEO_USER: NeoScheme = {
             displayName: "전화번호",
             placeholder: "010-1234-5678",
             searchable: true,
+            isUnique: true,
         }),
     },
 }

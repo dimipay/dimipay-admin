@@ -185,10 +185,7 @@ const TableViewer: NextPage = () => {
                                 <Important white>다운로드</Important>
                             </Button> */}
                             {currentTablePermission &&
-                                currentTablePermission.includes("U") &&
-                                experimentalFlags.includes(
-                                    EXPERIMENTAL_FLAGS.wiz,
-                                ) && (
+                                currentTablePermission.includes("U") && (
                                     <Button
                                         color={"black"}
                                         onClick={() => {

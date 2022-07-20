@@ -3,14 +3,22 @@ import { Option, SingleRelation, SLUG } from "@/types"
 import { Description, Regular } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useMemo, useCallback } from "react"
-import { FieldComponent, FieldFunction, FieldProps } from "."
-import { createRelationOptionRetriever } from "./multipleRelation"
+import { FieldComponent, FieldFunction, FieldProps, NeoField } from "."
+import {
+    createRelationOptionRetriever,
+    MultipleRelationFieldFactoryProps,
+} from "./multipleRelation"
 
 export interface SingleRelationFieldFactoryProps
     extends FieldProps<SingleRelation> {
     targetTable?: SLUG
     nameField?: string
 }
+
+export type SingleRelationNeoField = NeoField<
+    SingleRelation,
+    SingleRelationFieldFactoryProps
+>
 
 const SingleRelationComponent: FieldComponent<
     SingleRelation,

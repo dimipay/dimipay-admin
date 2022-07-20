@@ -11,6 +11,8 @@ import {
     NEO_USER,
     NEO_ADMIN_ROLE_SCHEME,
     NEO_ADMIN_ACCOUNT,
+    NEO_COUPON_SCHEME,
+    NEO_NOTICE_SCHEME,
 } from "./schemes"
 import { NeoScheme, SchemeGroup, StatisticsCard } from "./types"
 
@@ -52,6 +54,8 @@ export const GROUPED_TABLES: SchemeGroup[] = [
             NEO_ADMIN_ACCOUNT,
             NEO_PAYMENT_METHOD_SCHEME,
             NEO_ADMIN_ROLE_SCHEME,
+            NEO_COUPON_SCHEME,
+            NEO_NOTICE_SCHEME
         ],
     },
 ]

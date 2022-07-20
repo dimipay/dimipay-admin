@@ -90,7 +90,7 @@ model Coupon {
   name                          String
   expiresAt                     DateTime?
   amount                        Int
-  systemId                      String       @unique
+  systemId                      String       @unique @default(uuid())
   issuerSid                     String
   receiverSid                   String
   usedTransactionSid            String?

@@ -37,6 +37,8 @@ export enum SLUG {
     productInOutLog = "productInOutLog",
     storeProducts = "storeProducts",
     adminRole = "adminRole",
+    coupon = "coupon",
+    notice = "notice"
 }
 
 export interface RelationItem {

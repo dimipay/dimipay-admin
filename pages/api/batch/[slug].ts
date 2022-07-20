@@ -5,11 +5,7 @@ import {
     SingleRelationNeoField,
 } from "@/fields"
 import { prisma } from "@/storage"
-import {
-    HandlerError,
-    NeoScheme,
-    SLUG,
-} from "@/types"
+import { HandlerError, NeoScheme, SLUG } from "@/types"
 import { endpoint } from ".."
 
 const formatBatchUpdate = async (

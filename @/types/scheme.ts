@@ -16,8 +16,11 @@ export interface NeoScheme {
         }
     >
     panelComponents?: PanelComponent[]
-    selectActions?: ToolbarAction[]
+    selectActions?: SelectAction[]
+    wizards?: ActionButton<[NeoScheme]>[]
 }
+
+export type SelectAction = ActionButton<[TableRecord[], NeoScheme]>
 
 export interface Sort {
     field: string
@@ -80,15 +83,12 @@ export interface Option {
     icon?: JSX.Element
 }
 
-export interface ToolbarAction {
+export interface ActionButton<FunctionArgument extends Array<unknown> = []> {
     button: {
         label: string
-        color: "danger" | "normal" | "accent"
+        color?: "black"
     }
-    func(
-        selectedRecords: TableRecord[],
-        scheme: NeoScheme,
-    ): void | Promise<void>
+    func(...arg0: FunctionArgument): void | Promise<void>
 }
 
 export type PanelComponent = React.FC<{

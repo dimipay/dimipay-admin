@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { NeoScheme, TableRecord, ToolbarAction } from "@/types"
+import { NeoScheme, TableRecord, ActionButton } from "@/types"
 import { Description, Important } from "@/typo"
 
 import { ActionToolbars, HeaderCell, TableContent, TableWrapper } from "./style"
@@ -136,27 +136,25 @@ export const Table: React.FC<{
                     {selectedRecordIds.length !== 0 && (
                         <ActionToolbars gap={2} padding={4}>
                             {props.scheme.selectActions?.length ? (
-                                props.scheme.selectActions?.map(
-                                    (action: ToolbarAction) => (
-                                        <Button
-                                            key={action.button.label}
-                                            onClick={async () => {
-                                                await action.func(
-                                                    data.filter(d =>
-                                                        selectedRecordIds.includes(
-                                                            d.id,
-                                                        ),
+                                props.scheme.selectActions?.map(action => (
+                                    <Button
+                                        key={action.button.label}
+                                        onClick={async () => {
+                                            await action.func(
+                                                data.filter(d =>
+                                                    selectedRecordIds.includes(
+                                                        d.id,
                                                     ),
-                                                    props.scheme,
-                                                )
-                                                props.onReloadRequested?.()
-                                            }}>
-                                            <Important white>
-                                                {action.button.label}
-                                            </Important>
-                                        </Button>
-                                    ),
-                                )
+                                                ),
+                                                props.scheme,
+                                            )
+                                            props.onReloadRequested?.()
+                                        }}>
+                                        <Important white>
+                                            {action.button.label}
+                                        </Important>
+                                    </Button>
+                                ))
                             ) : (
                                 <Description>
                                     수행 가능한 동작이 없어요

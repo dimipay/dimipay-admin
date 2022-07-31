@@ -45,4 +45,15 @@ export const NEO_STORE_PRODUCT: NeoScheme = {
         }),
     },
     selectActions: [DELETE_SELECTED_RECORDS_ACTION],
+    wizards: [
+        {
+            button: {
+                label: "파일로 입고",
+                color: "black",
+            },
+            async func(scheme) {
+                console.log(scheme)
+            },
+        },
+    ],
 }

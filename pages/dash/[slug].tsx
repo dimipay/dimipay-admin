@@ -205,6 +205,18 @@ const TableViewer: NextPage = () => {
                                         </Important>
                                     </Button>
                                 )}
+                            {scheme.wizards?.map(wizard => (
+                                <Button
+                                    color={wizard.button.color}
+                                    key={wizard.button.label}
+                                    onClick={() => {
+                                        wizard.func(scheme)
+                                    }}>
+                                    <Important white>
+                                        {wizard.button.label}
+                                    </Important>
+                                </Button>
+                            ))}
                             {currentTablePermission &&
                                 currentTablePermission.includes("C") && (
                                     <Button

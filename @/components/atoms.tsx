@@ -30,3 +30,10 @@ export const ColorBubble: React.FC<{ color: string }> = ({ color }) => (
 export const Accent = styled("span", {
     color: "$accent",
 })
+
+export const Ul = styled("ul", {
+    paddingLeft: "6rem",
+    "&>li+li": {
+        marginTop: "2rem",
+    },
+})

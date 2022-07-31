@@ -4,7 +4,7 @@ import { Hexile, Vexile } from "@haechi/flexile"
 import Link from "next/link"
 import { Sidebar } from "pages/dash/partial"
 
-export const BatchFile = () => {
+export const StoreIn = () => {
     return (
         <Hexile fillx filly>
             <Sidebar />
@@ -39,4 +39,4 @@ export const BatchFile = () => {
     )
 }
 
-export default BatchFile
+export default StoreIn

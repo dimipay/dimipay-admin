@@ -88,7 +88,15 @@ export interface ActionButton<FunctionArgument extends Array<unknown> = []> {
         label: string
         color?: "black"
     }
-    func(...arg0: FunctionArgument): void | Promise<void>
+    func(...arg0: FunctionArgument):
+        | void
+        | Promise<void>
+        | {
+              goto: string
+          }
+        | Promise<{
+              goto: string
+          }>
 }
 
 export type PanelComponent = React.FC<{

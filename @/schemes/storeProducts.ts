@@ -51,8 +51,10 @@ export const NEO_STORE_PRODUCT: NeoScheme = {
                 label: "파일로 입고",
                 color: "black",
             },
-            async func(scheme) {
-                console.log(scheme)
+            async func() {
+                return {
+                    goto: "/dash/wizard/store-in",
+                }
             },
         },
     ],

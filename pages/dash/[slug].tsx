@@ -209,8 +209,9 @@ const TableViewer: NextPage = () => {
                                 <Button
                                     color={wizard.button.color}
                                     key={wizard.button.label}
-                                    onClick={() => {
-                                        wizard.func(scheme)
+                                    onClick={async () => {
+                                        const res = await wizard.func(scheme)
+                                        if (res?.goto) router.push(res.goto)
                                     }}>
                                     <Important white>
                                         {wizard.button.label}

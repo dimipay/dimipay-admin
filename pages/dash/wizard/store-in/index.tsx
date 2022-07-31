@@ -1,4 +1,4 @@
-import { Button, Ul, WizardFrame } from "@/components"
+import { Button, PlainLink, Ul, WizardFrame } from "@/components"
 import { Important, Regular } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
 import Link from "next/link"
@@ -28,11 +28,11 @@ export const StoreIn = () => {
                             </li>
                         </Ul>
                     </Regular>
-                    <Link href={location.href + "/upload"} passHref>
+                    <PlainLink href={location.href + "/upload"} passHref>
                         <Button block>
                             <Important white>다음</Important>
                         </Button>
-                    </Link>
+                    </PlainLink>
                 </WizardFrame>
             </Vexile>
         </Hexile>

@@ -44,6 +44,7 @@ export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = props => {
                         <Important>{group.groupName}</Important>
                         {group.content.map(table => (
                             <PlainLink
+                                passHref
                                 key={table.slug}
                                 href={`/dash/${
                                     Object.entries(SLUG).find(
@@ -56,7 +57,7 @@ export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = props => {
                     </Vexile>
                 ))}
             {user?.user?.AdminRole?.permissions?.extra?.statistics && (
-                <PlainLink href="/dash/statistics">
+                <PlainLink href="/dash/statistics" passHref>
                     <Hexile>
                         <LoadSVG
                             alt="그래프 아이콘"

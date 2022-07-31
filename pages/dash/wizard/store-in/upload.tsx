@@ -26,11 +26,13 @@ export const FileUpload = () => {
                             setStoreFile(
                                 records
                                     .map(record => ({
-                                        name: record[1].toString(),
-                                        barcode: record[12].toString(),
-                                        amount: +record[3].toString(),
+                                        name: record[1]?.toString(),
+                                        barcode: record[12]?.toString(),
+                                        amount: +record[3]?.toString(),
                                     }))
-                                    .filter(e => e.barcode),
+                                    .filter(
+                                        e => e.name && e.amount && e.barcode,
+                                    ),
                             )
 
                             router.push(location.href + "/../check")

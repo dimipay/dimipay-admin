@@ -15,6 +15,7 @@ export const createTypo = (props: {
         color: props.color || "$dark1",
         letterSpacing: props.spatialLetter ? "unset" : "-0.03em",
         margin: 0,
+        animated: true,
         variants: {
             accent: {
                 true: {

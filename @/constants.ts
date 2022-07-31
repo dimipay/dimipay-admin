@@ -55,7 +55,7 @@ export const GROUPED_TABLES: SchemeGroup[] = [
             NEO_PAYMENT_METHOD_SCHEME,
             NEO_ADMIN_ROLE_SCHEME,
             NEO_COUPON_SCHEME,
-            NEO_NOTICE_SCHEME
+            NEO_NOTICE_SCHEME,
         ],
     },
 ]

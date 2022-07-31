@@ -10,7 +10,7 @@ export const batchEdit = Object.keys(SLUG).reduce(
     },
     {} as {
         [key in SLUG]: (
-            input: Parameters<batchKone>[0]
+            input: Parameters<batchKone>[0],
         ) => ReturnType<batchKone>
-    }
+    },
 )

@@ -1,6 +1,6 @@
-import { date, number, singleRelation, text } from "@/fields";
-import { NeoScheme, SLUG } from "@/types";
-import { NEO_RECORD_BASE_FIELDS } from "../common";
+import { date, number, singleRelation, text } from "@/fields"
+import { NeoScheme, SLUG } from "@/types"
+import { NEO_RECORD_BASE_FIELDS } from "../common"
 
 // model Coupon {
 //     id                            String       @id @default(uuid())
@@ -26,7 +26,7 @@ export const NEO_COUPON_SCHEME: NeoScheme = {
         name: text({
             displayName: "이름",
             required: true,
-            searchable: true
+            searchable: true,
         }),
         expiresAt: date({
             displayName: "만료일",
@@ -36,14 +36,14 @@ export const NEO_COUPON_SCHEME: NeoScheme = {
         amount: number({
             displayName: "액면가",
             required: true,
-            searchable: true
+            searchable: true,
         }),
         systemId: text({
             displayName: "내부관리번호",
             required: true,
             isUnique: true,
             searchable: true,
-            autoGenerative: true
+            autoGenerative: true,
         }),
         User_Coupon_issuerSidToUser: singleRelation({
             displayName: "발급자",
@@ -65,6 +65,6 @@ export const NEO_COUPON_SCHEME: NeoScheme = {
             searchable: true,
             targetTable: SLUG.transaction,
             nameField: "name",
-        })
-    }
+        }),
+    },
 }

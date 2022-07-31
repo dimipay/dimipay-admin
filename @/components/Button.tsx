@@ -45,5 +45,10 @@ export const Button = styled("button", {
                 display: "block",
             },
         },
+        fillx: {
+            true: {
+                width: "100%",
+            },
+        },
     },
 })

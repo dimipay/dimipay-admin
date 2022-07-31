@@ -23,6 +23,7 @@ export const useTabSwitcher = ({
             selected={selected}
             onTabChange={index => setSelected(index)}
         />,
+        selected,
         (index: number) => setSelected(() => index),
-    ]
+    ] as const
 }

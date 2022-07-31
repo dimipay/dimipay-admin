@@ -8,7 +8,7 @@ export const StoreinProductTile: React.FC<{
     store: Store
     currentAmount: number
     color?: keyof typeof config.theme.colors
-    active: boolean
+    active?: boolean
 }> = ({ store, currentAmount, active, color }) => {
     return (
         <StoreCard

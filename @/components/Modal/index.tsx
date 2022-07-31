@@ -6,9 +6,10 @@ import { Button } from ".."
 import { ModalBackdrop, ModalWrapper } from "./style"
 
 export interface ModalContent {
-    content: string
+    content: JSX.Element
     title: string
-    button: {
+    wide?: boolean
+    button?: {
         label: string
         color?: "black"
         action(): void
@@ -27,16 +28,23 @@ export const useModal = () => {
             onClick={() => setContent(null)}>
             <ModalWrapper
                 fillx
+                filly
                 gap={2}
                 padding={6}
+                isWide={content.wide}
                 onClick={e => {
                     e.preventDefault()
                     e.stopPropagation()
                 }}>
                 <PageHeader>{content.title}</PageHeader>
-                <Regular>{content.content}</Regular>
+                {typeof content.content === "string" ? (
+                    <Regular>{content.content}</Regular>
+                ) : (
+                    content.content
+                )}
+
                 <Hexile x="right">
-                    {content.button.map(button => (
+                    {content.button?.map(button => (
                         <Button
                             key={button.label}
                             color={button.color}

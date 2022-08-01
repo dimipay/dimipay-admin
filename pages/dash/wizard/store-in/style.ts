@@ -1,4 +1,4 @@
-import { Card } from "@/components"
+import { Card, Redirector } from "@/components"
 import { config, styled } from "@/stitches.config"
 
 export const StoreCard = styled(Card, {
@@ -28,3 +28,5 @@ export const StoreCard = styled(Card, {
         >,
     },
 })
+
+export default Redirector

@@ -1,3 +1,4 @@
+import { Redirector } from "@/components"
 import { config } from "@/stitches.config"
 import { Store } from "@/types"
 import { Decorative, Description, Regular } from "@/typo"
@@ -27,3 +28,5 @@ export const StoreinProductTile: React.FC<{
         </StoreCard>
     )
 }
+
+export default Redirector

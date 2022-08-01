@@ -10,14 +10,6 @@ const TYPE_ICON_MAP: Record<string, string> = {
     number: numberInputIcon,
 }
 
-export const TEXT_INPUT_COMPATIBLE_TYPES = [
-    "string",
-    "number",
-    "date",
-    "password",
-    "color",
-] as const
-
 export const Input: React.FC<
     {
         placeholder?: string

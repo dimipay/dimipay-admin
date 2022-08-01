@@ -205,6 +205,19 @@ const TableViewer: NextPage = () => {
                                         </Important>
                                     </Button>
                                 )}
+                            {scheme.wizards?.map(wizard => (
+                                <Button
+                                    color={wizard.button.color}
+                                    key={wizard.button.label}
+                                    onClick={async () => {
+                                        const res = await wizard.func(scheme)
+                                        if (res?.goto) router.push(res.goto)
+                                    }}>
+                                    <Important white>
+                                        {wizard.button.label}
+                                    </Important>
+                                </Button>
+                            ))}
                             {currentTablePermission &&
                                 currentTablePermission.includes("C") && (
                                     <Button

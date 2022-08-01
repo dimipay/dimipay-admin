@@ -6,9 +6,10 @@ import { Button } from ".."
 import { ModalBackdrop, ModalWrapper } from "./style"
 
 export interface ModalContent {
-    content: string
+    content: JSX.Element | string
     title: string
-    button: {
+    wide?: boolean
+    button?: {
         label: string
         color?: "black"
         action(): void
@@ -27,24 +28,31 @@ export const useModal = () => {
             onClick={() => setContent(null)}>
             <ModalWrapper
                 fillx
-                gap={2}
+                gap={4}
                 padding={6}
+                isWide={content.wide}
                 onClick={e => {
                     e.preventDefault()
                     e.stopPropagation()
                 }}>
                 <PageHeader>{content.title}</PageHeader>
-                <Regular>{content.content}</Regular>
-                <Hexile x="right">
-                    {content.button.map(button => (
-                        <Button
-                            key={button.label}
-                            color={button.color}
-                            onClick={button.action}>
-                            <Important white>{button.label}</Important>
-                        </Button>
-                    ))}
-                </Hexile>
+                {typeof content.content === "string" ? (
+                    <Regular>{content.content}</Regular>
+                ) : (
+                    content.content
+                )}
+                {content.button && (
+                    <Hexile x="right">
+                        {content.button.map(button => (
+                            <Button
+                                key={button.label}
+                                color={button.color}
+                                onClick={button.action}>
+                                <Important white>{button.label}</Important>
+                            </Button>
+                        ))}
+                    </Hexile>
+                )}
             </ModalWrapper>
         </ModalBackdrop>
     ) : (

@@ -3,7 +3,7 @@ import { loadRedis, prisma } from "@/storage"
 import { Statistics } from "@/types"
 import { ProductInOutType } from "@prisma/client"
 
-async function saveProductStocksToRedis() {
+export async function saveProductStocksToRedis() {
     const redis = await loadRedis()
 
     redis.del(REDIS_HASHMAPS.product_stock)

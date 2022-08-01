@@ -1,9 +1,9 @@
-import { Button, WizardFrame } from "@/components"
+import { Button, Ul, WizardFrame } from "@/components"
 import { Description, Important, Regular } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
 import Link from "next/link"
 import { Sidebar } from "pages/dash/partial"
-import { ExampleTable, Ul } from "./style"
+import { ExampleTable } from "./style"
 
 export const BatchFile = () => {
     return (

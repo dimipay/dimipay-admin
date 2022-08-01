@@ -1,13 +1,13 @@
 import { date } from "@/fields/date"
 import { text } from "@/fields/text"
 import { table } from "@/functions"
-import { NeoScheme, TableRecord, ToolbarAction } from "@/types"
+import { NeoScheme, TableRecord, SelectAction } from "@/types"
 import { Product } from "@prisma/client"
 import { toast } from "react-toastify"
 
-export const DELETE_SELECTED_RECORDS_ACTION: ToolbarAction = {
+export const DELETE_SELECTED_RECORDS_ACTION: SelectAction = {
     button: {
-        color: "accent",
+        color: "black",
         label: "삭제",
     },
     func: async (selectedRecords: TableRecord[], scheme: NeoScheme) => {

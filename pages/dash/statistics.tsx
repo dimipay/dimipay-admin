@@ -10,17 +10,7 @@ import { Sidebar } from "./partial"
 import { useRecoilValue } from "recoil"
 import { userAtom } from "@/coil"
 import { useRouter } from "next/router"
-
-const StatisticsCard = styled(Vexile, {
-    backgroundColor: "white",
-    borderRadius: "2rem",
-    border: "0.5rem solid $dark5",
-})
-
-StatisticsCard.defaultProps = {
-    padding: 4,
-    gap: 3,
-}
+import { Card } from "@/components"
 
 const ListItem = styled(Hexile, {
     backgroundColor: "$dark6",
@@ -119,7 +109,7 @@ export const StatisticsDashboard = () => {
                                 {group.items.map(
                                     card =>
                                         statisticsValues && (
-                                            <StatisticsCard key={card.id}>
+                                            <Card key={card.id}>
                                                 <Regular>{card.name}</Regular>
                                                 {
                                                     <StatisticsRenderer
@@ -130,7 +120,7 @@ export const StatisticsDashboard = () => {
                                                         }
                                                     />
                                                 }
-                                            </StatisticsCard>
+                                            </Card>
                                         ),
                                 )}
                             </Hexile>

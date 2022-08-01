@@ -25,6 +25,8 @@ export const {
         colors: {
             accent: MAIN_ACCENT,
             error: "#FF9393",
+            positive: "#6291D7",
+            negative: "#D76263",
             ...DARKS,
         },
         shadows: {

@@ -8,13 +8,6 @@ export const ExampleTable = styled("table", {
     pading: "3rem",
 })
 
-export const Ul = styled("ul", {
-    paddingLeft: "6rem",
-    "&>li+li": {
-        marginTop: "2rem",
-    },
-})
-
 export const FieldItem = styled("div", {
     backgroundColor: "$dark6",
     padding: "2rem 3rem",

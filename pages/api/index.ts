@@ -1,18 +1,18 @@
 import { logNotion, verifyJWT } from "@/functions"
-import { HandlerError } from "@/types"
+import { HandlerError, Session } from "@/types"
 import { NextApiHandler } from "next"
 
-export type Handlers = Record<string, (props: any, slug: any) => unknown>
+export type Handlers = Record<
+    string,
+    (props: any, slug: any, user?: Session) => unknown
+>
 
 export const endpoint =
     (handlers: Handlers): NextApiHandler =>
     async (req, res) => {
         const user =
             req.headers.authorization &&
-            verifyJWT<{
-                number: string
-                username: string
-            }>(req.headers.authorization)
+            verifyJWT<Session>(req.headers.authorization)
 
         const reqContent =
             req.method === "GET" && req.query.query
@@ -27,7 +27,11 @@ export const endpoint =
             const handler = handlers[req.method as string]
             if (!handler) throw new HandlerError(`동작을 찾을 수 없어요`, 404)
 
-            const result = await handler(reqContent, req.query)
+            const result = await handler(
+                reqContent,
+                req.query,
+                user || undefined,
+            )
 
             logNotion({
                 actioner: (user && user.username) || "anonymous",

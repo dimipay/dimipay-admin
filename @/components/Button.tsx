@@ -45,5 +45,16 @@ export const Button = styled("button", {
                 display: "block",
             },
         },
+        fillx: {
+            true: {
+                width: "100%",
+            },
+        },
+        fit: {
+            true: {
+                width: "fit-content",
+                alignSelf: "revert",
+            },
+        },
     },
 })

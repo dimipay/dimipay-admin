@@ -50,5 +50,11 @@ export const Button = styled("button", {
                 width: "100%",
             },
         },
+        fit: {
+            true: {
+                width: "fit-content",
+                alignSelf: "revert",
+            },
+        },
     },
 })

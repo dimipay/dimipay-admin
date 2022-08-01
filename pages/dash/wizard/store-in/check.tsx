@@ -12,8 +12,9 @@ import { Sidebar } from "pages/dash/partial"
 import { useRouter } from "next/router"
 import { Store } from "@/types"
 import { toast } from "react-toastify"
+import { string } from "yup"
 
-const chime = new Audio("/scan_finish.wav")
+const chime = globalThis.Audio && new globalThis.Audio("/scan_finish.wav")
 
 const TAB_INDEX = {
     CHECKING: 0,
@@ -166,6 +167,18 @@ export const CheckStorein = () => {
         ],
     )
 
+    const decreaseAmount = useCallback(
+        (barcode: string) => {
+            if (scannedAmounts[barcode] > 0) {
+                setScanedAmount(scanned => ({
+                    ...scanned,
+                    [barcode]: scanned[barcode] - 1,
+                }))
+            }
+        },
+        [scannedAmounts, setScanedAmount],
+    )
+
     useHIDInput({
         onData(data) {
             increaseAmount(data)
@@ -205,7 +218,7 @@ export const CheckStorein = () => {
                                     <Hexile gap={4} linebreak>
                                         {unmatched.more.map(e => (
                                             <StoreinProductTile
-                                                key={e.barcode}
+                                                key={e.name + e.barcode}
                                                 color="positive"
                                                 currentAmount={
                                                     scannedAmounts[e.barcode]
@@ -224,7 +237,7 @@ export const CheckStorein = () => {
                                     <Hexile gap={4} linebreak>
                                         {unmatched.less.map(e => (
                                             <StoreinProductTile
-                                                key={e.barcode}
+                                                key={e.name + e.barcode}
                                                 color="negative"
                                                 currentAmount={
                                                     scannedAmounts[e.barcode]
@@ -337,9 +350,12 @@ export const CheckStorein = () => {
                                     currentTab === TAB_INDEX.CHECKING
                                         ? "checking"
                                         : "finished"
-                                ]?.map((store, index) => (
+                                ]?.map(store => (
                                     <StoreinProductTile
-                                        key={store.barcode}
+                                        key={store.name + store.barcode}
+                                        onClick={() =>
+                                            decreaseAmount(store.barcode)
+                                        }
                                         active={
                                             store.barcode ===
                                             scanHistory[0]?.barcode

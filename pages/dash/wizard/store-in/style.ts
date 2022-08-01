@@ -1,5 +1,6 @@
 import { Card, Redirector } from "@/components"
 import { config, styled } from "@/stitches.config"
+import { Vexile } from "@haechi/flexile"
 
 export const StoreCard = styled(Card, {
     width: "36rem",
@@ -27,6 +28,18 @@ export const StoreCard = styled(Card, {
             }
         >,
     },
+})
+
+export const HoverOverlay = styled("div", {
+    position: "absolute",
+    backgroundColor: "rgba(255 255 255 / 0.6)",
+    left: "-0.5rem",
+    top: "-0.5rem",
+    right: "-0.5rem",
+    bottom: "-0.5rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
 })
 
 export default Redirector

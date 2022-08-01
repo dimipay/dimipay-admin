@@ -191,6 +191,7 @@ export const CheckStorein = () => {
         const unmatched = storeinSheet.reduce(
             (grouped, current) => {
                 const delta = scannedAmounts[current.barcode] - current.amount
+                if (delta === 0) return grouped
 
                 return immer(grouped, draft => {
                     draft[delta < 0 ? "less" : "more"].push(current)

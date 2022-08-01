@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs"
 import { endpoint, Handlers } from "."
 
 const actions: Handlers = {
-    async POST(content: { username: string; password: string })  {
+    async POST(content: { username: string; password: string }) {
         const user = await prisma.adminAccount.findFirst({
             where: {
                 username: content.username,

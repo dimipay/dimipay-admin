@@ -28,6 +28,7 @@ export const CheckStorein = () => {
 
     const [scanHistory, setScanHistory] = useState<
         {
+            date: number
             barcode: string
             times: number
         }[]
@@ -100,11 +101,11 @@ export const CheckStorein = () => {
         tabs: [
             {
                 label: "확인중",
-                message: "13개",
+                message: (sortedSheet?.checking.length || 0) + "개",
             },
             {
                 label: "확인 완료",
-                message: "13개",
+                message: (sortedSheet?.finished.length || 0) + "개",
             },
         ],
     })
@@ -141,6 +142,7 @@ export const CheckStorein = () => {
                     {
                         barcode: barcode,
                         times: _scanHistory[0].times + 1,
+                        date: +new Date(),
                     },
                     ..._scanHistory.slice(1),
                 ])
@@ -149,11 +151,18 @@ export const CheckStorein = () => {
                     {
                         barcode: barcode,
                         times: 1,
+                        date: +new Date(),
                     },
                     ..._scanHistory,
                 ])
         },
-        [scanHistory, productNameBarcodeMap],
+        [
+            productNameBarcodeMap,
+            scanHistory,
+            requiredAmountByProductBarcode,
+            scannedAmounts,
+            setTab,
+        ],
     )
 
     useHIDInput({
@@ -195,6 +204,7 @@ export const CheckStorein = () => {
                                     <Hexile gap={4} linebreak>
                                         {unmatched.more.map(e => (
                                             <StoreinProductTile
+                                                key={e.barcode}
                                                 color="positive"
                                                 currentAmount={
                                                     scannedAmounts[e.barcode]
@@ -213,6 +223,7 @@ export const CheckStorein = () => {
                                     <Hexile gap={4} linebreak>
                                         {unmatched.less.map(e => (
                                             <StoreinProductTile
+                                                key={e.barcode}
                                                 color="negative"
                                                 currentAmount={
                                                     scannedAmounts[e.barcode]
@@ -290,6 +301,7 @@ export const CheckStorein = () => {
             console.log(storeResult)
             if (storeResult) {
                 toast.success("입고 처리가 완료되었습니다😊")
+                router.push("/dash/storeProducts")
             }
         } catch (e) {
             toast.error("입고 처리에 실패했습니다😢")
@@ -326,6 +338,7 @@ export const CheckStorein = () => {
                                         : "finished"
                                 ]?.map((store, index) => (
                                     <StoreinProductTile
+                                        key={store.barcode}
                                         active={
                                             store.barcode ===
                                             scanHistory[0]?.barcode
@@ -345,7 +358,10 @@ export const CheckStorein = () => {
                                 style={{ overflowY: "scroll" }}
                                 gap={4}>
                                 {scanHistory.map(barcode => (
-                                    <Hexile gap={2} x="space">
+                                    <Hexile
+                                        gap={2}
+                                        x="space"
+                                        key={barcode.date}>
                                         <Hexile gap={1} y="center">
                                             <Token>{barcode.times}번</Token>
                                             <Regular>

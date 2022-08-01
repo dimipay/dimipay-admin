@@ -49,7 +49,7 @@ const formatBatchUpdate = async (
                     })),
                 }
             } else if (type === "SINGLE_RELATION") {
-                const relationField = field as SingleRelationNeoField
+                const relationField = field as unknown as SingleRelationNeoField
 
                 const queried = await (
                     prisma[

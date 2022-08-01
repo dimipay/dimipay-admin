@@ -2,9 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import immer from "immer"
 
-import { useHIDInput, useTabSwitcher } from "@/functions"
+import { storeIn, useHIDInput, useTabSwitcher } from "@/functions"
 import { Description, Important, Regular, Token } from "@/typo"
-import { Button, WizardFrame } from "@/components"
+import { Button, Input, WizardFrame } from "@/components"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { StoreinProductTile } from "./partial"
 import { modalContentAtom, storeInWizardFileAtom } from "@/coil"
@@ -162,7 +162,7 @@ export const CheckStorein = () => {
         },
     })
 
-    const scanFinish = () => {
+    const scanFinish = async () => {
         if (!storeinSheet) return
 
         const unmatched = storeinSheet.reduce(
@@ -180,62 +180,119 @@ export const CheckStorein = () => {
         )
 
         if (unmatched.less.length > 0 || unmatched.more.length > 0) {
-            showModal({
-                wide: true,
-                title: "일부 상품의 스캔한 수량이 입고 파일 내용과 달라요",
-                content: (
-                    <Vexile gap={6} filly>
-                        <Regular>이대로 입고를 진행할까요?</Regular>
-                        {unmatched.more.length ? (
-                            <Vexile gap={2}>
-                                <Important>파일 내용보다 많은 상품</Important>
-                                <Hexile gap={4} linebreak>
-                                    {unmatched.more.map(e => (
-                                        <StoreinProductTile
-                                            color="positive"
-                                            currentAmount={
-                                                scannedAmounts[e.barcode]
-                                            }
-                                            store={e}
-                                        />
-                                    ))}
-                                </Hexile>
-                            </Vexile>
-                        ) : undefined}
-                        {unmatched.less.length ? (
-                            <Vexile gap={2}>
-                                <Important>파일 내용보다 적은 상품</Important>
-                                <Hexile gap={4} linebreak>
-                                    {unmatched.less.map(e => (
-                                        <StoreinProductTile
-                                            color="negative"
-                                            currentAmount={
-                                                scannedAmounts[e.barcode]
-                                            }
-                                            store={e}
-                                        />
-                                    ))}
-                                </Hexile>
-                            </Vexile>
-                        ) : undefined}
+            await new Promise<void>((ok, error) =>
+                showModal({
+                    wide: true,
+                    title: "일부 상품의 스캔한 수량이 입고 파일 내용과 달라요",
+                    content: (
+                        <Vexile gap={6} filly>
+                            <Regular>이대로 입고를 진행할까요?</Regular>
+                            {unmatched.more.length ? (
+                                <Vexile gap={2}>
+                                    <Important>
+                                        파일 내용보다 많은 상품
+                                    </Important>
+                                    <Hexile gap={4} linebreak>
+                                        {unmatched.more.map(e => (
+                                            <StoreinProductTile
+                                                color="positive"
+                                                currentAmount={
+                                                    scannedAmounts[e.barcode]
+                                                }
+                                                store={e}
+                                            />
+                                        ))}
+                                    </Hexile>
+                                </Vexile>
+                            ) : undefined}
+                            {unmatched.less.length ? (
+                                <Vexile gap={2}>
+                                    <Important>
+                                        파일 내용보다 적은 상품
+                                    </Important>
+                                    <Hexile gap={4} linebreak>
+                                        {unmatched.less.map(e => (
+                                            <StoreinProductTile
+                                                color="negative"
+                                                currentAmount={
+                                                    scannedAmounts[e.barcode]
+                                                }
+                                                store={e}
+                                            />
+                                        ))}
+                                    </Hexile>
+                                </Vexile>
+                            ) : undefined}
 
-                        <Hexile filly fillx y="bottom" paddingy={4}>
-                            <Hexile gap={2} fillx>
-                                <Button fillx block color="black">
-                                    <Important white>
-                                        다시 한번 확인할게요
-                                    </Important>
-                                </Button>
-                                <Button fillx block>
-                                    <Important white>
-                                        이 갯수가 맞습니다
-                                    </Important>
-                                </Button>
+                            <Hexile filly fillx y="bottom" paddingy={4}>
+                                <Hexile gap={2} fillx>
+                                    <Button fillx block color="black">
+                                        <Important
+                                            white
+                                            onClick={() => {
+                                                showModal(null)
+                                                error()
+                                            }}>
+                                            다시 한번 확인할게요
+                                        </Important>
+                                    </Button>
+                                    <Button fillx block onClick={() => ok()}>
+                                        <Important white>
+                                            이 갯수가 맞습니다
+                                        </Important>
+                                    </Button>
+                                </Hexile>
                             </Hexile>
-                        </Hexile>
-                    </Vexile>
+                        </Vexile>
+                    ),
+                }),
+            )
+        }
+
+        let title = new Date().toLocaleString() + " 정기입고"
+
+        await new Promise<string>(ok => {
+            showModal({
+                title: "입고 작업 메모를 입력해주세요",
+                content: (
+                    <Input
+                        label="입고 작업 메모"
+                        defaultValue={title}
+                        onChange={e => {
+                            title = e.target.value
+                        }}
+                    />
                 ),
+                button: [
+                    {
+                        label: "저장",
+                        action() {
+                            ok(title)
+                            showModal(null)
+                        },
+                    },
+                ],
             })
+        })
+
+        const scannedResult = immer(storeinSheet, draft => {
+            for (const e of draft) {
+                e.amount = scannedAmounts[e.barcode]
+            }
+        })
+
+        try {
+            const storeResult = await storeIn({
+                stores: scannedResult,
+                title,
+            })
+
+            console.log(storeResult)
+            if (storeResult) {
+                toast.success("입고 처리가 완료되었습니다😊")
+            }
+        } catch (e) {
+            toast.error("입고 처리에 실패했습니다😢")
         }
     }
 

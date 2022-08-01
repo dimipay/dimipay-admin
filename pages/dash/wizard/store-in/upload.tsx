@@ -29,6 +29,7 @@ export const FileUpload = () => {
                                         name: record[1]?.toString(),
                                         barcode: record[12]?.toString(),
                                         amount: +record[3]?.toString(),
+                                        unitCost: +record[4]?.toString(),
                                     }))
                                     .filter(
                                         e => e.name && e.amount && e.barcode,

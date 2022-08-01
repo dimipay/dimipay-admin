@@ -2,10 +2,10 @@ import { createJWT } from "@/functions"
 import { prisma } from "@/storage"
 import { HandlerError } from "@/types"
 import bcrypt from "bcryptjs"
-import { endpoint } from "."
+import { endpoint, Handlers } from "."
 
-const actions = {
-    POST: async (content: { username: string; password: string }) => {
+const actions: Handlers = {
+    async POST(content: { username: string; password: string })  {
         const user = await prisma.adminAccount.findFirst({
             where: {
                 username: content.username,

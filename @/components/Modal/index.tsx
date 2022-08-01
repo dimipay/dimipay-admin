@@ -6,7 +6,7 @@ import { Button } from ".."
 import { ModalBackdrop, ModalWrapper } from "./style"
 
 export interface ModalContent {
-    content: JSX.Element
+    content: JSX.Element | string
     title: string
     wide?: boolean
     button?: {
@@ -28,8 +28,7 @@ export const useModal = () => {
             onClick={() => setContent(null)}>
             <ModalWrapper
                 fillx
-                filly
-                gap={2}
+                gap={4}
                 padding={6}
                 isWide={content.wide}
                 onClick={e => {
@@ -42,17 +41,18 @@ export const useModal = () => {
                 ) : (
                     content.content
                 )}
-
-                <Hexile x="right">
-                    {content.button?.map(button => (
-                        <Button
-                            key={button.label}
-                            color={button.color}
-                            onClick={button.action}>
-                            <Important white>{button.label}</Important>
-                        </Button>
-                    ))}
-                </Hexile>
+                {content.button && (
+                    <Hexile x="right">
+                        {content.button.map(button => (
+                            <Button
+                                key={button.label}
+                                color={button.color}
+                                onClick={button.action}>
+                                <Important white>{button.label}</Important>
+                            </Button>
+                        ))}
+                    </Hexile>
+                )}
             </ModalWrapper>
         </ModalBackdrop>
     ) : (

@@ -8,7 +8,7 @@ export const StoreCard = styled(Card, {
     variants: {
         active: {
             true: {
-                high: "accent"
+                high: "accent",
             },
         },
         color: Object.fromEntries(
@@ -16,7 +16,7 @@ export const StoreCard = styled(Card, {
                 key,
                 {
                     borderColor: `$${key}`,
-                    borderWidth: "0.6rem"
+                    borderWidth: "0.6rem",
                 },
             ]),
         ) as Record<

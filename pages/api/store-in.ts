@@ -1,3 +1,4 @@
+import { saveProductStocksToRedis } from "@/schemes/serverside"
 import { prisma } from "@/storage"
 import { Session, Store } from "@/types"
 import { ProductInOutType } from "@prisma/client"
@@ -59,6 +60,8 @@ const actions = {
                 ),
             },
         })
+
+        await saveProductStocksToRedis()
 
         return {
             message: "success",

@@ -12,10 +12,7 @@ export const endpoint =
     async (req, res) => {
         const user =
             req.headers.authorization &&
-            verifyJWT<{
-                id: number
-                username: string
-            }>(req.headers.authorization)
+            verifyJWT<Session>(req.headers.authorization)
 
         const reqContent =
             req.method === "GET" && req.query.query

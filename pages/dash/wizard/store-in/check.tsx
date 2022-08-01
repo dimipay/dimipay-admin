@@ -13,6 +13,8 @@ import { useRouter } from "next/router"
 import { Store } from "@/types"
 import { toast } from "react-toastify"
 
+const chime = new Audio("/scan_finish.wav")
+
 const TAB_INDEX = {
     CHECKING: 0,
     FINISHED: 1,
@@ -91,8 +93,6 @@ export const CheckStorein = () => {
                 },
             )
 
-            console.log(grouped["checking"])
-
             return grouped
         }
     }, [scanHistory, storeinSheet, scannedAmounts])
@@ -125,6 +125,7 @@ export const CheckStorein = () => {
                     }
                 } else {
                     if (delta === 0) {
+                        chime.play()
                         toast.success("제품 스캔이 완료됐습니다!")
                     }
 

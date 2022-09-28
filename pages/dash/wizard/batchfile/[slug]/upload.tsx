@@ -46,7 +46,6 @@ export const FileUpload = () => {
                                 records: parsed,
                                 header: header.map(e => e.toString()),
                             })
-                            console.log(parsed)
                             router.push(location.href + "/../loadcheck")
                         }}
                     />

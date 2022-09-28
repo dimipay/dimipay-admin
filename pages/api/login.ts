@@ -19,7 +19,7 @@ const actions: Handlers = {
             },
         })
 
-        console.log(bcrypt.hashSync(content.password, 10))
+        // console.log(bcrypt.hashSync(content.password, 10))
 
         if (!user || !bcrypt.compareSync(content.password, user.hashedPassword))
             throw new HandlerError("일치하는 사용자를 찾을 수 없습니다", 400)

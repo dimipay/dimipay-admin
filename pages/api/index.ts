@@ -49,7 +49,7 @@ export const endpoint =
                     isHandlerError: true,
                 })
             } else {
-                console.log("오류 발생!", e)
+                console.error("오류 발생!", e)
                 const code = (e as { code: number }).code
                 const isCodeNumeric = !isNaN(code)
                 res.status((isCodeNumeric && +code) || 500).json({

@@ -28,15 +28,11 @@ const Preview = () => {
             throw new Error("테이블을 찾을 수 없습니다")
         }
 
-        console.log(matchedTable)
-
         return matchedTable
     }, [router])
 
     useEffect(() => {
         ;(async () => {
-            console.log("뭐 했대", batchFile, scheme)
-
             if (
                 !batchFile ||
                 !batchFile.alignField ||

@@ -312,7 +312,7 @@ export const CheckStorein = () => {
                 title,
             })
 
-            console.log(storeResult)
+            // console.log(storeResult)
             if (storeResult) {
                 toast.success("입고 처리가 완료되었습니다😊")
                 router.push("/dash/storeProducts")

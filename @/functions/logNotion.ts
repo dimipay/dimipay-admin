@@ -76,6 +76,6 @@ export const logNotion = async (props: {
             },
         })
     } catch (e) {
-        console.log(e)
+        console.error(e)
     }
 }

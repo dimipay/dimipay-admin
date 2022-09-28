@@ -169,7 +169,6 @@ const TableViewer: NextPage = () => {
                                 <InlineInput
                                     onChange={setQuickSearchQuery}
                                     focusHandler={e => {
-                                        console.log("지정해줌")
                                         setFocusSearchbox(() => e)
                                     }}>
                                     빠른 찾기..

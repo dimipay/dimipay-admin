@@ -2,13 +2,13 @@ import { batchEditWizardFileAtom } from "@/coil"
 import { WizardFrame } from "@/components"
 import { UploadFile } from "@/components/UploadFile"
 import { Hexile, Vexile } from "@haechi/flexile"
+import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { Sidebar } from "pages/dash/partial"
 import readXlsxFile from "read-excel-file"
-import { useSetRecoilState } from "recoil"
 
 export const FileUpload = () => {
-    const setBatchFile = useSetRecoilState(batchEditWizardFileAtom)
+    const [, setBatchFile] = useAtom(batchEditWizardFileAtom)
     const router = useRouter()
 
     return (

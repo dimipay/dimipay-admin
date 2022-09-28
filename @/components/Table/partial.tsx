@@ -8,9 +8,9 @@ import {
 import React, { forwardRef, useState } from "react"
 import { DividerLine, ModifyRecord } from ".."
 import { Important, Regular } from "@/typo"
-import { useRecoilState, useSetRecoilState } from "recoil"
 import { selectedRowAtom, subContentAtom } from "@/coil"
 import { NeoScheme, TableRecord } from "@/types"
+import { useAtom } from "jotai"
 
 export const Row = forwardRef<
     HTMLTableRowElement,
@@ -22,8 +22,8 @@ export const Row = forwardRef<
         scheme: NeoScheme
     }
 >(({ row, ...props }, ref) => {
-    const setSubContent = useSetRecoilState(subContentAtom)
-    const [selectedRow, setSelectedRow] = useRecoilState(selectedRowAtom)
+    const [, setSubContent] = useAtom(subContentAtom)
+    const [selectedRow, setSelectedRow] = useAtom(selectedRowAtom)
 
     return (
         <HighlightableTableRow
@@ -80,6 +80,7 @@ export const ActionableHeaderCell: React.FC<{
     onFilter?(): void
     isSorted?: boolean
     sortDirection?: "123" | "321"
+    children?: React.ReactNode
 }> = props => {
     const [isActionsVisible, showActions] = useState(false)
 

@@ -1283,6 +1283,7 @@ __metadata:
     formik: ^2.2.9
     immer: ^9.0.15
     josa-complete: ^2.0.1
+    jotai: ^1.8.4
     jsonwebtoken: ^8.5.1
     next: 12.3.1
     prettier: ^2.7.1
@@ -1293,8 +1294,6 @@ __metadata:
     react-spinners: ^0.13.4
     react-toastify: ^9.0.8
     read-excel-file: ^5.5.0
-    recoil: ^0.7.5
-    recoil-persist: ^4.2.0
     redis: ^4.3.1
     swr: ^1.3.0
     ts-node: ^10.9.1
@@ -2115,13 +2114,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hamt_plus@npm:1.0.2":
-  version: 1.0.2
-  resolution: "hamt_plus@npm:1.0.2"
-  checksum: af26ea32db03009019cc83dfa9411521a2fa16079443de1a502c9be46d8b3c975acda8ed93fc5750ef08d3186d35901e2d8cfe717dd54bea67b358601fa74e4c
-  languageName: node
-  linkType: hard
-
 "has-bigints@npm:^1.0.1, has-bigints@npm:^1.0.2":
   version: 1.0.2
   resolution: "has-bigints@npm:1.0.2"
@@ -2473,6 +2465,43 @@ __metadata:
   version: 2.0.1
   resolution: "josa-complete@npm:2.0.1"
   checksum: 8a1753a0f2b3e75caddfa2620a9087de540020f1c1c6cf00bd61aace6af3ad5d920ad973843d7732f0d68c39bd5e796967b91681e51d01cff7fa87cfbc555bf7
+  languageName: node
+  linkType: hard
+
+"jotai@npm:^1.8.4":
+  version: 1.8.4
+  resolution: "jotai@npm:1.8.4"
+  peerDependencies:
+    "@babel/core": "*"
+    "@babel/template": "*"
+    "@tanstack/query-core": "*"
+    "@urql/core": "*"
+    immer: "*"
+    optics-ts: "*"
+    react: ">=16.8"
+    valtio: "*"
+    wonka: "*"
+    xstate: "*"
+  peerDependenciesMeta:
+    "@babel/core":
+      optional: true
+    "@babel/template":
+      optional: true
+    "@tanstack/query-core":
+      optional: true
+    "@urql/core":
+      optional: true
+    immer:
+      optional: true
+    optics-ts:
+      optional: true
+    valtio:
+      optional: true
+    wonka:
+      optional: true
+    xstate:
+      optional: true
+  checksum: a3e9ffe9d1dad088bc965702fb2ae6f14162282d950bcb149f423ca7e8738466892b8b8652b65dda11d26e481056105170b961e4b19caa34400c3402d4e16157
   languageName: node
   linkType: hard
 
@@ -3539,31 +3568,6 @@ __metadata:
     string_decoder: ^1.1.1
     util-deprecate: ^1.0.1
   checksum: d4ea81502d3799439bb955a3a5d1d808592cf3133350ed352aeaa499647858b27b1c4013984900238b0873ec8d0d8defce72469fb7a83e61d53f5ad61cb80dc8
-  languageName: node
-  linkType: hard
-
-"recoil-persist@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "recoil-persist@npm:4.2.0"
-  peerDependencies:
-    recoil: ^0.7.2
-  checksum: 1c8a6be4bb914b383429603e910aba80734311d8657ddf9f94a39513da0eb41fd6a2b74439f93658daf465d2e66a2d890e9f6b2f8a047e4fb99dc5b31f301515
-  languageName: node
-  linkType: hard
-
-"recoil@npm:^0.7.5":
-  version: 0.7.5
-  resolution: "recoil@npm:0.7.5"
-  dependencies:
-    hamt_plus: 1.0.2
-  peerDependencies:
-    react: ">=16.13.1"
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 19b410cca6839c8b886b91378112e12de3e0393b547211dafcf7a272c1aa2d7af6c09a9ed39fb3e1997abe5f3d6583e3774dc9f9cdda8c36e4cb0be64a1b17ce
   languageName: node
   linkType: hard
 

@@ -7,8 +7,8 @@ import { Fragment } from "react"
 import { table } from "@/functions"
 import { Important } from "@/typo"
 import { useLogic } from "./logic"
-import { useRecoilValue } from "recoil"
 import { selectedRowAtom } from "@/coil"
+import { useAtom } from "jotai"
 
 export const RecordEditer: React.FC<{
     scheme: NeoScheme
@@ -54,7 +54,7 @@ export const ModifyRecord = (props: {
     scheme: NeoScheme
     onReloadRequested?(): void
 }) => {
-    const selectedData = useRecoilValue(selectedRowAtom)
+    const [selectedData] = useAtom(selectedRowAtom)
     if (!selectedData) return <></>
 
     return (

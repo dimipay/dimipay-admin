@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useCallback, useMemo, useState } from "react"
 import immer from "immer"
+import { toast } from "react-toastify"
+import { useAtom } from "jotai"
+import { useRouter } from "next/router"
 
 import { storeIn, useHIDInput, useTabSwitcher } from "@/functions"
 import { Description, Important, Regular, Token } from "@/typo"
@@ -9,10 +11,7 @@ import { Hexile, Vexile } from "@haechi/flexile"
 import { StoreinProductTile } from "./partial"
 import { modalContentAtom, storeInWizardFileAtom } from "@/coil"
 import { Sidebar } from "pages/dash/partial"
-import { useRouter } from "next/router"
 import { Store } from "@/types"
-import { toast } from "react-toastify"
-import { string } from "yup"
 
 const chime = globalThis.Audio && new globalThis.Audio("/scan_finish.wav")
 
@@ -23,8 +22,8 @@ const TAB_INDEX = {
 
 export const CheckStorein = () => {
     const router = useRouter()
-    const storeinSheet = useRecoilValue(storeInWizardFileAtom)
-    const showModal = useSetRecoilState(modalContentAtom)
+    const [storeinSheet] = useAtom(storeInWizardFileAtom)
+    const [, showModal] = useAtom(modalContentAtom)
     const [scannedAmounts, setScanedAmount] = useState<Record<string, number>>(
         Object.fromEntries(storeinSheet?.map(e => [e.barcode, 0]) || []),
     )

@@ -27,7 +27,7 @@
         "react-spinners": "^0.12.0",
         "react-toastify": "^8.1.1",
         "read-excel-file": "^5.3.5",
-        "recoil": "^0.6.1",
+        "recoil": "^0.7.5",
         "recoil-persist": "^4.0.0",
         "redis": "^4.0.4",
         "swr": "^1.2.1",

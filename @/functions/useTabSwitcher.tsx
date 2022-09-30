@@ -19,6 +19,7 @@ export const useTabSwitcher = ({
 
     return [
         <TabSwitcher
+            key={index}
             tabs={tabs}
             selected={selected}
             onTabChange={index => setSelected(index)}

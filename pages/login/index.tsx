@@ -1,7 +1,7 @@
 import { Vexile } from "@haechi/flexile"
-import { useSetRecoilState } from "recoil"
 import { useRouter } from "next/router"
 import { useFormik } from "formik"
+import { useAtom } from "jotai"
 
 import { Button, InlineForm, Input, LoadSVG } from "@/components"
 import { AuthIdentification, HandlerError } from "@/types"
@@ -13,8 +13,8 @@ import { logo } from "@/assets"
 import { LoginWrapper } from "./style"
 
 export const Login = () => {
-    const setUser = useSetRecoilState(userAtom)
-    const setFlag = useSetRecoilState(experimentalFlagsAtom)
+    const [, setUser] = useAtom(userAtom)
+    const [, setFlag] = useAtom(experimentalFlagsAtom)
     const router = useRouter()
 
     const { handleSubmit, handleBlur, handleChange, errors } =

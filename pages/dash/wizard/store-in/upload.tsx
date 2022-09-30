@@ -2,13 +2,13 @@ import { storeInWizardFileAtom } from "@/coil"
 import { WizardFrame } from "@/components"
 import { UploadFile } from "@/components/UploadFile"
 import { Hexile, Vexile } from "@haechi/flexile"
+import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { Sidebar } from "pages/dash/partial"
 import readXlsxFile from "read-excel-file"
-import { useSetRecoilState } from "recoil"
 
 export const FileUpload = () => {
-    const setStoreFile = useSetRecoilState(storeInWizardFileAtom)
+    const [, setStoreFile] = useAtom(storeInWizardFileAtom)
     const router = useRouter()
 
     return (

@@ -14,7 +14,6 @@ export const InlineInput: React.FC<{
         if (!props.focusHandler) return
 
         props.focusHandler(() => {
-            console.log("네~")
             if (!ref.current) {
                 console.log("Input is not initialized")
                 return

@@ -10,6 +10,7 @@ export const WizardFrame: React.FC<{
     fillx?: boolean
     filly?: boolean
     gap?: number
+    children?: JSX.Element | JSX.Element[]
 }> = props => {
     return (
         <Wrapper

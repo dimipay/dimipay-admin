@@ -73,9 +73,6 @@ model PrepaidCardChargeHistory {
 model GeneralCard {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @default(now()) @updatedAt
-  cardNumber       String
-  validMonth       Int
-  validYear        Int
   billingKey       String
   id               Int           @id @default(autoincrement())
   systemId         String        @unique @default(dbgenerated("gen_random_uuid()"))

@@ -1,6 +1,6 @@
 import { Hexile, Vexile } from "@haechi/flexile"
-import { useRecoilValue } from "recoil"
 import React, { useMemo } from "react"
+import { useAtom } from "jotai"
 
 import { LoadSVG, PlainLink, Redirector } from "@/components"
 import { GROUPED_TABLES } from "@/constants"
@@ -12,7 +12,7 @@ import { SLUG } from "@/types"
 import { SidebarWrapper } from "./style"
 
 export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = props => {
-    const user = useRecoilValue(userAtom)
+    const [user] = useAtom(userAtom)
     const readAllowedTables = useMemo(
         () =>
             Object.entries(user?.user.AdminRole?.permissions || {})

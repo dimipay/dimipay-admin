@@ -1,5 +1,6 @@
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useState, useEffect } from "react"
+import { useAtom } from "jotai"
 import { styled } from "@/stitches.config"
 
 import { PageHeader, Decorative, Important, Regular, Token } from "@/typo"
@@ -7,7 +8,6 @@ import { Statistics, StatisticsCard } from "@/types"
 import { getStatistics, useKone } from "@/functions"
 import { STATISTICS } from "@/constants"
 import { Sidebar } from "./partial"
-import { useRecoilValue } from "recoil"
 import { userAtom } from "@/coil"
 import { useRouter } from "next/router"
 import { Card } from "@/components"
@@ -72,7 +72,7 @@ export const StatisticsRenderer: React.FC<{
 }
 
 export const StatisticsDashboard = () => {
-    const user = useRecoilValue(userAtom)
+    const [user] = useAtom(userAtom)
     const router = useRouter()
 
     useEffect(() => {

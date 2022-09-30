@@ -1,7 +1,7 @@
+import { useAtom } from "jotai"
 import { modalContentAtom } from "@/coil"
 import { Important, PageHeader, Regular } from "@/typo"
 import { Hexile } from "@haechi/flexile"
-import { useRecoilState } from "recoil"
 import { Button } from ".."
 import { ModalBackdrop, ModalWrapper } from "./style"
 
@@ -17,7 +17,7 @@ export interface ModalContent {
 }
 
 export const useModal = () => {
-    const [content, setContent] = useRecoilState(modalContentAtom)
+    const [content, setContent] = useAtom(modalContentAtom)
 
     const element = content ? (
         <ModalBackdrop

@@ -4,13 +4,13 @@ import { NeoField, text } from "@/fields"
 import { NeoScheme, SLUG } from "@/types"
 import { Description, Important } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
+import { useAtom } from "jotai"
 import Link from "next/link"
 import { Sidebar } from "pages/dash/partial"
 import { useMemo } from "react"
-import { useRecoilValue } from "recoil"
 
 export const LoadCheck = () => {
-    const batchFile = useRecoilValue(batchEditWizardFileAtom)
+    const [batchFile] = useAtom(batchEditWizardFileAtom)
 
     const scheme: NeoScheme | undefined = useMemo(() => {
         if (!batchFile) return
@@ -40,7 +40,7 @@ export const LoadCheck = () => {
                     title="한번에 수정 마법사"
                     filly
                     fillx>
-                    {batchFile && (
+                    {batchFile ? (
                         <Vexile gap={2} filly>
                             <Description>
                                 총 {batchFile.records.length}건
@@ -58,6 +58,8 @@ export const LoadCheck = () => {
                                 />
                             )}
                         </Vexile>
+                    ) : (
+                        <span>NULL</span>
                     )}
                     <Link href={location.href + "/../linkformat"}>
                         <Button block>

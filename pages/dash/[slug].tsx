@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import HashLoader from "react-spinners/HashLoader"
 import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
 import { NextPage } from "next"
+import { useAtom } from "jotai"
 
 import { Button, InlineInput, LoadSVG, MiniInput, Table } from "@/components"
 import { NewRecord } from "@/components/Subcontent/NewRecord"
@@ -30,12 +30,12 @@ const TableViewer: NextPage = () => {
     const router = useRouter()
     const slug = router.query.slug as SLUG
 
-    const user = useRecoilValue(userAtom)
+    const [user] = useAtom(userAtom)
 
-    const [subcontent, setSubcontent] = useRecoilState(subContentAtom)
-    const setSelectedRow = useSetRecoilState(selectedRowAtom)
-    const setSubContent = useSetRecoilState(subContentAtom)
-    const experimentalFlags = useRecoilValue(experimentalFlagsAtom)
+    const [subcontent, setSubcontent] = useAtom(subContentAtom)
+    const [, setSelectedRow] = useAtom(selectedRowAtom)
+    const [, setSubContent] = useAtom(subContentAtom)
+    const [experimentalFlags] = useAtom(experimentalFlagsAtom)
 
     const scheme = useMemo(
         () => TABLES.find(table => table.slug === SLUG[slug]),
@@ -169,7 +169,6 @@ const TableViewer: NextPage = () => {
                                 <InlineInput
                                     onChange={setQuickSearchQuery}
                                     focusHandler={e => {
-                                        console.log("지정해줌")
                                         setFocusSearchbox(() => e)
                                     }}>
                                     빠른 찾기..

@@ -1,13 +1,14 @@
-import { getAtom, userAtom } from "@/coil"
+import { userAtom } from "@/coil"
 import { HandlerError } from "@/types"
 import { toast } from "react-toastify"
+import { atomStore } from "pages/_app"
 
 const getAuthHeader = () => {
-    const token = getAtom(userAtom)?.token
+    const user = atomStore.get(userAtom)
 
-    if (token)
+    if (user?.token)
         return {
-            Authorization: token,
+            Authorization: user.token,
         }
 
     return

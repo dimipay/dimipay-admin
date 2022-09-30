@@ -1,6 +1,6 @@
-import { RecoilRoot, useRecoilState } from "recoil"
 import { ToastContainer } from "react-toastify"
 import { useRouter } from "next/router"
+import { Provider, unstable_createStore, useAtom } from "jotai"
 
 import { globalCss } from "@/stitches.config"
 import { userAtom } from "@/coil"
@@ -33,9 +33,9 @@ globalCss({
     },
 })()
 
-const LoginChecker: React.FC = props => {
+const LoginChecker = ({ children }: { children?: JSX.Element }) => {
     const router = useRouter()
-    const [user] = useRecoilState(userAtom)
+    const [user] = useAtom(userAtom)
     const { element } = useModal()
 
     if (!router.asPath.startsWith("/login") && !user) {
@@ -46,22 +46,24 @@ const LoginChecker: React.FC = props => {
     return (
         <>
             {element}
-            {props.children}
+            {children}
         </>
     )
 }
+
+export const atomStore = unstable_createStore()
 
 const MyApp: React.FC<{
     Component: React.ComponentType
     pageProps: any
 }> = props => {
     return (
-        <RecoilRoot>
+        <Provider unstable_createStore={() => atomStore}>
             <ToastContainer />
             <LoginChecker>
                 <props.Component {...props.pageProps} />
             </LoginChecker>
-        </RecoilRoot>
+        </Provider>
     )
 }
 

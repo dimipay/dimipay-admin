@@ -1,15 +1,10 @@
 import { AdminAccount } from "@prisma/client"
-import { atom, RecoilState } from "recoil"
-import { recoilPersist } from "recoil-persist"
+import { atom } from "jotai"
 import { ModalContent } from "./components/Modal"
 import { PermissionType } from "./schemes"
 import { Store, TableRecord } from "./types"
 
-export const LOCALSTORAGE_KEY = "PERSISTENCY"
-
-const { persistAtom } = recoilPersist({
-    key: LOCALSTORAGE_KEY,
-})
+// export const LOCALSTORAGE_KEY = "PERSISTENCY"
 
 export interface UserAtom {
     user: AdminAccount & {
@@ -20,29 +15,16 @@ export interface UserAtom {
     token: string
 }
 
-export const userAtom = atom<UserAtom | null>({
-    default: null,
-    key: "USER",
-    effects_UNSTABLE: [persistAtom],
-})
+export const userAtom = atom<UserAtom | null>(null)
 
-export const experimentalFlagsAtom = atom<string[]>({
-    default: [],
-    key: "EXPERIMENTAL_FLAGS",
-})
+export const experimentalFlagsAtom = atom<string[]>([])
 
 export const subContentAtom = atom<{
     name: string
     element: JSX.Element
-} | null>({
-    default: null,
-    key: "SUB_CONTENT",
-})
+} | null>(null)
 
-export const selectedRowAtom = atom<TableRecord | null>({
-    default: null,
-    key: "SELECTED_ROW",
-})
+export const selectedRowAtom = atom<TableRecord | null>(null)
 
 export const batchEditWizardFileAtom = atom<{
     records: (Record<string, string | number | Date | boolean> & {
@@ -51,25 +33,16 @@ export const batchEditWizardFileAtom = atom<{
     header: string[]
     match?: string[]
     alignField?: string
-} | null>({
-    default: null,
-    key: "BATCH_EDIT_WIZARD_FILE",
-})
+} | null>(null)
 
-export const storeInWizardFileAtom = atom<Store[] | null>({
-    default: null,
-    key: "STORE_IN_WIZARD_FILE",
-})
+export const storeInWizardFileAtom = atom<Store[] | null>(null)
 
-export const getAtom = <AtomType>(atom: RecoilState<AtomType>): AtomType => {
-    const persistSerialized = localStorage.getItem(LOCALSTORAGE_KEY)
-    if (!persistSerialized) throw new Error("로그인이 필요해요")
+export const modalContentAtom = atom<null | ModalContent>(null)
 
-    const persist = JSON.parse(persistSerialized)
-    return persist[atom.key]
-}
+// export const getAtom = <AtomType>(atom: PrimitiveAtom<AtomType>): AtomType => {
+//     const persistSerialized = localStorage.getItem(LOCALSTORAGE_KEY)
+//     if (!persistSerialized) throw new Error("로그인이 필요해요")
 
-export const modalContentAtom = atom<null | ModalContent>({
-    default: null,
-    key: "MODAL_CONTENT_ATOM",
-})
+//     const persist = JSON.parse(persistSerialized)
+//     return persist;
+// }

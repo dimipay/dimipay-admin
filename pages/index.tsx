@@ -1,14 +1,14 @@
 import { Vexile } from "@haechi/flexile"
-import { useRecoilValue } from "recoil"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
+import { useAtom } from "jotai"
 
 import { LoadSVG } from "@/components"
 import { userAtom } from "@/coil"
 import { logo } from "@/assets"
 
 export default function AuthBranching() {
-    const user = useRecoilValue(userAtom)
+    const [user] = useAtom(userAtom)
     const goto = useRouter()
 
     useEffect(() => {

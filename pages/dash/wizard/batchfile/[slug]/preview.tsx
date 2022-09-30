@@ -6,17 +6,17 @@ import { NEO_RECORD_BASE_FIELDS } from "@/schemes/common"
 import { TableRecord } from "@/types"
 import { Important, PageHeader, Regular } from "@/typo"
 import { Hexile, Vexile } from "@haechi/flexile"
+import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { Sidebar } from "pages/dash/partial"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { toast } from "react-toastify"
-import { useRecoilValue, useSetRecoilState } from "recoil"
 import { CheckPreviewBar } from "./style"
 
 const Preview = () => {
     const router = useRouter()
-    const batchFile = useRecoilValue(batchEditWizardFileAtom)
-    const showModal = useSetRecoilState(modalContentAtom)
+    const [batchFile] = useAtom(batchEditWizardFileAtom)
+    const [, showModal] = useAtom(modalContentAtom)
     const [modifiedRecords, setModifiedRecords] = useState<TableRecord[]>()
 
     const scheme = useMemo(() => {
@@ -28,15 +28,11 @@ const Preview = () => {
             throw new Error("테이블을 찾을 수 없습니다")
         }
 
-        console.log(matchedTable)
-
         return matchedTable
     }, [router])
 
     useEffect(() => {
         ;(async () => {
-            console.log("뭐 했대", batchFile, scheme)
-
             if (
                 !batchFile ||
                 !batchFile.alignField ||

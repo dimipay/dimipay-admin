@@ -2,8 +2,16 @@
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
+
+# yarn berry
+.pnp.*
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 # testing
 /coverage
@@ -25,6 +33,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -32,5 +41,3 @@ yarn-error.log*
 
 # vercel
 .vercel
-
-.env

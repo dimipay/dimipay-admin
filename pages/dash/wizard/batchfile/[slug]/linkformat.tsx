@@ -12,14 +12,14 @@ import { Hexile, Vexile } from "@haechi/flexile"
 import { useRouter } from "next/router"
 import { Sidebar } from "pages/dash/partial"
 import { useCallback, useMemo, useState } from "react"
-import { useRecoilState } from "recoil"
+import { useAtom } from "jotai"
 import produce from "immer"
-import { FieldItem } from "./style"
 import { get을를 } from "josa-complete"
+import { FieldItem } from "./style"
 import { anchorIcon } from "@/assets"
 
 const LinkForat = () => {
-    const [batchFile, setBatchFile] = useRecoilState(batchEditWizardFileAtom)
+    const [batchFile, setBatchFile] = useAtom(batchEditWizardFileAtom)
 
     const router = useRouter()
 

@@ -3,7 +3,7 @@ export interface AuthIdentification {
     password: string
 }
 
-export interface Session{
+export interface Session {
     id: number
     username: string
 }

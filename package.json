@@ -26,7 +26,7 @@
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-intersection-observer": "^9.4.0",
-        "react-spinners": "^0.13.4",
+        "react-spinners": "^0.13.5",
         "react-toastify": "^9.0.8",
         "read-excel-file": "^5.5.0",
         "redis": "^4.3.1",

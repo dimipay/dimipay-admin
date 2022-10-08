@@ -22,6 +22,9 @@ model User {
   deviceUid                       String?
   bioKey                          String?
   phoneNumber                     String?
+  googleId                        String?         @unique
+  faceKey                         String?         @unique
+  pinTryCount                     Int             @default(0)
   AdminAccount                    AdminAccount?
   Coupon_Coupon_issuerSidToUser   Coupon[]        @relation("Coupon_issuerSidToUser")
   Coupon_Coupon_receiverSidToUser Coupon[]        @relation("Coupon_receiverSidToUser")
@@ -40,10 +43,14 @@ model PaymentMethod {
   id          Int               @id @default(autoincrement())
   is_deleted  Boolean           @default(false)
   ownerSid    String
+  previewNo   String?
+  ownerName   String?
   User        User              @relation(fields: [ownerSid], references: [systemId])
   GeneralCard GeneralCard?
   PrepaidCard PrepaidCard?
   Transaction Transaction[]
+
+  @@unique([ownerSid, systemId])
 }
 
 model PrepaidCard {
@@ -73,11 +80,13 @@ model PrepaidCardChargeHistory {
 model GeneralCard {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @default(now()) @updatedAt
-  billingKey       String
+  billingKey       String?
   id               Int           @id @default(autoincrement())
   systemId         String        @unique @default(dbgenerated("gen_random_uuid()"))
   paymentMethodSid String        @unique
-  PaymentMethod    PaymentMethod @relation(fields: [paymentMethodSid], references: [systemId])
+  hash             String?
+  PaymentMethod    PaymentMethod @relation(fields: [paymentMethodSid], references: [systemId], onDelete: Cascade)
+  Transaction      Transaction[]
 }
 
 model Coupon {
@@ -109,10 +118,12 @@ model Transaction {
   purchaseType      PurchaseType?
   purchaseDetail    Json?
   posDeviceSid      String?
-  usedCardSid       String
   userSid           String
+  paymentMethodId   Int?
+  usedCard          String?
+  PaymentMethod     PaymentMethod?     @relation(fields: [paymentMethodId], references: [id])
   PosDevice         PosDevice?         @relation(fields: [posDeviceSid], references: [systemId])
-  PaymentMethod     PaymentMethod      @relation(fields: [usedCardSid], references: [systemId])
+  GeneralCard       GeneralCard?       @relation(fields: [usedCard], references: [systemId])
   User              User               @relation(fields: [userSid], references: [systemId])
   Coupon            Coupon[]
   ProductInOutLog   ProductInOutLog[]
@@ -280,6 +291,7 @@ enum TransactionMethod {
   APP_QR
   FACESIGN
   INAPP
+  SYSTEM
 }
 
 enum Transaction_status {

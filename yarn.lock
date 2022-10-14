@@ -487,10 +487,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.8.4":
-  version: 18.8.4
-  resolution: "@types/node@npm:18.8.4"
-  checksum: c2b87f6b0b1f02b2ce61ca7cb93ea287119bda086a3f33e48da8f5e70c24ad7141cc3465946e0e36abb7eba70c7b320c7659842096e4aa573b3a8d557322c818
+"@types/node@npm:^18.8.5":
+  version: 18.8.5
+  resolution: "@types/node@npm:18.8.5"
+  checksum: f7d896f54743178e64c534c6da16f582505acf18904ecd0ee8541cb4bc1d429ba514e7ecfd5145221b71adbd6ae1ff72df082f667e56d056fcd1a719df948e08
   languageName: node
   linkType: hard
 
@@ -1326,7 +1326,7 @@ __metadata:
     "@types/bcrypt": ^5.0.0
     "@types/bcryptjs": ^2.4.2
     "@types/jsonwebtoken": ^8.5.9
-    "@types/node": ^18.8.4
+    "@types/node": ^18.8.5
     "@types/react": ^18.0.21
     "@typescript-eslint/eslint-plugin": ^5.40.0
     "@typescript-eslint/parser": ^5.40.0
@@ -1350,7 +1350,7 @@ __metadata:
     react-intersection-observer: ^9.4.0
     react-spinners: ^0.13.6
     react-toastify: ^9.0.8
-    read-excel-file: ^5.5.0
+    read-excel-file: ^5.5.1
     redis: ^4.3.1
     swr: ^1.3.0
     ts-node: ^10.9.1
@@ -3597,14 +3597,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"read-excel-file@npm:^5.5.0":
-  version: 5.5.0
-  resolution: "read-excel-file@npm:5.5.0"
+"read-excel-file@npm:^5.5.1":
+  version: 5.5.1
+  resolution: "read-excel-file@npm:5.5.1"
   dependencies:
     "@xmldom/xmldom": ^0.8.2
     fflate: ^0.7.3
     unzipper: ^0.10.11
-  checksum: 9263ec07622c9482f2e46af841e0ea454542a792fe3225c38c5b05403dc1153cef555b2a92d4665f482b433e5d40f89dbdc9be1791c18e1ab1c5f62b57d22912
+  checksum: 338473ebbe0bc73ba3939f858488ea758a02f763e27a24e3be50f24cdd441a70e26be8b6e238d2c38641af4e6efd1818930407808d5eecf04f443231c9464439
   languageName: node
   linkType: hard
 

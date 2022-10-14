@@ -183,6 +183,8 @@ const TableViewer: NextPage = () => {
                                 />
                                 <Important white>다운로드</Important>
                             </Button> */}
+                            {/* 
+                            // * 한 번에 수정 사용을 안해서 비활성화 해놓습니다.
                             {currentTablePermission &&
                                 currentTablePermission.includes("U") && (
                                     <Button
@@ -203,7 +205,7 @@ const TableViewer: NextPage = () => {
                                             한 번에 수정
                                         </Important>
                                     </Button>
-                                )}
+                                )} */}
                             {scheme.wizards?.map(wizard => (
                                 <Button
                                     color={wizard.button.color}

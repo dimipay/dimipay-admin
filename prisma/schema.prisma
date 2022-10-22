@@ -147,15 +147,15 @@ model Product {
   updatedAt               DateTime          @default(now()) @updatedAt
   name                    String
   barcode                 String            @unique @default(dbgenerated("gen_random_uuid()"))
-  purchaseCost            Int
+  purchaseCost            Int?
   sellingPrice            Int
   sellingStopped          Boolean           @default(false)
   id                      Int               @id @default(autoincrement())
   systemId                String            @unique @default(dbgenerated("gen_random_uuid()"))
   is_deleted              Boolean           @default(false)
   alias                   String?
-  categorySid             String
-  Category                Category          @relation(fields: [categorySid], references: [systemId])
+  categorySid             String?
+  Category                Category?         @relation(fields: [categorySid], references: [systemId])
   ProductInOutLog         ProductInOutLog[]
   transaction             Transaction[]
   excludedDiscountPolicy  DiscountPolicy[]  @relation("discountExcludedProduct")
@@ -171,10 +171,11 @@ model ProductInOutLog {
   type           ProductInOutType
   unitCost       Int
   systemId       String           @unique @default(dbgenerated("gen_random_uuid()"))
-  productSid     String
+  productSid     String?
   storeingSid    String?
   transactionSid String?
-  Product        Product          @relation(fields: [productSid], references: [systemId])
+  barcode        String?
+  Product        Product?         @relation(fields: [productSid], references: [systemId])
   StoreProducts  StoreProducts?   @relation(fields: [storeingSid], references: [systemId])
   Transaction    Transaction?     @relation(fields: [transactionSid], references: [systemId])
 }

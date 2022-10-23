@@ -29,7 +29,7 @@ const actions = {
                 type: content.delta > 0 ? "INCOME" : "OUTCOME",
                 message: content.message,
                 productSid: product.systemId,
-                unitCost: product.purchaseCost,
+                unitCost: product.purchaseCost || -1,
             },
         })
 

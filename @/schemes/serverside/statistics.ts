@@ -25,7 +25,7 @@ export async function saveProductStocksToRedis() {
         redis.hSet(
             REDIS_HASHMAPS.product_stock,
             product.productSid,
-            product._sum.delta,
+            product._sum.delta.toString(),
         )
     }
 

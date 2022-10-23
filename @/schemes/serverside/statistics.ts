@@ -82,7 +82,7 @@ export const statisticsGetters: {
                 await prisma.product.findMany({
                     where: {
                         systemId: {
-                            in: sales.map(s => s.productSid),
+                            in: sales.map(s => s.productSid || ""),
                         },
                     },
                     select: {
@@ -96,7 +96,11 @@ export const statisticsGetters: {
         return {
             list: [
                 ...sales.map(product => ({
-                    label: products[product.productSid.toString()],
+                    label: products[
+                        product.productSid !== null
+                            ? product.productSid.toString()
+                            : ""
+                    ],
                     secondaryLabel: (-product._sum.delta!).toString() + "개",
                 })),
             ],
@@ -165,7 +169,7 @@ export const statisticsGetters: {
                 await prisma.product.findMany({
                     where: {
                         systemId: {
-                            in: summary.map(s => s.productSid),
+                            in: summary.map(s => s.productSid || ""),
                         },
                     },
                     select: {
@@ -178,7 +182,11 @@ export const statisticsGetters: {
 
         return {
             list: summary.map(product => ({
-                label: products[product.productSid.toString()],
+                label: products[
+                    product.productSid !== null
+                        ? product.productSid.toString()
+                        : ""
+                ],
                 secondaryLabel: product._sum.delta!.toString() + "개",
             })),
         }

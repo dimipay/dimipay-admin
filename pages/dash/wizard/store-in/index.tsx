@@ -29,7 +29,7 @@ export const StoreIn = () => {
                             </li>
                         </Ul>
                     </Regular>
-                    <PlainLink href={location.href + "/upload"} passHref>
+                    <PlainLink href={"./upload"} passHref>
                         <Button block>
                             <Important white>다음</Important>
                         </Button>

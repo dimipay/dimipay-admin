@@ -82,7 +82,7 @@ export const BatchFile = () => {
                             </li>
                         </Ul>
                     </Regular>
-                    <Link href={location.href + "/upload"}>
+                    <Link href={"./upload"}>
                         <Button block>
                             <Important white>다음</Important>
                         </Button>

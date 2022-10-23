@@ -141,7 +141,7 @@ const LinkForat = () => {
                                         match: fieldMatches,
                                         alignField,
                                     })
-                                    router.push(location.href + "/../preview")
+                                    router.push("../preview")
                                 }}>
                                 <Important white>다음</Important>
                             </Button>

@@ -36,7 +36,7 @@ export const FileUpload = () => {
                                     ),
                             )
 
-                            router.push(location.href + "/../check")
+                            router.push("../check")
                         }}
                     />
                 </WizardFrame>

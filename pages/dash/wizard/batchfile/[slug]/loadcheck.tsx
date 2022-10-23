@@ -61,7 +61,7 @@ export const LoadCheck = () => {
                     ) : (
                         <span>NULL</span>
                     )}
-                    <Link href={location.href + "/../linkformat"}>
+                    <Link href={"../linkformat"}>
                         <Button block>
                             <Important white>
                                 데이터가 잘 불러와졌습니다

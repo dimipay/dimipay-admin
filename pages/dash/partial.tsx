@@ -69,6 +69,11 @@ export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = props => {
                     </Hexile>
                 </PlainLink>
             )}
+            <PlainLink href="/dash/erpstore" passHref>
+                <Hexile>
+                    <Regular underline>ERP 상품재고</Regular>
+                </Hexile>
+            </PlainLink>
         </SidebarWrapper>
     )
 }

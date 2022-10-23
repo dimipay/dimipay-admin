@@ -27,11 +27,11 @@ import { REDIS_HASHMAPS } from "./@/functions/redisKey"
     })
 
     for (const product of summary) {
-        if (product._sum.delta === null) continue
+        if (product.productSid === null || product._sum.delta === null) continue
         redis.hSet(
             REDIS_HASHMAPS.product_stock,
             product.productSid,
-            product._sum.delta,
+            product._sum.delta.toString(),
         )
     }
 

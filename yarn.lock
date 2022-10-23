@@ -480,6 +480,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/luxon@npm:^3":
+  version: 3.0.2
+  resolution: "@types/luxon@npm:3.0.2"
+  checksum: e47e199c5d70ce16e4eff54b21fdf385065f1134774109b40c36dba8b5fd29a732b763125e93863d6070dd22ba6a3f18dbdd368cf3748aae9f24bb335c5c210d
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 18.0.0
   resolution: "@types/node@npm:18.0.0"
@@ -1334,6 +1341,7 @@ __metadata:
     "@types/bcrypt": ^5.0.0
     "@types/bcryptjs": ^2.4.2
     "@types/jsonwebtoken": ^8.5.9
+    "@types/luxon": ^3
     "@types/node": ^18.11.2
     "@types/react": ^18.0.21
     "@typescript-eslint/eslint-plugin": ^5.40.1
@@ -1350,6 +1358,7 @@ __metadata:
     josa-complete: ^2.0.1
     jotai: ^1.8.6
     jsonwebtoken: ^8.5.1
+    luxon: ^3.0.4
     next: 12.3.1
     prettier: ^2.7.1
     prisma: ^4.5.0
@@ -2814,6 +2823,13 @@ __metadata:
   version: 7.14.0
   resolution: "lru-cache@npm:7.14.0"
   checksum: efdd329f2c1bb790b71d497c6c59272e6bc2d7dd060ba55fc136becd3dd31fc8346edb446275504d94cb60d3c8385dbf5267b79b23789e409b2bdf302d13f0d7
+  languageName: node
+  linkType: hard
+
+"luxon@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "luxon@npm:3.0.4"
+  checksum: d0908c3951da2a10ccf23040210ead23b0da5366a9d0954e7d5db3560189a7bd703d8af1e00084f197effc9cd7158d1bddf32886d98a70d59ce9bc3fe88bbce0
   languageName: node
   linkType: hard
 

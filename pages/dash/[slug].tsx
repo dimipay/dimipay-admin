@@ -118,6 +118,7 @@ const TableViewer: NextPage = () => {
                 searchQuery: quickSearchQuery,
             })
             .then(e => {
+                console.log(e.records)
                 setRecords(e.records)
                 setFullRecordAmount(e.amount)
                 setLoading(false)

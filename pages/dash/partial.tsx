@@ -34,9 +34,10 @@ export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = props => {
             />
             {GROUPED_TABLES.map(e => ({
                 ...e,
-                content: e.content.filter(table =>
-                    readAllowedTables.includes(table.slug),
-                ),
+                content: e.content,
+                // .filter(table =>
+                //     readAllowedTables.includes(table.slug),
+                // ),
             }))
                 .filter(e => e.content.length !== 0)
                 .map(group => (
@@ -56,19 +57,17 @@ export const Sidebar: React.FC<React.HTMLProps<HTMLDivElement>> = props => {
                         ))}
                     </Vexile>
                 ))}
-            {user?.user?.AdminRole?.permissions?.extra?.statistics && (
-                <PlainLink href="/dash/statistics" passHref>
-                    <Hexile>
-                        <LoadSVG
-                            alt="그래프 아이콘"
-                            height={5}
-                            width={5}
-                            src={graphIcon}
-                        />
-                        <Regular underline>통계</Regular>
-                    </Hexile>
-                </PlainLink>
-            )}
+            <PlainLink href="/dash/statistics" passHref>
+                <Hexile>
+                    <LoadSVG
+                        alt="그래프 아이콘"
+                        height={5}
+                        width={5}
+                        src={graphIcon}
+                    />
+                    <Regular underline>통계</Regular>
+                </Hexile>
+            </PlainLink>
             <PlainLink href="/dash/erpstore" passHref>
                 <Hexile>
                     <Regular underline>ERP 상품재고</Regular>

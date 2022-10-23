@@ -37,13 +37,13 @@ export const GROUPED_TABLES: SchemeGroup[] = [
     {
         groupName: "판매",
         content: [
-            NEO_PRODUCT,
+            // NEO_PRODUCT,
             NEO_TRANSACTION_SCHEME,
-            NEO_CATEGORY_SCHEME,
+            // NEO_CATEGORY_SCHEME,
             NEO_DISCOUNT_POLICY,
             NEO_EVENT_SCHEME,
-            NEO_PRODUCT_IN_OUT_LOG_SCHEME,
-            NEO_STORE_PRODUCT,
+            // NEO_PRODUCT_IN_OUT_LOG_SCHEME,
+            // NEO_STORE_PRODUCT,
         ],
     },
     {
@@ -54,8 +54,8 @@ export const GROUPED_TABLES: SchemeGroup[] = [
             NEO_ADMIN_ACCOUNT,
             NEO_PAYMENT_METHOD_SCHEME,
             NEO_ADMIN_ROLE_SCHEME,
-            NEO_COUPON_SCHEME,
-            NEO_NOTICE_SCHEME,
+            // NEO_COUPON_SCHEME,
+            // NEO_NOTICE_SCHEME,
         ],
     },
 ]

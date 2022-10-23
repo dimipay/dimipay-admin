@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css"
 import "@/assets/font/SUIT-Variable.css"
 import "josa-complete"
 import { useModal } from "@/components"
+import React from "react"
 
 globalCss({
     ":root": {
@@ -38,10 +39,11 @@ const LoginChecker = ({ children }: { children?: JSX.Element }) => {
     const [user] = useAtom(userAtom)
     const { element } = useModal()
 
-    if (!router.asPath.startsWith("/login") && !user) {
-        if (global.location) router.push("/login")
-        return <></>
-    }
+    React.useEffect(() => {
+        if (!router.asPath.startsWith("/login") && !user) {
+            if (global.location) router.push("/login")
+        }
+    }, [user, router])
 
     return (
         <>

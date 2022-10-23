@@ -1,5 +1,6 @@
 import { AdminAccount } from "@prisma/client"
 import { atom } from "jotai"
+import { atomWithStorage, createJSONStorage } from "jotai/utils"
 import { ModalContent } from "./components/Modal"
 import { PermissionType } from "./schemes"
 import { Store, TableRecord } from "./types"
@@ -15,9 +16,11 @@ export interface UserAtom {
     token: string
 }
 
-export const userAtom = atom<UserAtom | null>(null)
+// const storage = createJSONStorage(() => sessionStorage)
 
-export const experimentalFlagsAtom = atom<string[]>([])
+export const userAtom = atomWithStorage<UserAtom | null>("userAtom", null)
+
+export const experimentalFlagsAtom = atomWithStorage<string[]>("flagsAtom", [])
 
 export const subContentAtom = atom<{
     name: string

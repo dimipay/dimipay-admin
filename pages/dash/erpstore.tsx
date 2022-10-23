@@ -309,7 +309,6 @@ export const getServerSideProps: GetServerSideProps = async (
                 },
             },
         )
-        console.log(res.data)
         sessionId = res.data.Data?.Datas.SESSION_ID || ""
         await redis.set("ERPSESSION", sessionId)
     }
@@ -336,8 +335,6 @@ export const getServerSideProps: GetServerSideProps = async (
     } else if (response.data.Data !== null) {
         records = response.data.Data
     }
-
-    console.log(response.data)
 
     return {
         props: {

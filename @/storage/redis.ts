@@ -10,9 +10,9 @@ export async function loadRedis() {
         url: REDIS_URI,
     })
     await client.connect()
-    client.on('error', (err) => {
-        console.error('Redis error:', err);
-    });
+    client.on("error", err => {
+        console.error("Redis error:", err)
+    })
 
     redisIntance = client
     return redisIntance

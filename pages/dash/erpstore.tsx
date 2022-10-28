@@ -284,15 +284,19 @@ export const getServerSideProps: GetServerSideProps = async (
 ) => {
     const redis = await loadRedis()
 
-    const root =
-        process.env.NODE_ENV == "production"
-            ? "https://oapiAA.ecount.com"
-            : "https://sboapiAA.ecount.com"
+    const root = "https://sboapiAA.ecount.com"
+    // process.env.NODE_ENV == "production"
+    //     ? "https://oapiAA.ecount.com"
+    //     : "https://sboapiAA.ecount.com"
+    const rediskey = "erpsession_dev"
+    // process.env.NODE_ENV == "production"
+    //     ? "erpsession_prod"
+    //     : "erpsession_dev"
 
     let sessionId = ""
 
-    if (await redis.exists("ERPSESSION")) {
-        sessionId = (await redis.get("ERPSESSION")) || ""
+    if (await redis.exists(rediskey)) {
+        sessionId = (await redis.get(rediskey)) || ""
     } else {
         const res = await axios.post<ERPLoginResult>(
             `${root}/OAPI/V2/OAPILogin`,
@@ -310,7 +314,7 @@ export const getServerSideProps: GetServerSideProps = async (
             },
         )
         sessionId = res.data.Data?.Datas.SESSION_ID || ""
-        await redis.set("ERPSESSION", sessionId)
+        await redis.set(rediskey, sessionId)
     }
 
     const now = DateTime.now().toFormat("yyyyMMdd")

@@ -487,10 +487,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^18.11.2":
+"@types/node@npm:*":
   version: 18.11.7
   resolution: "@types/node@npm:18.11.7"
   checksum: 69d630825cf6fbf580d08d76a4d4836ef8c34ed4fe0842221ade87d275f517099cbfabe8e22397208e564bd24926db97699ab9db5c091383269a432b336665e2
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.14.0":
+  version: 18.14.0
+  resolution: "@types/node@npm:18.14.0"
+  checksum: d83fcf5e4ed544755dd9028f5cbb6b9d46235043159111bb2ad62223729aee581c0144a9f6df8ba73d74011db9ed4ebd7af2fd5e0996714e3beb508a5da8ac5c
   languageName: node
   linkType: hard
 
@@ -1264,7 +1271,7 @@ __metadata:
     "@types/bcryptjs": ^2.4.2
     "@types/jsonwebtoken": ^8.5.9
     "@types/luxon": ^3
-    "@types/node": ^18.11.2
+    "@types/node": ^18.14.0
     "@types/react": ^18.0.21
     "@typescript-eslint/eslint-plugin": ^5.40.1
     "@typescript-eslint/parser": ^5.40.1

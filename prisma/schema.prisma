@@ -9,28 +9,30 @@ datasource db {
 }
 
 model User {
-  id                              Int             @id @default(autoincrement())
-  systemId                        String          @unique @default(dbgenerated("gen_random_uuid()"))
-  createdAt                       DateTime        @default(now())
-  updatedAt                       DateTime        @default(now()) @updatedAt
-  isDisabled                      Boolean         @default(false)
-  accountName                     String          @unique
-  name                            String
-  isTeacher                       Boolean?        @default(false)
-  profileImage                    String?
-  paymentPin                      String?
-  deviceUid                       String?
-  bioKey                          String?
-  phoneNumber                     String?
-  googleId                        String?         @unique
-  faceKey                         String?         @unique
-  pinTryCount                     Int             @default(0)
-  AdminAccount                    AdminAccount?
-  Coupon_Coupon_issuerSidToUser   Coupon[]        @relation("Coupon_issuerSidToUser")
-  Coupon_Coupon_receiverSidToUser Coupon[]        @relation("Coupon_receiverSidToUser")
-  Notice                          Notice[]
-  PaymentMethod                   PaymentMethod[]
-  Transaction                     Transaction[]
+  id                             Int             @id @default(autoincrement())
+  systemId                       String          @unique @default(dbgenerated("gen_random_uuid()"))
+  createdAt                      DateTime        @default(now())
+  updatedAt                      DateTime        @default(now()) @updatedAt
+  isDisabled                     Boolean         @default(false)
+  accountName                    String          @unique
+  name                           String
+  isTeacher                      Boolean?        @default(false)
+  profileImage                   String?
+  paymentPin                     String?
+  deviceUid                      String?
+  bioKey                         String?
+  phoneNumber                    String?
+  googleId                       String?         @unique
+  faceKey                        String?         @unique
+  pinTryCount                    Int             @default(0)
+  couponTryCount                 Int             @default(0)
+  AdminAccount                   AdminAccount?
+  Coupon_Coupon_issuerIdToUser   Coupon[]        @relation("Coupon_issuerIdToUser")
+  Coupon_Coupon_receiverIdToUser Coupon[]        @relation("Coupon_receiverIdToUser")
+  CouponRequest                  CouponRequest[]
+  Notice                         Notice[]
+  PaymentMethod                  PaymentMethod[]
+  Transaction                    Transaction[]
 }
 
 model PaymentMethod {
@@ -90,19 +92,21 @@ model GeneralCard {
 }
 
 model Coupon {
-  id                            String       @id @default(uuid())
-  createdAt                     DateTime     @default(now())
-  updatedAt                     DateTime     @default(now()) @updatedAt
-  name                          String
-  expiresAt                     DateTime?
-  amount                        Int
-  systemId                      String       @unique @default(uuid())
-  issuerSid                     String
-  receiverSid                   String
-  usedTransactionSid            String?
-  User_Coupon_issuerSidToUser   User         @relation("Coupon_issuerSidToUser", fields: [issuerSid], references: [systemId])
-  User_Coupon_receiverSidToUser User         @relation("Coupon_receiverSidToUser", fields: [receiverSid], references: [systemId])
-  Transaction                   Transaction? @relation(fields: [usedTransactionSid], references: [systemId])
+  createdAt                    DateTime      @default(now())
+  expiresAt                    DateTime
+  code                         String        @unique
+  issuerId                     Int
+  receiverId                   Int?
+  requestId                    Int
+  typeId                       Int
+  usedAt                       DateTime?
+  usedTransactionId            Int?
+  id                           Int           @id @default(autoincrement())
+  User_Coupon_issuerIdToUser   User          @relation("Coupon_issuerIdToUser", fields: [issuerId], references: [id])
+  User_Coupon_receiverIdToUser User?         @relation("Coupon_receiverIdToUser", fields: [receiverId], references: [id])
+  CouponRequest                CouponRequest @relation(fields: [requestId], references: [id])
+  CouponType                   CouponType    @relation(fields: [typeId], references: [id])
+  Transaction                  Transaction?  @relation(fields: [usedTransactionId], references: [id])
 }
 
 model Transaction {
@@ -134,7 +138,7 @@ model Category {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @default(now()) @updatedAt
   name           String
-  color          String
+  color          String?
   id             Int              @id @default(autoincrement())
   is_deleted     Boolean          @default(false)
   systemId       String           @unique @default(dbgenerated("gen_random_uuid()"))
@@ -146,7 +150,7 @@ model Product {
   createdAt               DateTime          @default(now())
   updatedAt               DateTime          @default(now()) @updatedAt
   name                    String
-  barcode                 String            @unique @default(dbgenerated("gen_random_uuid()"))
+  barcode                 String            @unique
   purchaseCost            Int?
   sellingPrice            Int
   sellingStopped          Boolean           @default(false)
@@ -172,9 +176,9 @@ model ProductInOutLog {
   unitCost       Int
   systemId       String           @unique @default(dbgenerated("gen_random_uuid()"))
   productSid     String?
+  barcode        String?
   storeingSid    String?
   transactionSid String?
-  barcode        String?
   Product        Product?         @relation(fields: [productSid], references: [systemId])
   StoreProducts  StoreProducts?   @relation(fields: [storeingSid], references: [systemId])
   Transaction    Transaction?     @relation(fields: [transactionSid], references: [systemId])
@@ -275,6 +279,42 @@ model AdminRole {
   AdminAccount AdminAccount[]
 }
 
+model CouponRequest {
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now())
+  id                Int                 @id @default(autoincrement())
+  approved          Boolean             @default(false)
+  requestUserId     Int
+  User              User                @relation(fields: [requestUserId], references: [id])
+  Coupon            Coupon[]
+  CouponRequestItem CouponRequestItem[]
+}
+
+model CouponRequestItem {
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now())
+  id              Int           @id @default(autoincrement())
+  amount          Int
+  couponTypeId    Int
+  couponRequestId Int
+  CouponRequest   CouponRequest @relation(fields: [couponRequestId], references: [id])
+  CouponType      CouponType    @relation(fields: [couponTypeId], references: [id])
+}
+
+model CouponType {
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now())
+  id                Int                 @id @default(autoincrement())
+  name              String
+  price             Int
+  discount          Int
+  description       String?
+  is_deleted        Boolean             @default(false)
+  type              CouponTypeName
+  Coupon            Coupon[]
+  CouponRequestItem CouponRequestItem[]
+}
+
 enum PaymentMethodType {
   PREPAID
   GENERAL
@@ -311,4 +351,9 @@ enum PurchaseType {
 enum ProductInOutType {
   INCOME
   OUTCOME
+}
+
+enum CouponTypeName {
+  CASH
+  CATEGORY
 }

@@ -1280,7 +1280,7 @@ __metadata:
     josa-complete: ^2.0.1
     jotai: ^1.8.6
     jsonwebtoken: ^8.5.1
-    luxon: ^3.0.4
+    luxon: ^3.3.0
     next: 12.3.1
     prettier: ^2.7.1
     prisma: ^4.5.0
@@ -2730,10 +2730,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "luxon@npm:3.0.4"
-  checksum: d0908c3951da2a10ccf23040210ead23b0da5366a9d0954e7d5db3560189a7bd703d8af1e00084f197effc9cd7158d1bddf32886d98a70d59ce9bc3fe88bbce0
+"luxon@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "luxon@npm:3.3.0"
+  checksum: 50cf17a0dc155c3dcacbeae8c0b7e80db425e0ba97b9cbdf12a7fc142d841ff1ab1560919f033af46240ed44e2f70c49f76e3422524c7fc8bb8d81ca47c66187
   languageName: node
   linkType: hard
 
